@@ -9,48 +9,86 @@ import {
 import Link from "next/link"
 import { ModeToggler } from "../shared/ModeToggler"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Button } from "../ui/button"
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import { LuHeart } from "react-icons/lu";
+import { BsCart3 } from "react-icons/bs";
+import { LuUserCircle2 } from "react-icons/lu";
 
 
 export default function NavMenu() {
-    const [showBg, setShowBg] = useState(false)
     const [open, setOpen] = useState<boolean>(false)
 
     return (
-        <header className={`flex justify-between items-center`}>
-            <NavigationMenu className={`!container items-center rounded-xl max-w-none px-8 justify-between hidden gap-2 md:flex h-full`}>
-                <Image className="ml-auto" src="/imgs/logo.png" width={100} height={75} alt="logo" />
+        <header className={`flex my-6 mx-auto justify-around items-center w-full px-8`}>
+            <h1 className="text-6xl font-bold">HoReCa</h1>
+            <NavigationMenu className={` items-center  justify-between hidden gap-2 md:flex`}>
                 <NavigationMenuList className="items-center justify-between hidden gap-2 md:flex ">
                     <NavigationMenuItem>
                         <Link href="/" legacyBehavior passHref>
-                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>الرئيسية</NavigationMenuLink>
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Home</NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/#services" legacyBehavior passHref>
-                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>الخدمات</NavigationMenuLink>
+                        <Link href="/products" legacyBehavior passHref>
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Products</NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/#testimonials" legacyBehavior passHref>
-                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>العملاء</NavigationMenuLink>
+                        <Link href="/services" legacyBehavior passHref>
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Services</NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/#about" legacyBehavior passHref>
-                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>من نحن</NavigationMenuLink>
+                        <Link href="/about" legacyBehavior passHref>
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>About</NavigationMenuLink>
                         </Link>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                        <ModeToggler />
                     </NavigationMenuItem>
                 </NavigationMenuList>
             </NavigationMenu>
+            <div className="items-center justify-between hidden gap-4 md:flex ">
+                <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false">
+                    <HoverCard>
+                        <HoverCardTrigger>
+                            <LuHeart className="w-6 h-6" />
+                        </HoverCardTrigger>
+                        <HoverCardContent>
+                            The React Framework – created and maintained by @vercel.
+                        </HoverCardContent>
+                    </HoverCard>
+                </Link>
+                <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false">
+                    <HoverCard>
+                        <HoverCardTrigger>
+                            <BsCart3 className="w-6 h-6" />
+                        </HoverCardTrigger>
+                        <HoverCardContent>
+                            The React Framework – created and maintained by @vercel.
+                        </HoverCardContent>
+                    </HoverCard>
+                </Link>
+                <Link href="/profile" aria-description="open profile" aria-label="open profile" aria-controls="navbar-default" aria-expanded="false">
+                    <HoverCard>
+                        <HoverCardTrigger>
+                            <LuUserCircle2 className="w-6 h-6" />
+                        </HoverCardTrigger>
+                        <HoverCardContent>
+                            The React Framework – created and maintained by @vercel.
+                        </HoverCardContent>
+                    </HoverCard>
+                </Link>
+
+                <ModeToggler />
+            </div>
+
             {/* Nav for small screens */}
-            <div className={`flex items-center justify-between h-full md:hidden rounded-xl px-8 my-8 `}>
-                <Image className="ml-auto" src="/imgs/logo.png" width={130} height={32} alt="logo" />
+            {/* <div className={`flex items-center justify-between h-full md:hidden rounded-xl px-8 my-8 `}>
                 <Popover onOpenChange={setOpen} open={open}>
                     <PopoverTrigger aria-controls="2" aria-labelledby="open menu button" asChild>
                         <div className="flex items-center gap-2">
@@ -69,22 +107,22 @@ export default function NavMenu() {
                                 <NavigationMenuList className="flex flex-col items-center justify-center gap-2">
                                     <NavigationMenuItem>
                                         <Link href="/" legacyBehavior passHref>
-                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>الرئيسية</NavigationMenuLink>
+                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>Home</NavigationMenuLink>
                                         </Link>
                                     </NavigationMenuItem>
                                     <NavigationMenuItem>
-                                        <Link href="/#services" legacyBehavior passHref>
-                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>الخدمات</NavigationMenuLink>
+                                        <Link href="/products" legacyBehavior passHref>
+                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>Products</NavigationMenuLink>
                                         </Link>
                                     </NavigationMenuItem>
                                     <NavigationMenuItem>
-                                        <Link href="/#testimonials" legacyBehavior passHref>
-                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>العملاء</NavigationMenuLink>
+                                        <Link href="/services" legacyBehavior passHref>
+                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>Services</NavigationMenuLink>
                                         </Link>
                                     </NavigationMenuItem>
                                     <NavigationMenuItem>
-                                        <Link href="/#about" legacyBehavior passHref>
-                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>من نحن</NavigationMenuLink>
+                                        <Link href="/about" legacyBehavior passHref>
+                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>About</NavigationMenuLink>
                                         </Link>
                                     </NavigationMenuItem>
                                 </NavigationMenuList>
@@ -92,7 +130,7 @@ export default function NavMenu() {
                         </div>
                     </PopoverContent>
                 </Popover>
-            </div>
+            </div> */}
         </header>
     )
 }
