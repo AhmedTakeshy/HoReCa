@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import '../styles/globals.css'
 import ProviderWrapper from '@/_store/provider'
+import { ThemeProvider } from '@/context/ThemeProvider'
 
-const poppins = Poppins({ 
+const poppins = Poppins({
   subsets: ['latin'],
   weight: ["400", "500", "600", "700", "800", "900"],
 })
@@ -21,11 +22,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <ProviderWrapper>
-          <main>
-            {children}
-          </main>
-        </ProviderWrapper>
+        <ThemeProvider>
+          <ProviderWrapper>
+            <main>
+              {children}
+            </main>
+          </ProviderWrapper>
+        </ThemeProvider>
       </body>
     </html>
   )
