@@ -17,7 +17,7 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { LuHeart } from "react-icons/lu";
+import { GoHeartFill } from "react-icons/go";
 import { BsCart3 } from "react-icons/bs";
 import { LuUserCircle2 } from "react-icons/lu";
 
@@ -53,10 +53,10 @@ export default function NavMenu() {
                 </NavigationMenuList>
             </NavigationMenu>
             <div className="items-center justify-between hidden gap-4 md:flex ">
-                <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false">
+                <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false" className="">
                     <HoverCard>
                         <HoverCardTrigger>
-                            <LuHeart className="w-6 h-6" />
+                            <GoHeartFill className="w-6 h-6 hover:text-red-600" />
                         </HoverCardTrigger>
                         <HoverCardContent>
                             The React Framework – created and maintained by @vercel.
