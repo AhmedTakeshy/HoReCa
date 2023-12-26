@@ -21,12 +21,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={poppins.className}>
-        <ThemeProvider>
+      <body className={`${poppins.className} antialiased flex flex-col min-h-screen`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <ProviderWrapper>
-            <main>
               {children}
-            </main>
           </ProviderWrapper>
         </ThemeProvider>
       </body>
