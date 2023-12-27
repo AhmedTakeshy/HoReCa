@@ -7,7 +7,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -67,10 +67,48 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "move-out": {
+          "0%": {
+            right: "50%",
+            transform: "translateX(-50%) rotate(0deg)",
+          },
+          "60%": {
+            right: "-200px",
+            transform: "translateX(50%) rotate(-45deg)",
+          },
+          "70%": {
+            right: "inherit",
+            left: "-100px",
+            transform: "translateX(-50%) rotate(-45deg)",
+          },
+          "75%": {
+            right: "inherit",
+            left: "-100px",
+            transform: "translateX(-50%) rotate(-45deg)",
+          },
+          "100%": {
+            right: "inherit",
+            left: "50%",
+            transform: "translateX(-50%)",
+          },
+        },
+        "pumping-heart": {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.3)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "flip": {
+          "0%": { transform: " rotateY(0deg)" },
+          "50%": { transform: " rotateY(-180deg)" },
+          "100%": { transform: " rotateY(-360deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "move-out": "move-out 2.25s ease-in-out 1",
+        "pumping-heart": "pumping-heart 1.25s ease-in-out infinite forwards",
+        "flip": "flip 2s cubic-bezier(0.4, 0.2, 0.2, 1) 2 forwards",
       },
     },
   },
