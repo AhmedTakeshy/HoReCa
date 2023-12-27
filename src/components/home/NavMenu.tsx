@@ -11,7 +11,7 @@ import { ModeToggler } from "../shared/ModeToggler"
 import Image from "next/image"
 import { useState } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
-import { Button } from "../ui/button"
+import { Button, buttonVariants } from "../ui/button"
 import {
     HoverCard,
     HoverCardContent,
@@ -26,8 +26,8 @@ export default function NavMenu() {
     const [open, setOpen] = useState<boolean>(false)
 
     return (
-        <header className={`flex my-6 mx-auto justify-around items-center w-full px-8`}>
-            <h1 className="text-6xl font-bold">HoReCa</h1>
+        <header className={`flex my-6 mx-auto md:justify-around justify-between items-center w-full md:px-8 px-3`}>
+            <h1 className="text-3xl font-bold xl:text-6xl lg:text-4xl te text-blue-950 dark:text-sky-700">HoReCa</h1>
             <NavigationMenu className={` items-center  justify-between hidden gap-2 md:flex`}>
                 <NavigationMenuList className="items-center justify-between hidden gap-2 md:flex ">
                     <NavigationMenuItem>
@@ -53,56 +53,55 @@ export default function NavMenu() {
                 </NavigationMenuList>
             </NavigationMenu>
             <div className="items-center justify-between hidden gap-4 md:flex ">
-                <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false" className="">
+                <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false" className="group">
                     <HoverCard>
                         <HoverCardTrigger>
-                            <GoHeartFill className="w-6 h-6 hover:text-red-600" />
+                            <GoHeartFill className="w-6 h-6 group-hover:animate-pumping-heart group-hover:text-red-600" />
                         </HoverCardTrigger>
                         <HoverCardContent>
                             The React Framework – created and maintained by @vercel.
                         </HoverCardContent>
                     </HoverCard>
                 </Link>
-                <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false">
+                <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className=" group">
                     <HoverCard>
                         <HoverCardTrigger>
-                            <BsCart3 className="w-6 h-6" />
+                            <BsCart3 className="w-6 h-6 group-hover:text-blue-700" />
                         </HoverCardTrigger>
                         <HoverCardContent>
                             The React Framework – created and maintained by @vercel.
                         </HoverCardContent>
                     </HoverCard>
                 </Link>
-                <Link href="/profile" aria-description="open profile" aria-label="open profile" aria-controls="navbar-default" aria-expanded="false">
+                <Link href="/profile" aria-description="open profile" aria-label="open profile" aria-controls="navbar-default" aria-expanded="false" className="group">
                     <HoverCard>
                         <HoverCardTrigger>
-                            <LuUserCircle2 className="w-6 h-6" />
+                            <LuUserCircle2 className="w-6 h-6 group-hover:text-cyan-700" />
                         </HoverCardTrigger>
                         <HoverCardContent>
                             The React Framework – created and maintained by @vercel.
                         </HoverCardContent>
                     </HoverCard>
                 </Link>
-
                 <ModeToggler />
             </div>
 
             {/* Nav for small screens */}
-            {/* <div className={`flex items-center justify-between h-full md:hidden rounded-xl px-8 my-8 `}>
+            <div className={`flex items-center justify-between h-full md:hidden rounded-xl `}>
                 <Popover onOpenChange={setOpen} open={open}>
                     <PopoverTrigger aria-controls="2" aria-labelledby="open menu button" asChild>
                         <div className="flex items-center gap-2">
-                            <ModeToggler />
                             <Button aria-description="open main menu" aria-label="open menu" data-collapse-toggle="navbar-default" type="button" className="inline-flex items-center justify-center w-10 h-10 p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
                                 <span className="sr-only">Open main menu</span>
                                 <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
                                 </svg>
                             </Button>
+                            <ModeToggler />
                         </div>
                     </PopoverTrigger>
-                    <PopoverContent className="relative w-screen ">
-                        <div className="flex flex-col items-center mx-auto md:flex-row">
+                    <PopoverContent className="relative w-screen mx-px ">
+                        <div className="flex flex-col items-center mx-auto">
                             <NavigationMenu>
                                 <NavigationMenuList className="flex flex-col items-center justify-center gap-2">
                                     <NavigationMenuItem>
@@ -127,10 +126,22 @@ export default function NavMenu() {
                                     </NavigationMenuItem>
                                 </NavigationMenuList>
                             </NavigationMenu>
+                            <div className="flex items-center justify-between w-full gap-2 mx-2">
+                                <Link href="/wishlist" className={`${buttonVariants({ variant: "default" })} w-full group`}>
+                                    <GoHeartFill className="w-6 h-6 group-hover:animate-pumping-heart group-hover:text-red-600 " />
+                                </Link>
+                                <Link href="/cart" className={`${buttonVariants({ variant: "default" })} w-full group relative overflow-hidden`}>
+                                    <BsCart3 className="absolute w-6 h-6 group-hover:animate-move-out group-hover:text-blue-700" />
+                                </Link>
+                            </div>
+                            <Link href="/profile" className={`${buttonVariants({ variant: "default" })} my-2 w-full mx-4 relative group hover:animate-flip perspective hover:bg-cyan-950`}>
+                                <LuUserCircle2 className="w-6 h-6" />
+                                <span className="flex items-center justify-center text-lg shadow-md shadow-blue-500 backface">Sign in</span>
+                            </Link>
                         </div>
                     </PopoverContent>
                 </Popover>
-            </div> */}
+            </div>
         </header>
     )
 }
