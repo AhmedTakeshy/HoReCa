@@ -53,36 +53,36 @@ export default function NavMenu() {
                 </NavigationMenuList>
             </NavigationMenu>
             <div className="items-center justify-between hidden gap-4 md:flex ">
-                <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false" className="group">
-                    <HoverCard>
-                        <HoverCardTrigger>
+                <HoverCard openDelay={0.5}>
+                    <HoverCardTrigger asChild>
+                        <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false" className="group">
                             <GoHeartFill className="w-6 h-6 group-hover:animate-pumping-heart group-hover:text-red-600" />
-                        </HoverCardTrigger>
-                        <HoverCardContent>
-                            The React Framework – created and maintained by @vercel.
-                        </HoverCardContent>
-                    </HoverCard>
-                </Link>
-                <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className=" group">
-                    <HoverCard>
-                        <HoverCardTrigger>
+                        </Link>
+                    </HoverCardTrigger>
+                    <HoverCardContent>
+                        The React Framework – created and maintained by @vercel.
+                    </HoverCardContent>
+                </HoverCard>
+                <HoverCard openDelay={0.5}>
+                    <HoverCardTrigger asChild>
+                        <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className=" group">
                             <BsCart3 className="w-6 h-6 group-hover:text-blue-700" />
-                        </HoverCardTrigger>
-                        <HoverCardContent>
-                            The React Framework – created and maintained by @vercel.
-                        </HoverCardContent>
-                    </HoverCard>
-                </Link>
-                <Link href="/profile" aria-description="open profile" aria-label="open profile" aria-controls="navbar-default" aria-expanded="false" className="group">
-                    <HoverCard>
-                        <HoverCardTrigger>
+                        </Link>
+                    </HoverCardTrigger>
+                    <HoverCardContent>
+                        The React Framework – created and maintained by @vercel.
+                    </HoverCardContent>
+                </HoverCard>
+                <HoverCard openDelay={0.5}>
+                    <HoverCardTrigger asChild>
+                        <Link href="/profile" aria-description="open profile" aria-label="open profile" aria-controls="navbar-default" aria-expanded="false" className="group">
                             <LuUserCircle2 className="w-6 h-6 group-hover:text-cyan-700" />
-                        </HoverCardTrigger>
-                        <HoverCardContent>
-                            The React Framework – created and maintained by @vercel.
-                        </HoverCardContent>
-                    </HoverCard>
-                </Link>
+                        </Link>
+                    </HoverCardTrigger>
+                    <HoverCardContent>
+                        The React Framework – created and maintained by @vercel.
+                    </HoverCardContent>
+                </HoverCard>
                 <ModeToggler />
             </div>
 
