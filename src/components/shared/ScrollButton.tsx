@@ -21,7 +21,7 @@ export default function ScrollButton() {
     }, []);
 
     return (
-        <Button aria-label='scroll' aria-description='scroll to top' onClick={scrollTo} size="icon" className={`border-1 ${showBtn ? "opacity-100" : "opacity-0"} duration-300 transition-all fixed z-10 flex items-center justify-center right-4 bottom-4`} >
+        <Button aria-label='scroll' aria-description='scroll to top' onClick={scrollTo} size="icon" className={`border-1 ${showBtn ? "opacity-100" : "opacity-0 pointer-events-none"} duration-300 transition-all fixed z-10 flex items-center justify-center right-4 bottom-4`} >
             <IoIosArrowUp size={25} />
         </Button>
     )
