@@ -1,11 +1,11 @@
 import Banner from "@/components/home/Banner";
-import Products from "@/components/home/Products";
+import Categories from "@/components/home/Categoies";
 
 export default function Home() {
   return (
     <main className="my-8">
       <Banner />
-      <Products />
+      <Categories />
     </main>
   )
 }
