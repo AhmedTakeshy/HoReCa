@@ -1,5 +1,6 @@
 type Product ={
     id: number,
+    publicId: string,
     title: string,
     price: number,
     thumbnail: string,
@@ -19,6 +20,5 @@ type Cart ={
 }
 
 type ServerResponse<T> =
-    | { status: "loading" }
     | { data: T; status: "success"; statusCode: number }
-    | { error: string; status: "error"; statusCode: number };
+    | { errorMessage: string; status: "error"; statusCode: number };
