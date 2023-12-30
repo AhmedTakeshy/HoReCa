@@ -6,6 +6,10 @@ const nextConfig = {
                 protocol: "https",
                 hostname: "n11scdn.akamaized.net",
             },
+            {
+                protocol: "https",
+                hostname: "i.dummyjson.com",
+            },
         ],
     }
 }
