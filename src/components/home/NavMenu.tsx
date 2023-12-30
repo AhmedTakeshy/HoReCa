@@ -20,10 +20,13 @@ import {
 import { GoHeartFill } from "react-icons/go";
 import { BsCart3 } from "react-icons/bs";
 import { LuUserCircle2 } from "react-icons/lu";
+import { useAppSelector } from "@/_store/hooks"
+import SimpleProduct from "./SimpleProduct"
 
 
 export default function NavMenu() {
     const [open, setOpen] = useState<boolean>(false)
+    const cart = useAppSelector(state => state.cart)
 
     return (
         <header className={`flex my-6 mx-auto md:justify-around justify-between items-center w-full md:px-8 px-3`}>
@@ -53,27 +56,27 @@ export default function NavMenu() {
                 </NavigationMenuList>
             </NavigationMenu>
             <div className="items-center justify-between hidden gap-4 md:flex ">
-                <HoverCard openDelay={0.5}>
+                <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false" className="group">
+                    <GoHeartFill className="w-6 h-6 group-hover:animate-pumping-heart group-hover:text-red-600" />
+                </Link>
+                <HoverCard openDelay={200} closeDelay={100}>
                     <HoverCardTrigger asChild>
-                        <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false" className="group">
-                            <GoHeartFill className="w-6 h-6 group-hover:animate-pumping-heart group-hover:text-red-600" />
-                        </Link>
-                    </HoverCardTrigger>
-                    <HoverCardContent>
-                        The React Framework – created and maintained by @vercel.
-                    </HoverCardContent>
-                </HoverCard>
-                <HoverCard openDelay={0.5}>
-                    <HoverCardTrigger asChild>
-                        <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className=" group">
+                        <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className="relative group">
                             <BsCart3 className="w-6 h-6 group-hover:text-blue-700" />
+                            <span className="absolute -top-2 -right-2 rounded-full bg-sky-500  text-center text-xs">{cart.totalQuantity}</span>
                         </Link>
                     </HoverCardTrigger>
-                    <HoverCardContent>
-                        The React Framework – created and maintained by @vercel.
+                    <HoverCardContent className="overflow-y-auto p-4 w-80 max-h-96">
+                        {cart.items.length > 0 ?
+                            cart.items.map(item => (
+                                <SimpleProduct key={item.id} data={item} />
+                            ))
+                            :
+                            <p>The cart is empty.</p>
+                        }
                     </HoverCardContent>
                 </HoverCard>
-                <HoverCard openDelay={0.5}>
+                <HoverCard openDelay={200} closeDelay={100}>
                     <HoverCardTrigger asChild>
                         <Link href="/profile" aria-description="open profile" aria-label="open profile" aria-controls="navbar-default" aria-expanded="false" className="group">
                             <LuUserCircle2 className="w-6 h-6 group-hover:text-cyan-700" />
