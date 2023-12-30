@@ -2,7 +2,8 @@ import Link from "next/link";
 import { MdOutlinePhoneAndroid } from "react-icons/md";
 import { dataList } from "@/lib/DUMMYDATA";
 import ListItems from "./ListItems";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
+import Image from "next/image";
+import Carousel from "./Carousel";
 
 export default function Banner() {
     return (
@@ -18,7 +19,7 @@ export default function Banner() {
                                 <span className="text-left ">{item.header}</span>
                             </Link>
                             <div
-                                className="hidden absolute z-[1] lg:top-8 top-36 lg:right-0 right-24 rounded-br-sm lg:rounded-br-none w-[77%] lg:h-[calc(100%-2rem)] rounded-r-sm place-content-start group-hover:grid grid-cols-4 bg-white dark:bg-slate-700 shadow-md dark:shadow-none hover:grid">
+                                className="hidden absolute z-[1] lg:top-0 top-36 lg:right-0 right-24 rounded-br-sm lg:rounded-br-none w-[77%] lg:h-full rounded-r-sm place-content-start group-hover:grid grid-cols-4 bg-white dark:bg-slate-700 shadow-md dark:shadow-none hover:grid">
                                 {Object.keys(item.data).map((key, index) => (
                                     <ListItems key={index} title={key} data={item.data[key]} />
                                 ))}
@@ -28,29 +29,31 @@ export default function Banner() {
                     <li className="item px-4 py-[7px] w-full no-click"></li>
                 </ul>
                 <div className="flex flex-col justify-between gap-5">
-                    <div className="flex items-center justify-between gap-5">
-                        <div className="grid grid-cols-[auto,1fr] gap-4 place-items-center p-4 bg-white shadow-md rounded-sm">
-                            <img className="w-28 h-28" src="https://n11scdn.akamaized.net/a1/194/01/01/37/98/IMG-1916864032408453496.jpg" alt="oil photo" />
+                <Carousel />
+                    <div className="flex items-center justify-between gap-5 pr-4">
+                        <div className="grid grid-cols-[auto,1fr] gap-4 place-items-center p-4 bg-white dark:bg-gray-700 shadow-md rounded">
+                            <Image className="w-28 h-28 rounded-md" src="https://n11scdn.akamaized.net/a1/194/01/01/37/98/IMG-1916864032408453496.jpg" alt="oil photo" width={112} height={112}/>
                             <div className="flex flex-col justify-center">
                                 <p className="mt-3">Motul Moto 4T 20W-40 Motorcycle Oil</p>
-                                <div className="flex items-center justify-start">
-                                    <p className="mr-6 font-bold">₺ 190,89 - 194,79</p>
-                                    <img className="w-16 h-16" src="/images/shipping.jpg" alt="shipping photo" />
+                                <div className="flex items-center justify-between mt-4">
+                                    <p className="-mt-12 font-bold">₺ 190,89 - 194,79</p>
+                                    <Image  className="w-16 h-16 rounded" src="/images/shipping.jpg" alt="shipping photo"width={64} height={64} />
                                 </div>
                             </div>
                         </div>
-                        <div className="grid grid-cols-[auto,1fr] gap-4 p-4 place-items-center bg-white shadow-md rounded-sm">
-                            <img className="w-28 h-28" src="https://n11scdn.akamaized.net/a1/194/01/01/37/98/IMG-1916864032408453496.jpg" alt="oil photo" />
+                        <div className="grid grid-cols-[auto,1fr] gap-4 p-4 place-items-center bg-white dark:bg-gray-700 shadow-md rounded">
+                            <Image  className="w-28 h-28 rounded-md" src="https://n11scdn.akamaized.net/a1/194/01/01/37/98/IMG-1916864032408453496.jpg" alt="oil photo"width={112} height={112} />
                             <div className="flex flex-col justify-center ">
                                 <p className="mt-3">Motul Moto 4T 20W-40 Motorcycle Oil</p>
-                                <div className="flex items-center justify-start">
-                                    <p className="mr-6 font-bold">₺ 190,89 - 194,79</p>
-                                    <img className="w-16 h-16" src="/images/shipping.jpg" alt="shipping photo" />
+                                <div className="flex items-center justify-between mt-4">
+                                    <p className="-mt-12 font-bold">₺ 190,89 - 194,79</p>
+                                    <Image className="w-16 h-16 rounded" src="/images/shipping.jpg" alt="shipping photo" width={64} height={64}/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     )
