@@ -26,9 +26,9 @@ export const getProducts = async ({ page = 1, search }: ProductsProps): Promise<
 export const getCategories = async (): Promise<ServerResponse<string[]>> => {
     try {
         const response = await fetch("https://dummyjson.com/products/categories")
-        console.log("🚀 ~ file: userActions.ts:33 ~ getCategories ~ response:", response)
         if (response.ok) {
             const res = await response.json();
+            console.log("🚀 ~ file: userActions.ts:32 ~ getCategories ~ res:", res)
             const posts: string[] = res.categories;
             return { data: posts, status: "success", statusCode: response.status };
         } else {
