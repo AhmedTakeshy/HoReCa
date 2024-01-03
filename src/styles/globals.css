@@ -100,7 +100,9 @@ ul:hover .no-click:hover ~.item:not(:hover){
   @apply border-r-2 border-white dark:border-slate-950
 }
 
-
+.flex-center {
+  @apply flex items-center justify-center
+}
 
 .containerX {
   @apply w-full gap-12 px-8 mx-auto max-w-none sm:max-w-[calc(100%-5rem)] md:max-w-[calc(100%-7rem)] lg:max-w-[calc(100%-10rem)];
