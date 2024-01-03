@@ -27,10 +27,8 @@ export const getCategories = async (): Promise<ServerResponse<string[]>> => {
     try {
         const response = await fetch("https://dummyjson.com/products/categories")
         if (response.ok) {
-            const res = await response.json();
-            console.log("🚀 ~ file: userActions.ts:32 ~ getCategories ~ res:", res)
-            const posts: string[] = res.categories;
-            return { data: posts, status: "success", statusCode: response.status };
+            const res:string[] = await response.json();
+            return { data: res, status: "success", statusCode: response.status };
         } else {
             return { errorMessage: "There are no categories at the moment!", status: "error", statusCode: response.status };
         }
