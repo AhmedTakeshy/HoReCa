@@ -6,6 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
 import { ImgProps } from "next/dist/shared/lib/get-img-props"
 import Image from "next/image"
 import { type CarouselApi } from "@/components/ui/carousel"
@@ -42,11 +43,16 @@ export default function Carousel({ image }: CarouselItemProps) {
   return (
     <CarouselComponent
     setApi={setApi}
-    opts={{ loop: true, align: "start", }}>
-      <CarouselContent className="w-full h-full shadow-md rounded-md">
+    opts={{ loop: true, align: "start", }}
+    plugins={[
+      Autoplay({
+        delay: 4000,
+      }),
+    ]}>
+      <CarouselContent className="w-full h-full rounded-md shadow-md">
         {images.map((image, index) => (
           <CarouselItem key={index} className="flex flex-col justify-center">
-            <Image src={image} alt="carousel" width={970} height={420} className="mx-auto w-full rounded-md" />
+            <Image src={image} alt="carousel" width={970} height={420} className="w-full mx-auto rounded-md" />
           </CarouselItem>
         ))}
       </CarouselContent>

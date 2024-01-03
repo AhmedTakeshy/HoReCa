@@ -63,10 +63,10 @@ export default function NavMenu() {
                     <HoverCardTrigger asChild>
                         <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className="relative group">
                             <BsCart3 className="w-6 h-6 group-hover:text-blue-700" />
-                            <span className="absolute -top-2 -right-2 rounded-full bg-sky-500  text-center text-xs">{cart.totalQuantity}</span>
+                            <span className="absolute text-xs rounded-full flex-center -top-2 -right-2 bg-sky-500">{cart.totalQuantity}</span>
                         </Link>
                     </HoverCardTrigger>
-                    <HoverCardContent className="overflow-y-auto p-4 w-80 max-h-96">
+                    <HoverCardContent className="p-4 overflow-y-auto w-80 max-h-96">
                         {cart.items.length > 0 ?
                             cart.items.map(item => (
                                 <SimpleProduct key={item.id} data={item} />
