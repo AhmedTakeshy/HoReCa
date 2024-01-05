@@ -7,118 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model AuthActionForCustomerDescriptions {
-  Id                      BigInt                 @id(map: "PK_AuthActionForCustomerDescriptions") @default(autoincrement())
-  AuthActionForCustomerId BigInt
-  LanguageId              BigInt
-  Description             String                 @db.NVarChar(500)
-  AuthActionForCustomers  AuthActionForCustomers @relation(fields: [AuthActionForCustomerId], references: [Id], onUpdate: NoAction, map: "FK_AuthActionForCustomerDescriptionAuthActionForCustomer")
-  Languages               Languages              @relation(fields: [LanguageId], references: [Id], onUpdate: NoAction, map: "FK_AuthActionForCustomerDescriptionLanguage")
-
-  @@index([AuthActionForCustomerId], map: "IX_FK_AuthActionForCustomerDescriptionAuthActionForCustomer")
-  @@index([LanguageId], map: "IX_FK_AuthActionForCustomerDescriptionLanguage")
-}
-
-model AuthActionForCustomers {
-  Id                                BigInt                              @id(map: "PK_AuthActionForCustomers") @default(autoincrement())
-  Code                              String                              @db.NVarChar(80)
-  OrderNumber                       Int
-  DetailedDescription               String?                             @db.NVarChar(500)
-  AuthActionForCustomerDescriptions AuthActionForCustomerDescriptions[]
-  CouponCustomerAuthActions         CouponCustomerAuthActions[]
-  CustomerAuthActionForCustomers    CustomerAuthActionForCustomers[]
-  CustomerAuthActionForPackages     CustomerAuthActionForPackages[]
-  CustomerSubscriptionCustomerAuths CustomerSubscriptionCustomerAuths[]
-  PackageExtras                     PackageExtras[]
-}
-
-model AuthActionForUserDescriptions {
-  Id                  BigInt             @id(map: "PK_AuthActionForUserDescriptions") @default(autoincrement())
-  AuthActionForUserId BigInt
-  LanguageId          BigInt
-  Description         String             @db.NVarChar(500)
-  AuthActionForUsers  AuthActionForUsers @relation(fields: [AuthActionForUserId], references: [Id], onUpdate: NoAction, map: "FK_AuthActionForUserDescriptionAuthActionForUser")
-  Languages           Languages          @relation(fields: [LanguageId], references: [Id], onUpdate: NoAction, map: "FK_AuthActionForUserDescriptionLanguage")
-
-  @@index([AuthActionForUserId], map: "IX_FK_AuthActionForUserDescriptionAuthActionForUser")
-  @@index([LanguageId], map: "IX_FK_AuthActionForUserDescriptionLanguage")
-}
-
-model AuthActionForUsers {
-  Id                             BigInt                           @id(map: "PK_AuthActionForUsers") @default(autoincrement())
-  Code                           String                           @db.NVarChar(80)
-  OrderNumber                    Int
-  GroupCode                      String                           @db.NVarChar(20)
-  AuthActionForUserDescriptions  AuthActionForUserDescriptions[]
-  CustomerUserAuthActionForUsers CustomerUserAuthActionForUsers[]
-}
-
-model BulkOperationLines {
-  Id                         BigInt                     @id(map: "PK_BulkOperationLines") @default(autoincrement())
-  Status                     Int                        @db.TinyInt
-  StatusResult               String?                    @db.NVarChar(2000)
-  BulkOperationId            BigInt
-  Entegre_ProductECommerceId BigInt?
-  ProductId                  BigInt?
-  FormulaText                String?                    @db.NVarChar(250)
-  BulkOperations             BulkOperations             @relation(fields: [BulkOperationId], references: [Id], onUpdate: NoAction, map: "FK_BulkOperationBulkOperationLine")
-  Entegre_ProductECommerces  Entegre_ProductECommerces? @relation(fields: [Entegre_ProductECommerceId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Entegre_ProductECommerceBulkOperationLine")
-  Products                   Products?                  @relation(fields: [ProductId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ProductBulkOperationLine")
-
-  @@index([BulkOperationId, Status], map: "IX_BulkOperationLines_BulkOperationId_Status")
-  @@index([ProductId, Status], map: "IX_BulkOperationLines_ProductId_Status")
-}
-
-model BulkOperations {
-  Id                   BigInt               @id(map: "PK_BulkOperations") @default(autoincrement())
-  OperationType        Int                  @db.TinyInt
-  CreatedDate          DateTime             @db.DateTime
-  StartDate            DateTime?            @db.DateTime
-  EndDate              DateTime?            @db.DateTime
-  ParamValue           String?              @db.NVarChar(250)
-  OperationSourceValue String?              @db.NVarChar(2500)
-  OperationSourceType  Int?                 @db.TinyInt
-  CustomerId           BigInt
-  Status               Int                  @db.TinyInt
-  ProductId            BigInt?
-  BulkOperationLines   BulkOperationLines[]
-  Customers            Customers            @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerBulkOperation")
-  Products             Products?            @relation(fields: [ProductId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ProductBulkOperation")
-
-  @@index([CustomerId], map: "IX_BulkOperations_CustomerId")
-  @@index([OperationType, OperationSourceType, CustomerId, CreatedDate, ParamValue, Status], map: "IX_BulkOperations_OperationType_OperationSourceType_CustomerId_CreatedDate_ParamValue_Status")
-}
-
-model CampaignCustomers {
-  Id           BigInt     @id(map: "PK_CampaignCustomers") @default(autoincrement())
-  IpAddress    String     @db.NVarChar(50)
-  RegisterDate DateTime   @db.DateTime
-  RegisterGuid String     @db.UniqueIdentifier
-  PurchaseDate DateTime?  @db.DateTime
-  CampaignId   String     @db.UniqueIdentifier
-  CustomerId   BigInt?
-  PackagesId   BigInt?
-  Campaigns    Campaigns  @relation(fields: [CampaignId], references: [Id], onUpdate: NoAction, map: "FK_CampaignCampaignCustomers")
-  Customers    Customers? @relation(fields: [CustomerId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CustomerCampaignCustomers")
-  Packages     Packages?  @relation(fields: [PackagesId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_PackagesCampaignCustomers")
-
-  @@index([CampaignId], map: "IX_FK_CampaignCampaignCustomers")
-  @@index([CustomerId], map: "IX_FK_CustomerCampaignCustomers")
-  @@index([PackagesId], map: "IX_FK_PackagesCampaignCustomers")
-}
-
-model Campaigns {
-  Id                       String                   @id(map: "PK_Campaigns") @db.UniqueIdentifier
-  CampaignCode             String?                  @db.NVarChar(50)
-  CampaignDescription      String?                  @db.NVarChar(300)
-  RegisterDate             DateTime                 @db.DateTime
-  CustomerRepresentativeId BigInt?
-  CampaignCustomers        CampaignCustomers[]
-  CustomerRepresentatives  CustomerRepresentatives? @relation(fields: [CustomerRepresentativeId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CustomerRepresentativeCampaign")
-
-  @@index([CustomerRepresentativeId], map: "IX_FK_CustomerRepresentativeCampaign")
-}
-
 model Categories {
   Id               BigInt       @id(map: "PK_Categories") @default(autoincrement())
   Name             String       @db.NVarChar(100)
@@ -130,201 +18,12 @@ model Categories {
   Categories       Categories?  @relation("CategoriesToCategories", fields: [ParentId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CategoryCategory")
   other_Categories Categories[] @relation("CategoriesToCategories")
   VatRates         VatRates?    @relation(fields: [DefaultVatRateId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CategoryVatRate")
-  Customers        Customers    @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerCategory")
   Products         Products[]
 
   @@index([CustomerId], map: "IX_Categories_CustomerId")
   @@index([Deepest, CustomerId], map: "IX_Categories_Deepest_CustomerId")
   @@index([ParentId, CustomerId], map: "IX_Categories_ParentId_CustomerId")
   @@index([ParentId], map: "IX_FK_CategoryCategory")
-}
-
-model Cities {
-  Id                          BigInt                        @id(map: "PK_Cities") @default(autoincrement())
-  Name                        String                        @db.NVarChar(100)
-  CustomerInvoiceInformations CustomerInvoiceInformations[]
-  Customers                   Customers[]
-  Districts                   Districts[]
-}
-
-model ClaimItemReasons {
-  Id          BigInt     @id(map: "PK_ClaimItemReasons") @default(autoincrement())
-  ClaimItemId BigInt
-  ClaimReason String     @db.NVarChar(350)
-  ClaimItems  ClaimItems @relation(fields: [ClaimItemId], references: [Id], onUpdate: NoAction, map: "FK_ClaimItemReasonClaimItem")
-
-  @@index([ClaimItemId], map: "IX_ClaimItemReasons_ClaimItemId")
-}
-
-model ClaimItems {
-  Id                             BigInt             @id(map: "PK_ClaimItems") @default(autoincrement())
-  ClaimId                        BigInt
-  ProductId                      BigInt?
-  ProductVariantGroupId          BigInt?
-  ProductStockCode               String             @db.NVarChar(50)
-  EntegreProductId               String?            @db.NVarChar(50)
-  EntegreLineItemId              String?            @db.NVarChar(50)
-  Quantity                       Decimal            @db.Decimal(20, 8)
-  VatRateId                      Int
-  CurrencyId                     Int
-  UnitTypeId                     Int
-  ClaimItemStatus                Int                @db.TinyInt
-  UnitPrice                      Decimal            @db.Decimal(12, 2)
-  ShipmentCompanyCampaignNumber  String?            @db.NVarChar(80)
-  ShipmentCompanyECommerceCodeId String?            @db.NVarChar(80)
-  ProductName                    String             @db.NVarChar(250)
-  OrderLineId                    BigInt?
-  EntegreProductSlug             String?            @db.NVarChar(250)
-  RequestedEntegreLineItemIdCode String?            @db.NVarChar(50)
-  StockMultiplier                Decimal            @default(1, map: "DF_CI_StockMultplier") @db.Decimal(16, 8)
-  UnitDiscountAmount             Decimal            @default(0, map: "DF__ClaimItem__UnitD__1E05700A") @db.Decimal(12, 2)
-  ClaimItemReasons               ClaimItemReasons[]
-
-  @@index([ClaimId], map: "IX_FK_ClaimItemClaim")
-  @@index([ProductId], map: "IX_FK_ClaimItemProduct")
-  @@index([ProductVariantGroupId], map: "IX_FK_ClaimItemProductVariantGroup")
-  @@index([OrderLineId], map: "IX_FK_OrderLineId")
-}
-
-model Claims {
-  Id                      BigInt                @id(map: "PK_Claims") @default(autoincrement())
-  EntegreClaimNumber      String                @db.NVarChar(50)
-  EntegreClaimId          String?               @db.NVarChar(50)
-  CustomerFullName        String                @db.NVarChar(300)
-  ClaimDate               DateTime              @db.DateTime
-  IntegratedECommerceCode String                @db.NVarChar(10)
-  CustomerId              BigInt
-  CustomerECommerceKeyId  BigInt
-  PackageBarcode          String?               @db.NVarChar(250)
-  ClaimStatus             Int                   @db.TinyInt
-  InvoicePrinted          Boolean               @default(false, map: "DF__Claims__InvoiceP__1EF99443")
-  OrderInvoiceNumber      String?               @db.NVarChar(50)
-  ClaimInvoiceNumber      String?               @db.NVarChar(50)
-  Customers               Customers             @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_ClaimCustomer")
-  CustomerECommerceKeys   CustomerECommerceKeys @relation(fields: [CustomerECommerceKeyId], references: [Id], onUpdate: NoAction, map: "FK_ClaimCustomerECommerceKey")
-
-  @@index([CustomerId, ClaimDate], map: "IX_Claims_CustomerId_ClaimDate")
-  @@index([EntegreClaimNumber, IntegratedECommerceCode, CustomerId, CustomerECommerceKeyId, ClaimStatus], map: "IX_Claims_EntegreClaimNumber_IntegratedECommerceCode_CustomerId_CustomerECommerceKeyId_ClaimStatus")
-  @@index([IntegratedECommerceCode, CustomerId, CustomerECommerceKeyId, EntegreClaimId, ClaimDate], map: "IX_Claims_IntegratedECommerceCode_CustomerId_CustomerECommerceKeyId_EntegreClaimId_ClaimDate")
-  @@index([IntegratedECommerceCode, CustomerId, CustomerECommerceKeyId, EntegreClaimId, ClaimStatus], map: "IX_Claims_IntegratedECommerceCode_CustomerId_CustomerECommerceKeyId_EntegreClaimId_ClaimStatus")
-  @@index([IntegratedECommerceCode, CustomerId, CustomerECommerceKeyId, EntegreClaimNumber, ClaimDate], map: "IX_Claims_IntegratedECommerceCode_CustomerId_CustomerECommerceKeyId_EntegreClaimNumber_ClaimDate")
-  @@index([CustomerId], map: "IX_FK_ClaimCustomer")
-}
-
-model ConnectedCustomers {
-  Id            BigInt       @id(map: "PK_ConnectedCustomers") @default(autoincrement())
-  ConnectionId  String       @db.NVarChar(50)
-  IpAddress     String?      @db.NVarChar(40)
-  ConnectedOn   DateTime     @db.DateTime
-  CustomerId    BigInt
-  AccountingApp String?      @db.NVarChar(20)
-  Transport     String?      @db.NVarChar(100)
-  CustomerErpId BigInt
-  Customers     Customers    @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerConnectedCustomer")
-  CustomerErps  CustomerErps @relation(fields: [CustomerErpId], references: [Id], onUpdate: NoAction, map: "FK_CustomerErpConnectedCustomer")
-}
-
-model ConnectedUsers {
-  Id           BigInt    @id(map: "PK_ConnectedUsers") @default(autoincrement())
-  ConnectionId String    @unique(map: "UNQ_ConnectedUsers_ConnectionId") @db.NVarChar(50)
-  ConnectedOn  DateTime  @db.DateTime
-  UserAgent    String?
-  UserId       BigInt
-  CustomerId   BigInt
-  IpAddress    String?   @db.NVarChar(40)
-  Transport    String?   @db.NVarChar(100)
-  Customers    Customers @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerConnectedUser")
-  Users        Users     @relation(fields: [UserId], references: [Id], onUpdate: NoAction, map: "FK_UserConnectedUser")
-
-  @@index([CustomerId], map: "IX_FK_CustomerConnectedUser")
-  @@index([UserId], map: "IX_FK_UserConnectedUser")
-}
-
-model Countries {
-  Iso2              String              @id(map: "PK_Countries") @db.NVarChar(2)
-  Iso3              String?             @db.NVarChar(3)
-  PhoneCode         Int?                @db.SmallInt
-  Name              String              @db.NVarChar(80)
-  Customers         Customers[]
-  InvoiceAddresses  InvoiceAddresses[]
-  ShippingAddresses ShippingAddresses[]
-}
-
-model CouponAllowedPackages {
-  Id         BigInt   @id(map: "PK_CouponAllowedPackages") @default(autoincrement())
-  CouponId   BigInt
-  PackagesId BigInt
-  Coupons    Coupons  @relation(fields: [CouponId], references: [Id], onUpdate: NoAction, map: "FK_CouponAllowedPackageCoupon")
-  Packages   Packages @relation(fields: [PackagesId], references: [Id], onUpdate: NoAction, map: "FK_CouponAllowedPackagePackages")
-
-  @@index([CouponId], map: "IX_FK_CouponAllowedPackageCoupon")
-  @@index([PackagesId], map: "IX_FK_CouponAllowedPackagePackages")
-}
-
-model CouponCustomerAuthActions {
-  Id                      BigInt                 @id(map: "PK_CouponCustomerAuthActions") @default(autoincrement())
-  CouponId                BigInt
-  AuthActionForCustomerId BigInt
-  AuthActionForCustomers  AuthActionForCustomers @relation(fields: [AuthActionForCustomerId], references: [Id], onUpdate: NoAction, map: "FK_CouponCustomerAuthActionAuthActionForCustomer")
-  Coupons                 Coupons                @relation(fields: [CouponId], references: [Id], onUpdate: NoAction, map: "FK_CouponCustomerAuthActionCoupon")
-
-  @@index([AuthActionForCustomerId], map: "IX_FK_CouponCustomerAuthActionAuthActionForCustomer")
-  @@index([CouponId], map: "IX_FK_CouponCustomerAuthActionCoupon")
-}
-
-model CouponGiftPackages {
-  Id         BigInt   @id(map: "PK_CouponGiftPackages") @default(autoincrement())
-  CouponId   BigInt
-  PackagesId BigInt
-  Price      Decimal  @db.Decimal(12, 2)
-  Coupons    Coupons  @relation(fields: [CouponId], references: [Id], onUpdate: NoAction, map: "FK_CouponGiftPackageCoupon")
-  Packages   Packages @relation(fields: [PackagesId], references: [Id], onUpdate: NoAction, map: "FK_CouponGiftPackagePackages")
-
-  @@index([CouponId], map: "IX_FK_CouponGiftPackageCoupon")
-  @@index([PackagesId], map: "IX_FK_CouponGiftPackagePackages")
-}
-
-model CouponPackageExtras {
-  Id                       BigInt  @id(map: "PK_CouponPackageExtras") @default(autoincrement())
-  CompetitionAnalysisCount Int
-  ErpCount                 Int
-  ProductLimit             Int
-  SubUserCount             Int
-  StoreCount               Int
-  CouponId                 BigInt
-  Coupons                  Coupons @relation(fields: [CouponId], references: [Id], onUpdate: NoAction, map: "FK_CouponPackageExtraCoupon")
-
-  @@index([CouponId], map: "IX_FK_CouponPackageExtraCoupon")
-}
-
-model Coupons {
-  Id                        BigInt                      @id(map: "PK_Coupons") @default(autoincrement())
-  Name                      String                      @db.NVarChar(100)
-  Code                      String                      @db.NVarChar(25)
-  Limit                     Int
-  StartDate                 DateTime                    @db.DateTime
-  EndDate                   DateTime?                   @db.DateTime
-  NewCustomerOnly           Boolean
-  CouponAllowedPackages     CouponAllowedPackages[]
-  CouponCustomerAuthActions CouponCustomerAuthActions[]
-  CouponGiftPackages        CouponGiftPackages[]
-  CouponPackageExtras       CouponPackageExtras[]
-  CouponUsages              CouponUsages[]
-}
-
-model CouponUsages {
-  Id                     BigInt                @id(map: "PK_CouponUsages") @default(autoincrement())
-  CustomerId             BigInt
-  CustomerSubscriptionId BigInt
-  Date                   DateTime              @db.DateTime
-  CouponId               BigInt
-  Coupons                Coupons               @relation(fields: [CouponId], references: [Id], onUpdate: NoAction, map: "FK_CouponUsageCoupon")
-  Customers              Customers             @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CouponUsageCustomer")
-  CustomerSubscriptions  CustomerSubscriptions @relation(fields: [CustomerSubscriptionId], references: [Id], onUpdate: NoAction, map: "FK_CouponUsageCustomerSubscription")
-
-  @@index([CouponId], map: "IX_FK_CouponUsageCoupon")
-  @@index([CustomerId], map: "IX_FK_CouponUsageCustomer")
-  @@index([CustomerSubscriptionId], map: "IX_FK_CouponUsageCustomerSubscription")
 }
 
 model Currencies {
@@ -344,9 +43,6 @@ model Currencies {
   OrderLines_OrderLines_ShipmentCurrencyIdToCurrencies                                                          OrderLines[]                           @relation("OrderLines_ShipmentCurrencyIdToCurrencies")
   OrderLines_OrderLines_ProductCurrencyIdToCurrencies                                                           OrderLines[]                           @relation("OrderLines_ProductCurrencyIdToCurrencies")
   OrderServiceItems                                                                                             OrderServiceItems[]
-  Products_Products_CurrencyIdToCurrencies                                                                      Products[]                             @relation("Products_CurrencyIdToCurrencies")
-  Products_Products_MinSalePriceCurrencyIdToCurrencies                                                          Products[]                             @relation("Products_MinSalePriceCurrencyIdToCurrencies")
-  Shipments                                                                                                     Shipments[]
 }
 
 model CurrencyExchanges {
@@ -356,25 +52,6 @@ model CurrencyExchanges {
   CurrencyId Int
   LastUpdate DateTime   @db.DateTime
   Currencies Currencies @relation(fields: [CurrencyId], references: [Id], onUpdate: NoAction, map: "FK_CurrencyCurrencyExchange")
-}
-
-model CustomerAuthActionForCustomers {
-  Id                      BigInt                 @id(map: "PK_CustomerAuthActionForCustomers") @default(autoincrement())
-  CustomerId              BigInt
-  AuthActionForCustomerId BigInt
-  AuthActionForCustomers  AuthActionForCustomers @relation(fields: [AuthActionForCustomerId], references: [Id], onUpdate: NoAction, map: "FK_AuthActionForCustomerCustomerAuthActionForCustomer")
-  Customers               Customers              @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerCustomerAuthActionForCustomer")
-
-  @@index([AuthActionForCustomerId], map: "IX_FK_AuthActionForCustomerCustomerAuthActionForCustomer")
-  @@index([CustomerId], map: "IX_FK_CustomerCustomerAuthActionForCustomer")
-}
-
-model CustomerAuthActionForPackages {
-  Id                      BigInt                 @id(map: "PK_CustomerAuthActionForPackages") @default(autoincrement())
-  PackagesId              BigInt
-  AuthActionForCustomerId BigInt
-  AuthActionForCustomers  AuthActionForCustomers @relation(fields: [AuthActionForCustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerAuthActionForPackageAuthActionForCustomer")
-  Packages                Packages               @relation(fields: [PackagesId], references: [Id], onUpdate: NoAction, map: "FK_CustomerAuthActionForPackagePackages")
 }
 
 model CustomerBrands {
@@ -442,7 +119,6 @@ model CustomerECommerceDefaultSettings {
   Entegre_Allegro_CustomerDefaultSettingId BigInt?
   Entegre_N11Pro_CustomerDefaultSettingId  BigInt?
   Customers                                Customers                                @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerCustomerECommerceDefaultSetting")
-  CustomerErps                             CustomerErps?                            @relation(fields: [CustomerErpId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CustomerECommerceDefaultSettingCustomerErp")
   CustomerECommerceKeys                    CustomerECommerceKeys                    @relation(fields: [CustomerECommerceKeyId], references: [Id], onUpdate: NoAction, map: "FK_CustomerECommerceKeyCustomerECommerceDefaultSetting")
   Entegre_AE_CustomerDefaultSettings       Entegre_AE_CustomerDefaultSettings?      @relation(fields: [Entegre_AE_CustomerDefaultSettingId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Entegre_AE_CustomerDefaultSettingCustomerECommerceDefaultSetting")
   Entegre_Allegro_CustomerDefaultSettings  Entegre_Allegro_CustomerDefaultSettings? @relation(fields: [Entegre_Allegro_CustomerDefaultSettingId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Entegre_Allegro_CustomerDefaultSettingCustomerECommerceDefaultSetting")
@@ -502,7 +178,6 @@ model CustomerECommerceKeys {
   AutoAssignOrderPackageUserId                                           BigInt?
   ECommercePriceFromCostPriceFormula                                     String?                                @db.NVarChar(200)
   UseVirtualStockAmount                                                  Boolean                                @default(false, map: "DF__CustomerE__UseVi__269AB60B")
-  Claims                                                                 Claims[]
   CustomerCreditTransactions                                             CustomerCreditTransactions[]
   CustomerDefaultCargoSettings                                           CustomerDefaultCargoSettings[]
   CustomerECommerceDefaultSettings                                       CustomerECommerceDefaultSettings[]
@@ -557,20 +232,6 @@ model CustomerECommerceProductInsertLogs {
   @@index([CustomerId, InsertDate], map: "IX_CustomerECommerceProductInsertLogs_CustomerId_InsertDate")
 }
 
-model CustomerErps {
-  Id                               BigInt                             @id(map: "PK_CustomerErps") @default(autoincrement())
-  Name                             String                             @db.NVarChar(50)
-  IsDefault                        Boolean
-  UseForStockUpdate                Boolean
-  CustomerId                       BigInt
-  Code                             String?                            @db.NVarChar(100)
-  ConnectedCustomers               ConnectedCustomers[]
-  CustomerECommerceDefaultSettings CustomerECommerceDefaultSettings[]
-  Customers                        Customers                          @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerErpCustomer")
-
-  @@index([CustomerId], map: "IX_FK_CustomerErpCustomer")
-}
-
 model CustomerInvoiceInformations {
   CustomerId             BigInt
   Name                   String                @db.NVarChar(250)
@@ -588,7 +249,6 @@ model CustomerInvoiceInformations {
   IbanNumber             String?               @db.NVarChar(30)
   TaxExemptionCode       String?               @db.NVarChar(5)
   ExportTaxExemptionCode String?               @db.NVarChar(5)
-  Cities                 Cities                @relation(fields: [CityId], references: [Id], onUpdate: NoAction, map: "FK_CityCustomerInvoiceInformation")
   Customers              Customers             @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerCustomerInvoiceInformation")
   CustomerECommerceKeys  CustomerECommerceKeys @relation(fields: [CustomerECommerceKeyId], references: [Id], onUpdate: NoAction, map: "FK_CustomerInvoiceInformationCustomerECommerceKey")
   Districts              Districts             @relation(fields: [DistrictId], references: [Id], onUpdate: NoAction, map: "FK_DistrictCustomerInvoiceInformation")
@@ -605,22 +265,6 @@ model CustomerInvoiceSettings {
   UseStockMultiplierForCargoBarcode Boolean   @default(false, map: "DF__CustomerI__UseSt__297722B6")
   UseBundleProductForInvoice        Boolean   @default(false, map: "DF__CustomerI__UseBu__797DF6D1")
   Customers                         Customers @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerCustomerInvoiceSetting")
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model CustomerNotifications {
-  Id                      BigInt                @default(autoincrement())
-  CustomerId              BigInt
-  NotificationType        Int                   @db.TinyInt
-  RefNo                   String                @db.NVarChar(50)
-  NotificationDescription String                @db.NVarChar(500)
-  NotificationDate        DateTime              @db.DateTime
-  IntegratedECommerceCode String?               @db.NVarChar(10)
-  Customers               Customers             @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerNotificationCustomer")
-  IntegratedECommerces    IntegratedECommerces? @relation(fields: [IntegratedECommerceCode], references: [Code], onDelete: NoAction, onUpdate: NoAction, map: "FK_CustomerNotificationIntegratedECommerce")
-
-  @@index([CustomerId, NotificationDate], map: "IX_CustomerNotifications_CustomerId_NotificationDate")
-  @@ignore
 }
 
 model CustomerNotificationSettings {
@@ -714,7 +358,6 @@ model CustomerRepresentatives {
   PhoneNumber    String?        @db.NVarChar(10)
   CustomerUserId BigInt?
   IsDealer       Boolean        @default(true, map: "DF__CustomerR__IsDea__2A6B46EF")
-  Campaigns      Campaigns[]
   CustomerUsers  CustomerUsers? @relation(fields: [CustomerUserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CustomerRepresentativeCustomerUser")
   Customers      Customers[]
 
@@ -753,14 +396,6 @@ model Customers {
   CountryIso2                                  String                                         @default("TR", map: "DF__Customers__Count__2C538F61") @db.NVarChar(2)
   ReferenceCode                                String                                         @default("newid()", map: "DF__Customers__Refer__2D47B39A") @db.NVarChar(50)
   ReferenceCustomerId                          BigInt?
-  BulkOperations                               BulkOperations[]
-  CampaignCustomers                            CampaignCustomers[]
-  Categories                                   Categories[]
-  Claims                                       Claims[]
-  ConnectedCustomers                           ConnectedCustomers[]
-  ConnectedUsers                               ConnectedUsers[]
-  CouponUsages                                 CouponUsages[]
-  CustomerAuthActionForCustomers               CustomerAuthActionForCustomers[]
   CustomerBrands                               CustomerBrands[]
   CustomerCreditTransactions                   CustomerCreditTransactions[]
   CustomerECommerceDefaultSettings             CustomerECommerceDefaultSettings[]
@@ -768,17 +403,13 @@ model Customers {
   CustomerECommerceKeys                        CustomerECommerceKeys[]
   CustomerECommerceMessageTemplates            CustomerECommerceMessageTemplates[]
   CustomerECommerceProductInsertLogs           CustomerECommerceProductInsertLogs[]
-  CustomerErps                                 CustomerErps[]
   CustomerInvoiceInformations                  CustomerInvoiceInformations[]
   CustomerInvoiceSettings                      CustomerInvoiceSettings?
-  CustomerNotifications                        CustomerNotifications[]                        @ignore
   CustomerNotificationSettings                 CustomerNotificationSettings[]
   CustomerOrderColorTags                       CustomerOrderColorTags[]
   CustomerPosPayments                          CustomerPosPayments[]
   CustomerReports                              CustomerReports[]
   CustomerReportTemplates                      CustomerReportTemplates[]
-  Cities                                       Cities?                                        @relation(fields: [CityId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CityCustomer")
-  Countries                                    Countries                                      @relation(fields: [CountryIso2], references: [Iso2], onUpdate: NoAction, map: "FK_CustomerCountry")
   Customers                                    Customers?                                     @relation("CustomersToCustomers", fields: [ReferenceCustomerId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CustomerCustomer")
   other_Customers                              Customers[]                                    @relation("CustomersToCustomers")
   CustomerRepresentatives                      CustomerRepresentatives?                       @relation(fields: [CustomerRepresentativeId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CustomerRepresentativeCustomer")
@@ -803,7 +434,6 @@ model Customers {
   Entegre_TO_Questions                         Entegre_TO_Questions[]
   Orders                                       Orders[]
   Products                                     Products[]
-  Shipments                                    Shipments[]
   Tags                                         Tags[]
   Variants                                     Variants[]
   VariantValues                                VariantValues[]
@@ -886,11 +516,10 @@ model CustomerSMSTransactions {
 }
 
 model CustomerSubscriptionCustomerAuths {
-  Id                      BigInt                 @id(map: "PK_CustomerSubscriptionCustomerAuths") @default(autoincrement())
+  Id                      BigInt                @id(map: "PK_CustomerSubscriptionCustomerAuths") @default(autoincrement())
   CustomerSubscriptionId  BigInt
   AuthActionForCustomerId BigInt
-  AuthActionForCustomers  AuthActionForCustomers @relation(fields: [AuthActionForCustomerId], references: [Id], onUpdate: NoAction, map: "FK_AuthActionForCustomerCustomerSubscriptionCustomerAuth")
-  CustomerSubscriptions   CustomerSubscriptions  @relation(fields: [CustomerSubscriptionId], references: [Id], onUpdate: NoAction, map: "FK_CustomerSubscriptionCustomerSubscriptionCustomerAuth")
+  CustomerSubscriptions   CustomerSubscriptions @relation(fields: [CustomerSubscriptionId], references: [Id], onUpdate: NoAction, map: "FK_CustomerSubscriptionCustomerSubscriptionCustomerAuth")
 
   @@index([AuthActionForCustomerId], map: "IX_CustomerSubscriptionCustomerAuths_AuthActionForCustomerId")
   @@index([CustomerSubscriptionId], map: "IX_FK_CustomerSubscriptionCustomerSubscriptionCustomerAuth")
@@ -922,11 +551,9 @@ model CustomerSubscriptions {
   ContractApprovedDate                DateTime?                           @db.DateTime
   ContractApprovedIpAddress           String?                             @db.NVarChar(50)
   ContractUserAgent                   String?
-  CouponUsages                        CouponUsages[]
   CustomerPosPayments                 CustomerPosPayments[]
   CustomerSubscriptionCustomerAuths   CustomerSubscriptionCustomerAuths[]
   Customers                           Customers                           @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerCustomerSubscription")
-  Packages                            Packages?                           @relation(fields: [PackagesId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CustomerSubscriptionPackages")
 
   @@index([CustomerId, StartDate, EndDate], map: "IX_CustomerSubscriptions_CustomerId_StartDate_EndDate")
   @@index([PackageName, StartDate], map: "IX_CustomerSubscriptions_PackageName_StartDate")
@@ -939,22 +566,20 @@ model CustomerSubscriptions {
 }
 
 model CustomerUserAuthActionForUsers {
-  Id                  BigInt             @id(map: "PK_CustomerUserAuthActionForUsers") @default(autoincrement())
+  Id                  BigInt        @id(map: "PK_CustomerUserAuthActionForUsers") @default(autoincrement())
   CustomerUserId      BigInt
   AuthActionForUserId BigInt
-  AuthActionForUsers  AuthActionForUsers @relation(fields: [AuthActionForUserId], references: [Id], onUpdate: NoAction, map: "FK_AuthActionForUserCustomerUserAuthActionForUser")
-  CustomerUsers       CustomerUsers      @relation(fields: [CustomerUserId], references: [Id], onUpdate: NoAction, map: "FK_CustomerUserCustomerUserAuthActionForUser")
+  CustomerUsers       CustomerUsers @relation(fields: [CustomerUserId], references: [Id], onUpdate: NoAction, map: "FK_CustomerUserCustomerUserAuthActionForUser")
 
   @@index([CustomerUserId], map: "IX_CustomerUserAuthActionForUsers_CustomerUserId")
 }
 
 model CustomerUserNotificationTypes {
-  Id                 Int               @id(map: "PK_CustomerUserNotificationTypes") @default(autoincrement())
+  Id                 Int           @id(map: "PK_CustomerUserNotificationTypes") @default(autoincrement())
   Enabled            Boolean
   NotificationTypeId Int
   CustomerUserId     BigInt
-  CustomerUsers      CustomerUsers     @relation(fields: [CustomerUserId], references: [Id], onUpdate: NoAction, map: "FK_CustomerUserCustomerUserNotificationType")
-  NotificationTypes  NotificationTypes @relation(fields: [NotificationTypeId], references: [Id], onUpdate: NoAction, map: "FK_NotificationTypeCustomerUserNotificationType")
+  CustomerUsers      CustomerUsers @relation(fields: [CustomerUserId], references: [Id], onUpdate: NoAction, map: "FK_CustomerUserCustomerUserNotificationType")
 
   @@index([CustomerUserId], map: "IX_FK_CustomerUserCustomerUserNotificationType")
 }
@@ -993,7 +618,6 @@ model Districts {
   CityId                      BigInt
   CustomerInvoiceInformations CustomerInvoiceInformations[]
   Customers                   Customers[]
-  Cities                      Cities                        @relation(fields: [CityId], references: [Id], onUpdate: NoAction, map: "FK_CityDistrict")
 
   @@index([CityId], map: "IX_FK_CityDistrict")
 }
@@ -1242,7 +866,6 @@ model Entegre_AMZ_CustomerDefaultSettings {
   ShippingDays                     Int?                               @db.TinyInt
   ShipmentCompanyId                BigInt?
   CustomerECommerceDefaultSettings CustomerECommerceDefaultSettings[]
-  ShipmentCompanies                ShipmentCompanies?                 @relation(fields: [ShipmentCompanyId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ShipmentCompanyEntegre_AMZ_CustomerDefaultSetting")
 }
 
 model Entegre_BD_Attributes {
@@ -2132,14 +1755,6 @@ model Entegre_MoNi_AttributeValues {
   Entegre_MoNi_AttributeAttributeValues Entegre_MoNi_AttributeAttributeValues[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model Entegre_MoNi_Brands {
-  Id   BigInt
-  Name String @db.NVarChar(150)
-
-  @@ignore
-}
-
 model Entegre_MoNi_Categories {
   Id                                    BigInt                                  @id(map: "PK_Entegre_MoNi_Categories")
   Name                                  String                                  @db.NVarChar(100)
@@ -2655,7 +2270,6 @@ model Entegre_ProductECommerce_ShipmentCompanies {
   Entegre_ProductECommerceId BigInt
   SortOrder                  Int                       @default(1, map: "DF__Entegre_P__SortO__3E723F9C") @db.TinyInt
   Entegre_ProductECommerces  Entegre_ProductECommerces @relation(fields: [Entegre_ProductECommerceId], references: [Id], onUpdate: NoAction, map: "FK_Entegre_ProductECommerceEntegre_ProductECommerce_ShipmentCompany")
-  ShipmentCompanies          ShipmentCompanies         @relation(fields: [ShipmentCompanyId], references: [Id], onUpdate: NoAction, map: "FK_ShipmentCompanyEntegre_ProductECommerce_ShipmentCompany")
 
   @@index([Entegre_ProductECommerceId], map: "IX_FK_Entegre_ProductECommerceEntegre_ProductECommerce_ShipmentCompany")
 }
@@ -2750,7 +2364,6 @@ model Entegre_ProductECommerces {
   SourceCurrencyId                                                  Int?
   SourcePriceInclusiveVat                                           Decimal?                                        @db.Decimal(20, 8)
   PriceFormula                                                      String?                                         @db.NVarChar(200)
-  BulkOperationLines                                                BulkOperationLines[]
   Entegre_N11_Questions                                             Entegre_N11_Questions[]
   Entegre_ProductECommerce_Attributes                               Entegre_ProductECommerce_Attributes[]
   Entegre_ProductECommerce_CompetitionAnalyses                      Entegre_ProductECommerce_CompetitionAnalyses[]
@@ -2804,7 +2417,6 @@ model Entegre_ShipmentCompanies {
   ShipmentCompanyId          BigInt
   EntegreShipmentCompanyId   String?              @db.NVarChar(30)
   IntegratedECommerces       IntegratedECommerces @relation(fields: [IntegratedECommerceCode], references: [Code], onUpdate: NoAction, map: "FK_IntegratedECommerceEntegre_ShipmentCompany")
-  ShipmentCompanies          ShipmentCompanies    @relation(fields: [ShipmentCompanyId], references: [Id], onUpdate: NoAction, map: "FK_ShipmentCompanyEntegre_ShipmentCompany")
 
   @@index([IntegratedECommerceCode], map: "IX_FK_IntegratedECommerceEntegre_ShipmentCompany")
 }
@@ -3091,7 +2703,6 @@ model IntegratedECommerces {
   CustomerCreditTransactions                                             CustomerCreditTransactions[]
   CustomerECommerceDefaultSettings                                       CustomerECommerceDefaultSettings[]
   CustomerECommerceKeys                                                  CustomerECommerceKeys[]
-  CustomerNotifications                                                  CustomerNotifications[]              @ignore
   ECommerceProductBatches                                                ECommerceProductBatches[]
   ECommerceSynchronizations                                              ECommerceSynchronizations[]
   eInvoices                                                              eInvoices[]
@@ -3103,65 +2714,6 @@ model IntegratedECommerces {
   Orders_Orders_IntegratedCargoECommerceCodeToIntegratedECommerces       Orders[]                             @relation("Orders_IntegratedCargoECommerceCodeToIntegratedECommerces")
   Orders_Orders_IntegratedECommerceCodeToIntegratedECommerces            Orders[]                             @relation("Orders_IntegratedECommerceCodeToIntegratedECommerces")
   Orders_Orders_IntegratedFulFillmentECommerceCodeToIntegratedECommerces Orders[]                             @relation("Orders_IntegratedFulFillmentECommerceCodeToIntegratedECommerces")
-}
-
-model InvoiceAddresses {
-  Id                    BigInt    @id(map: "PK_InvoiceAddresses") @default(autoincrement())
-  CustomerName          String    @db.NVarChar(300)
-  AdressLine            String    @db.NVarChar(800)
-  City                  String    @db.NVarChar(100)
-  District              String?   @db.NVarChar(100)
-  Neighborhood          String?   @db.NVarChar(200)
-  ZipCode               String?   @db.NVarChar(15)
-  CustomerTaxNumber     String?   @db.NVarChar(20)
-  CustomerTaxOffice     String?   @db.NVarChar(50)
-  CustomerCitizenShipId String?   @db.NVarChar(20)
-  CustomerGsm           String?   @db.NVarChar(15)
-  CustomerPhone         String?   @db.NVarChar(15)
-  CountryIso2           String    @default("TR", map: "DF__InvoiceAd__Count__442B18F2") @db.NVarChar(2)
-  Countries             Countries @relation(fields: [CountryIso2], references: [Iso2], onUpdate: NoAction, map: "FK_InvoiceAddressCountry")
-  Orders                Orders[]
-}
-
-model Languages {
-  Id                                BigInt                              @id(map: "PK_Languages") @default(autoincrement())
-  Name                              String                              @db.NVarChar(100)
-  ShortName                         String                              @db.NVarChar(10)
-  Code                              String                              @db.NVarChar(10)
-  AuthActionForCustomerDescriptions AuthActionForCustomerDescriptions[]
-  AuthActionForUserDescriptions     AuthActionForUserDescriptions[]
-  NotificationTypeDescriptions      NotificationTypeDescriptions[]
-  Users                             Users[]
-}
-
-model MainAnnouncements {
-  Id               BigInt   @id(map: "PK_MainAnnouncements") @default(autoincrement())
-  CreatedAt        DateTime @db.DateTime
-  Title            String   @db.NVarChar(100)
-  Description      String   @db.NVarChar(Max)
-  ViewType         Int      @db.TinyInt
-  AnnouncementType Int      @db.TinyInt
-
-  @@index([CreatedAt], map: "IX_MainAnnouncements_CreatedAt")
-}
-
-model NotificationTypeDescriptions {
-  Id                 BigInt            @id(map: "PK_NotificationTypeDescriptions") @default(autoincrement())
-  NotificationTypeId Int
-  LanguageId         BigInt
-  Description        String            @db.NVarChar(500)
-  Languages          Languages         @relation(fields: [LanguageId], references: [Id], onUpdate: NoAction, map: "FK_NotificationTypeDescriptionLanguage")
-  NotificationTypes  NotificationTypes @relation(fields: [NotificationTypeId], references: [Id], onUpdate: NoAction, map: "FK_NotificationTypeDescriptionNotificationType")
-
-  @@index([LanguageId], map: "IX_FK_NotificationTypeDescriptionLanguage")
-  @@index([NotificationTypeId], map: "IX_FK_NotificationTypeDescriptionNotificationType")
-}
-
-model NotificationTypes {
-  Id                            Int                             @id(map: "PK_NotificationTypes") @default(autoincrement())
-  Code                          String                          @db.NVarChar(50)
-  CustomerUserNotificationTypes CustomerUserNotificationTypes[]
-  NotificationTypeDescriptions  NotificationTypeDescriptions[]
 }
 
 model OrderLineCustomTextOptions {
@@ -3254,7 +2806,6 @@ model OrderLines {
   UnitTypes                                            UnitTypes                    @relation(fields: [UnitTypeId], references: [Id], onUpdate: NoAction, map: "FK_UnitTypeOrderLine")
   VatRates                                             VatRates                     @relation(fields: [VatRateId], references: [Id], onUpdate: NoAction, map: "FK_VatRateOrderLine")
   OrderLineVariants                                    OrderLineVariants[]
-  ShipmentLines                                        ShipmentLines[]
 
   @@index([OrderId(sort: Desc)], map: "IX_FK_OrderOrderLine")
   @@index([EntegreProductId, ProductStockCode], map: "IX_OrderLines_EntegreProductId_ProductStockCode")
@@ -3341,13 +2892,10 @@ model Orders {
   IntegratedECommerces_Orders_IntegratedCargoECommerceCodeToIntegratedECommerces        IntegratedECommerces?        @relation("Orders_IntegratedCargoECommerceCodeToIntegratedECommerces", fields: [IntegratedCargoECommerceCode], references: [Code], onDelete: NoAction, onUpdate: NoAction, map: "FK_IntegratedECommerceCargoOrder")
   IntegratedECommerces_Orders_IntegratedECommerceCodeToIntegratedECommerces             IntegratedECommerces         @relation("Orders_IntegratedECommerceCodeToIntegratedECommerces", fields: [IntegratedECommerceCode], references: [Code], onUpdate: NoAction, map: "FK_IntegratedECommerceOrder")
   IntegratedECommerces_Orders_IntegratedFulFillmentECommerceCodeToIntegratedECommerces  IntegratedECommerces?        @relation("Orders_IntegratedFulFillmentECommerceCodeToIntegratedECommerces", fields: [IntegratedFulFillmentECommerceCode], references: [Code], onDelete: NoAction, onUpdate: NoAction, map: "FK_IntegratedFulFillmentECommerce")
-  InvoiceAddresses                                                                      InvoiceAddresses?            @relation(fields: [InvoiceAddressId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_InvoiceAddressOrder")
   eInvoices                                                                             eInvoices?                   @relation(fields: [eInvoiceId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_OrdereInvoice")
   Users_Orders_AssignedUserIdToUsers                                                    Users?                       @relation("Orders_AssignedUserIdToUsers", fields: [AssignedUserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_OrderUser1")
   Users_Orders_PackedUserIdToUsers                                                      Users?                       @relation("Orders_PackedUserIdToUsers", fields: [PackedUserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_OrderUser2")
-  ShippingAddresses                                                                     ShippingAddresses            @relation(fields: [ShippingAddressId], references: [Id], onUpdate: NoAction, map: "FK_ShippingAddressOrder")
   OrderServiceItems                                                                     OrderServiceItems[]
-  ShipmentOrders                                                                        ShipmentOrders[]
 
   @@index([CustomerECommerceAccountingKeyId], map: "IX_FK_CustomerECommerceAccountingKeyId")
   @@index([CustomerECommerceCargoKeyId], map: "IX_FK_CustomerECommerceCargoKeyOrder")
@@ -3392,40 +2940,6 @@ model OrderServiceItems {
   @@index([VatRateId, OrderId], map: "IX_OrderServiceItems_VatRateId_OrderId")
 }
 
-model PackageExtras {
-  Id                      BigInt                 @id(map: "PK_PackageExtras") @default(autoincrement())
-  Price                   Decimal                @db.Decimal(12, 2)
-  PackagesId              BigInt
-  AuthActionForCustomerId BigInt
-  AuthActionForCustomers  AuthActionForCustomers @relation(fields: [AuthActionForCustomerId], references: [Id], onUpdate: NoAction, map: "FK_AuthActionForCustomerPackageExtras")
-  Packages                Packages               @relation(fields: [PackagesId], references: [Id], onUpdate: NoAction, map: "FK_PackagesPackageExtras")
-}
-
-model Packages {
-  Id                              BigInt                          @id(map: "PK_Packages") @default(autoincrement())
-  Name                            String                          @db.NVarChar(100)
-  Price                           Decimal                         @db.Decimal(12, 2)
-  DefaultSubUserCount             Int                             @db.SmallInt
-  DefaultStoreCount               Int                             @db.SmallInt
-  SubscriptionType                Int                             @db.TinyInt
-  DailyNewECommerceProductLimit   Int?
-  DefaultCompetitionAnalysisCount Int                             @default(0, map: "DF__Packages__Defaul__5090EFD7")
-  MinimumMonthlyCreditUsageAmount Decimal?                        @db.Decimal(12, 2)
-  StartDate                       DateTime                        @default(now(), map: "DF__Packages__StartD__51851410") @db.DateTime
-  EndDate                         DateTime?                       @db.DateTime
-  DefaultErpCount                 Int                             @default(0, map: "DF__Packages__Defaul__52793849") @db.SmallInt
-  MaximumPurchasableQuantity      Int?                            @db.SmallInt
-  IsPrivate                       Boolean                         @default(false, map: "DF__Packages__IsPriv__536D5C82")
-  MaxProductLimit                 Int?
-  MaxOrderLimit                   Int?
-  CampaignCustomers               CampaignCustomers[]
-  CouponAllowedPackages           CouponAllowedPackages[]
-  CouponGiftPackages              CouponGiftPackages[]
-  CustomerAuthActionForPackages   CustomerAuthActionForPackages[]
-  CustomerSubscriptions           CustomerSubscriptions[]
-  PackageExtras                   PackageExtras[]
-}
-
 model Point_Cities {
   Id              BigInt            @id(map: "PK_Point_Cities")
   Name            String            @db.NVarChar(50)
@@ -3467,77 +2981,55 @@ model ProductImages {
   @@index([ProductId], map: "IX_ProductImages_ProductId")
 }
 
-model ProductPhantomLines {
-  Id                                                      BigInt                @id(map: "PK_ProductPhantomLines") @default(autoincrement())
-  QuantityUsed                                            Decimal               @db.Decimal(16, 8)
-  PricePercentage                                         Decimal               @db.Decimal(4, 1)
-  ProductId                                               BigInt
-  PhantomProductId                                        BigInt
-  PhantomProductVariantGroupId                            BigInt?
-  Products_ProductPhantomLines_ProductIdToProducts        Products              @relation("ProductPhantomLines_ProductIdToProducts", fields: [ProductId], references: [Id], onUpdate: NoAction, map: "FK_ProductPhantomLineProduct")
-  Products_ProductPhantomLines_PhantomProductIdToProducts Products              @relation("ProductPhantomLines_PhantomProductIdToProducts", fields: [PhantomProductId], references: [Id], onUpdate: NoAction, map: "FK_ProductPhantomLineProduct1")
-  ProductVariantGroups                                    ProductVariantGroups? @relation(fields: [PhantomProductVariantGroupId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ProductPhantomLineProductVariantGroup")
-
-  @@index([ProductId], map: "IX_FK_ProductPhantomLineProduct")
-  @@index([PhantomProductId], map: "IX_FK_ProductPhantomLineProduct1")
-  @@index([PhantomProductVariantGroupId], map: "IX_FK_ProductPhantomLineProductVariantGroup")
-}
-
 model Products {
-  Id                                                                 BigInt                               @id(map: "PK_Products") @default(autoincrement())
-  PublicId                                                           String                               @unique @default(nanoid())
-  Code                                                               String?                              @db.NVarChar(50)
-  Name                                                               String                               @db.NVarChar(150)
-  SubHeader                                                          String?                              @db.NVarChar(100)
-  Description                                                        String?                              @db.NVarChar(Max)
-  Width                                                              Decimal?                             @db.Decimal(18, 7)
-  Length                                                             Decimal?                             @db.Decimal(18, 7)
-  Height                                                             Decimal?                             @db.Decimal(18, 7)
-  Weight                                                             Decimal?                             @db.Decimal(18, 7)
-  VolumetricWeight                                                   Decimal?                             @db.Decimal(18, 7)
-  Gtin                                                               String?                              @db.NVarChar(15)
-  Mpn                                                                String?                              @db.NVarChar(50)
-  CustomerId                                                         BigInt
-  CategoryId                                                         BigInt?
-  UnitTypeId                                                         Int
-  VatRateId                                                          Int?
-  CurrencyId                                                         Int
-  PriceExclusiveVat                                                  Decimal                              @db.Decimal(20, 8)
-  StockAmount                                                        Decimal?                             @db.Decimal(20, 8)
-  ProductStatus                                                      Int                                  @db.TinyInt
-  ProductType                                                        Int                                  @db.TinyInt
-  CustomerBrandId                                                    BigInt?
-  InvoiceName                                                        String?                              @db.NVarChar(150)
-  Rack                                                               String?                              @db.NVarChar(50)
-  WarrantyMonths                                                     Int?                                 @db.TinyInt
-  Tags                                                               String?                              @db.NVarChar(200)
-  CreatedOn                                                          DateTime                             @default(now(), map: "DF__Products__Create__5555A4F4") @db.DateTime
-  CriticalInventoryAmount                                            Decimal?                             @db.Decimal(20, 8)
-  SoldCount                                                          Int                                  @default(0, map: "DF__Products__SoldCo__5649C92D")
-  MinSalePrice                                                       Decimal?                             @db.Decimal(14, 2)
-  MinSalePriceCurrencyId                                             Int?
-  VirtualStockAmount                                                 Decimal?                             @db.Decimal(20, 8)
-  Gtip                                                               String?                              @db.NVarChar(50)
-  BulkOperationLines                                                 BulkOperationLines[]
-  BulkOperations                                                     BulkOperations[]
-  Entegre_ProductECommerce_Histories                                 Entegre_ProductECommerce_Histories[]
-  Entegre_ProductECommerces                                          Entegre_ProductECommerces[]
-  OrderLinePhantomLines                                              OrderLinePhantomLines[]
-  OrderLines                                                         OrderLines[]
-  ProductDescriptions                                                ProductDescriptions[]
-  ProductImages                                                      ProductImages[]
-  ProductPhantomLines_ProductPhantomLines_ProductIdToProducts        ProductPhantomLines[]                @relation("ProductPhantomLines_ProductIdToProducts")
-  ProductPhantomLines_ProductPhantomLines_PhantomProductIdToProducts ProductPhantomLines[]                @relation("ProductPhantomLines_PhantomProductIdToProducts")
-  Categories                                                         Categories?                          @relation(fields: [CategoryId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CategoryProduct")
-  Currencies_Products_CurrencyIdToCurrencies                         Currencies                           @relation("Products_CurrencyIdToCurrencies", fields: [CurrencyId], references: [Id], onUpdate: NoAction, map: "FK_CurrencyProduct")
-  Customers                                                          Customers                            @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerProduct")
-  Currencies_Products_MinSalePriceCurrencyIdToCurrencies             Currencies?                          @relation("Products_MinSalePriceCurrencyIdToCurrencies", fields: [MinSalePriceCurrencyId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ProductCurrency1")
-  UnitTypes                                                          UnitTypes                            @relation(fields: [UnitTypeId], references: [Id], onUpdate: NoAction, map: "FK_UnitTypeProduct")
-  VatRates                                                           VatRates?                            @relation(fields: [VatRateId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_VatRateProduct")
-  ProductStockJobs                                                   ProductStockJobs[]
-  ProductTags                                                        ProductTags[]
-  ProductVariantGroupPhantomLines                                    ProductVariantGroupPhantomLines[]
-  ProductVariantGroups                                               ProductVariantGroups[]
+  Id                                         BigInt                               @id(map: "PK_Products") @default(autoincrement())
+  PublicId                                   String                               @unique @default(nanoid())
+  Code                                       String?                              @db.NVarChar(50)
+  Name                                       String                               @db.NVarChar(150)
+  SubHeader                                  String?                              @db.NVarChar(100)
+  Description                                String?                              @db.NVarChar(Max)
+  Width                                      Decimal?                             @db.Decimal(18, 7)
+  Length                                     Decimal?                             @db.Decimal(18, 7)
+  Height                                     Decimal?                             @db.Decimal(18, 7)
+  Weight                                     Decimal?                             @db.Decimal(18, 7)
+  VolumetricWeight                           Decimal?                             @db.Decimal(18, 7)
+  Gtin                                       String?                              @db.NVarChar(15)
+  Mpn                                        String?                              @db.NVarChar(50)
+  CustomerId                                 BigInt
+  CategoryId                                 BigInt?
+  UnitTypeId                                 Int
+  VatRateId                                  Int?
+  CurrencyId                                 Int
+  PriceExclusiveVat                          Decimal                              @db.Decimal(20, 8)
+  StockAmount                                Decimal?                             @db.Decimal(20, 8)
+  ProductStatus                              Int                                  @db.TinyInt
+  ProductType                                Int                                  @db.TinyInt
+  CustomerBrandId                            BigInt?
+  InvoiceName                                String?                              @db.NVarChar(150)
+  Rack                                       String?                              @db.NVarChar(50)
+  WarrantyMonths                             Int?                                 @db.TinyInt
+  Tags                                       String?                              @db.NVarChar(200)
+  CreatedOn                                  DateTime                             @default(now(), map: "DF__Products__Create__5555A4F4") @db.DateTime
+  CriticalInventoryAmount                    Decimal?                             @db.Decimal(20, 8)
+  SoldCount                                  Int                                  @default(0, map: "DF__Products__SoldCo__5649C92D")
+  MinSalePrice                               Decimal?                             @db.Decimal(14, 2)
+  MinSalePriceCurrencyId                     Int?
+  VirtualStockAmount                         Decimal?                             @db.Decimal(20, 8)
+  Gtip                                       String?                              @db.NVarChar(50)
+  Entegre_ProductECommerce_Histories         Entegre_ProductECommerce_Histories[]
+  Entegre_ProductECommerces                  Entegre_ProductECommerces[]
+  OrderLinePhantomLines                      OrderLinePhantomLines[]
+  OrderLines                                 OrderLines[]
+  ProductDescriptions                        ProductDescriptions[]
+  ProductImages                              ProductImages[]
+  Categories                                 Categories?                          @relation(fields: [CategoryId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_CategoryProduct")
+  Customers                                  Customers                            @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerProduct")
+  UnitTypes                                  UnitTypes                            @relation(fields: [UnitTypeId], references: [Id], onUpdate: NoAction, map: "FK_UnitTypeProduct")
+  VatRates                                   VatRates?                            @relation(fields: [VatRateId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_VatRateProduct")
+  ProductStockJobs                           ProductStockJobs[]
+  ProductTags                                ProductTags[]
+  ProductVariantGroupPhantomLines            ProductVariantGroupPhantomLines[]
+  ProductVariantGroups                       ProductVariantGroups[]
 
   @@index([CustomerId], map: "IX_FK_CustomerProduct")
   @@index([CategoryId], map: "IX_Products_CategoryId")
@@ -3609,7 +3101,6 @@ model ProductVariantGroups {
   Entegre_ProductECommerce_Variants                                                                                  Entegre_ProductECommerce_Variants[]
   OrderLinePhantomLines                                                                                              OrderLinePhantomLines[]
   OrderLines                                                                                                         OrderLines[]
-  ProductPhantomLines                                                                                                ProductPhantomLines[]
   ProductVariantGroupImages                                                                                          ProductVariantGroupImages[]
   ProductVariantGroupPhantomLines_ProductVariantGroupPhantomLines_ProductVariantGroupIdToProductVariantGroups        ProductVariantGroupPhantomLines[]   @relation("ProductVariantGroupPhantomLines_ProductVariantGroupIdToProductVariantGroups")
   ProductVariantGroupPhantomLines_ProductVariantGroupPhantomLines_PhantomProductVariantGroupIdToProductVariantGroups ProductVariantGroupPhantomLines[]   @relation("ProductVariantGroupPhantomLines_PhantomProductVariantGroupIdToProductVariantGroups")
@@ -3637,111 +3128,6 @@ model ProductVariants {
   @@index([VariantValueId], map: "IX_ProductVariants_VariantValueId")
 }
 
-model SendeoCities {
-  Id              BigInt            @id(map: "PK_SendeoCities")
-  Name            String            @db.NVarChar(100)
-  SendeoDistricts SendeoDistricts[]
-}
-
-model SendeoDistricts {
-  Id           BigInt        @id(map: "PK_SendeoDistricts")
-  Name         String        @db.NVarChar(100)
-  SendeoCityId BigInt?
-  SendeoCities SendeoCities? @relation(fields: [SendeoCityId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "FK_SendeoCitySendeoDistrict")
-
-  @@index([SendeoCityId], map: "IX_FK_SendeoCitySendeoDistrict")
-}
-
-model ShipmentCompanies {
-  Id                                         BigInt                                       @id(map: "PK_ShipmentCompanies") @default(autoincrement())
-  Name                                       String                                       @db.NVarChar(100)
-  TrackingUrlTemplate                        String?                                      @db.NVarChar(250)
-  CompanyName                                String?                                      @db.NVarChar(100)
-  TaxOffice                                  String?                                      @db.NVarChar(50)
-  TaxNumber                                  String?                                      @db.NVarChar(50)
-  Entegre_AMZ_CustomerDefaultSettings        Entegre_AMZ_CustomerDefaultSettings[]
-  Entegre_ProductECommerce_ShipmentCompanies Entegre_ProductECommerce_ShipmentCompanies[]
-  Entegre_ShipmentCompanies                  Entegre_ShipmentCompanies[]
-  Shipments                                  Shipments[]
-}
-
-model ShipmentLines {
-  Id          BigInt     @id(map: "PK_ShipmentLines") @default(autoincrement())
-  Quantity    Decimal    @db.Decimal(20, 8)
-  UnitTypeId  Int
-  ShipmentId  BigInt
-  OrderLineId BigInt
-  OrderLines  OrderLines @relation(fields: [OrderLineId], references: [Id], onUpdate: NoAction, map: "FK_OrderLineShipmentLine")
-  Shipments   Shipments  @relation(fields: [ShipmentId], references: [Id], onUpdate: NoAction, map: "FK_ShipmentShipmentLine")
-  UnitTypes   UnitTypes  @relation(fields: [UnitTypeId], references: [Id], onUpdate: NoAction, map: "FK_UnitTypeShipmentLine")
-
-  @@index([OrderLineId], map: "IX_ShipmentLines_OrderLineId")
-  @@index([ShipmentId], map: "IX_ShipmentLines_ShipmentId")
-}
-
-model ShipmentOrders {
-  Id         BigInt    @id(map: "PK_ShipmentOrders") @default(autoincrement())
-  OrderId    BigInt
-  ShipmentId BigInt
-  Orders     Orders    @relation(fields: [OrderId], references: [Id], onUpdate: NoAction, map: "FK_OrderShipmentOrder")
-  Shipments  Shipments @relation(fields: [ShipmentId], references: [Id], onUpdate: NoAction, map: "FK_ShipmentShipmentOrder")
-
-  @@index([OrderId], map: "IX_FK_OrderShipmentOrder")
-  @@index([ShipmentId], map: "IX_ShipmentOrders_ShipmentId")
-}
-
-model Shipments {
-  Id                            BigInt            @id(map: "PK_Shipments") @default(autoincrement())
-  ShipmentCode                  String            @db.NVarChar(50)
-  ShipmentCompanyId             BigInt
-  ShipmentFeeAmount             Decimal           @db.Decimal(12, 2)
-  ShipmentDate                  DateTime          @db.DateTime
-  CurrencyId                    Int
-  ShipmentType                  Int               @db.TinyInt
-  ShippingAddressId             BigInt
-  ShipmentPaymentType           Int               @db.TinyInt
-  CustomerId                    BigInt
-  ShipmentBarCode               String?           @db.NVarChar(120)
-  IsInternational               Boolean           @default(false, map: "DF__Shipments__IsInt__5832119F")
-  InternationalCargoCompanyName String?           @db.NVarChar(50)
-  InternationalCargoCode        String?           @db.NVarChar(50)
-  ShipmentLines                 ShipmentLines[]
-  ShipmentOrders                ShipmentOrders[]
-  Currencies                    Currencies        @relation(fields: [CurrencyId], references: [Id], onUpdate: NoAction, map: "FK_CurrencyShipment")
-  Customers                     Customers         @relation(fields: [CustomerId], references: [Id], onUpdate: NoAction, map: "FK_CustomerShipment")
-  ShipmentCompanies             ShipmentCompanies @relation(fields: [ShipmentCompanyId], references: [Id], onUpdate: NoAction, map: "FK_ShipmentCompanyShipment")
-  ShippingAddresses             ShippingAddresses @relation(fields: [ShippingAddressId], references: [Id], onUpdate: NoAction, map: "FK_ShippingAddressShipment")
-
-  @@index([ShipmentCode], map: "IX_Shipments_ShipmentCode")
-  @@index([ShippingAddressId], map: "IX_Shipments_ShippingAddressId")
-}
-
-model ShippingAddresses {
-  Id                    BigInt      @id(map: "PK_ShippingAddresses") @default(autoincrement())
-  CustomerName          String      @db.NVarChar(300)
-  AdressLine            String      @db.NVarChar(800)
-  City                  String      @db.NVarChar(100)
-  District              String?     @db.NVarChar(100)
-  Neighborhood          String?     @db.NVarChar(200)
-  ZipCode               String?     @db.NVarChar(15)
-  CustomerTaxNumber     String?     @db.NVarChar(20)
-  CustomerTaxOffice     String?     @db.NVarChar(50)
-  CustomerCitizenShipId String?     @db.NVarChar(20)
-  CustomerGsm           String?     @db.NVarChar(15)
-  CustomerPhone         String?     @db.NVarChar(15)
-  CountryIso2           String      @default("TR", map: "DF__ShippingA__Count__592635D8") @db.NVarChar(2)
-  Orders                Orders[]
-  Shipments             Shipments[]
-  Countries             Countries   @relation(fields: [CountryIso2], references: [Iso2], onUpdate: NoAction, map: "FK_ShippingAddressCountry")
-}
-
-model ShortMessagePackages {
-  Id           BigInt  @id(map: "PK_ShortMessagePackages") @default(autoincrement())
-  Name         String  @db.NVarChar(2000)
-  PackagePrice Decimal @db.Decimal(12, 2)
-  Credit       Decimal @db.Decimal(8, 2)
-}
-
 model Tags {
   Id          BigInt        @id(map: "PK_Tags") @default(autoincrement())
   Name        String        @db.NVarChar(50)
@@ -3759,23 +3145,6 @@ model UnitTypes {
   OrderLinePhantomLines OrderLinePhantomLines[]
   OrderLines            OrderLines[]
   Products              Products[]
-  ShipmentLines         ShipmentLines[]
-}
-
-model UpsAreas {
-  Id        BigInt    @id(map: "PK_UpsAreas")
-  Name      String    @db.NVarChar(200)
-  UpsCityId BigInt
-  UpsCities UpsCities @relation(fields: [UpsCityId], references: [Id], onUpdate: NoAction, map: "FK_UpsAreaUpsCity")
-
-  @@index([UpsCityId], map: "IX_FK_UpsAreaUpsCity")
-  @@index([UpsCityId], map: "IX_UpsAreas_UpsCityId")
-}
-
-model UpsCities {
-  Id       BigInt     @id(map: "PK_UpsCities")
-  Name     String     @db.NVarChar(100)
-  UpsAreas UpsAreas[]
 }
 
 model Users {
@@ -3795,12 +3164,10 @@ model Users {
   LanguageId                          BigInt
   RefreshToken                        String?                 @db.NVarChar(500)
   RefreshTokenExpireDate              DateTime?               @db.DateTime
-  ConnectedUsers                      ConnectedUsers[]
   CustomerECommerceKeys               CustomerECommerceKeys[]
   CustomerUsers                       CustomerUsers[]
   Orders_Orders_AssignedUserIdToUsers Orders[]                @relation("Orders_AssignedUserIdToUsers")
   Orders_Orders_PackedUserIdToUsers   Orders[]                @relation("Orders_PackedUserIdToUsers")
-  Languages                           Languages               @relation(fields: [LanguageId], references: [Id], onUpdate: NoAction, map: "FK_LanguageUser")
 
   @@index([LanguageId], map: "IX_FK_LanguageUser")
 }
