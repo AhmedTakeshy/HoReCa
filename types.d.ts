@@ -1,24 +1,23 @@
-type Product ={
+type Product = {
     id: number,
     publicId: string,
     title: string,
-    price: number,
-    thumbnail: string,
-    image: string[],
-    brand: string,
-    rating: number,
     description: string,
-    category: string,
+    price: number,
     stock: number,
-    quantity: number,
+    brand: string,
+    category: string,
+    thumbnail: string,
+    images: string[],
+    quantity?: number,
 }
 
-type Cart ={
-    items:Product[],
+type Cart = {
+    items: Product[],
     totalAmount: number,
     totalQuantity: number,
 }
 
 type ServerResponse<T> =
-    | { data: T; status: "success"; statusCode: number }
-    | { errorMessage: string; status: "error"; statusCode: number };
+    { successMessage: string, data: T; status: "Success"; statusCode: number } |
+    { errorMessage: string; status: "Error"; statusCode: number };
