@@ -1,7 +1,5 @@
 "use client"
-
 import Image from "next/image"
-import { Button } from "../ui/button"
 import { FaRegTrashCan } from "react-icons/fa6"
 import { useAppDispatch } from "@/_store/hooks"
 import { addToCart, removeFromCart } from "@/_store/cartSlice"
@@ -37,8 +35,8 @@ export default function SimpleProduct({ data }: Props) {
                 </div>
             </Link>
             <div className="flex flex-col justify-between items-center h-full">
-            <FaRegTrashCan className="w-5 h-5 hover:text-red-700 hover:cursor-pointer" onClick={removeProduct} />
-            <p className="text-sm font-medium text-gray-500 dark:text-inherit">(X{data.quantity})</p>
+                <FaRegTrashCan className="w-5 h-5 hover:text-red-700 hover:cursor-pointer" onClick={removeProduct} />
+                <p className="text-sm font-medium text-gray-500 dark:text-inherit">(X{data.quantity})</p>
             </div>
         </div>
     )

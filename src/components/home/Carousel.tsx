@@ -7,57 +7,44 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
-import { ImgProps } from "next/dist/shared/lib/get-img-props"
 import Image from "next/image"
-import { type CarouselApi } from "@/components/ui/carousel"
-import { useEffect, useState } from "react"
-type CarouselItemProps = {
-  image?: React.Component<ImgProps>[] | React.Component<ImgProps>
-}
+import bagImg from "@/../public/images/bag.jpg"
+import giftsImg from "@/../public/images/gifts.jpg"
+import shoesImg from "@/../public/images/shoes.jpg"
+import shopImg from "@/../public/images/shop.jpg"
+import wallImg from "@/../public/images/wall.jpg"
+
+
 const images = [
-  "https://n11scdn.akamaized.net/a1/878_420/wholesale/16/69/87/02/11695843.jpeg",
-  "https://n11scdn.akamaized.net/a1/878_420/wholesale/79/28/20/26/59697996.jpeg",
-  "https://n11scdn.akamaized.net/a1/878_420/wholesale/42/10/96/56/81373951.jpeg",
-  "https://n11scdn.akamaized.net/a1/878_420/wholesale/94/61/58/44/20675891.jpeg"
+  wallImg,
+  shoesImg,
+  shopImg,
+  giftsImg,
+  bagImg,
 ]
 
-export default function Carousel({ image }: CarouselItemProps) {
-  const [api, setApi] = useState<CarouselApi>()
-  const [current, setCurrent] = useState(0)
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    if (!api) {
-      return
-    }
-
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap() + 1)
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1)
-    })
-  }, [api])
-
+export default function Carousel() {
 
   return (
-    <CarouselComponent
-    setApi={setApi}
-    opts={{ loop: true, align: "start", }}
-    plugins={[
-      Autoplay({
-        delay: 4000,
-      }),
-    ]}>
-      <CarouselContent className="w-full h-full rounded-md shadow-md">
-        {images.map((image, index) => (
-          <CarouselItem key={index} className="flex flex-col justify-center">
-            <Image src={image} alt="carousel" width={970} height={420} className="w-full mx-auto rounded-md" />
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="left-0" />
-      <CarouselNext className="right-4" />
-    </CarouselComponent>
+    <div className="container flex rounded-md">
+      <CarouselComponent
+        opts={{ loop: true, align: "start", }}
+        plugins={[
+          Autoplay({
+            delay: 4000,
+          }),
+        ]}
+      >
+        <CarouselContent className="w-full rounded-md shadow-md max-h-[calc(100vh-10rem)]">
+          {images.map((image, index) => (
+            <CarouselItem key={index} className="">
+              <Image src={image} alt="carousel" placeholder="blur" className="object-fill h-full mx-auto rounded-md" />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-4" />
+        <CarouselNext className="right-8" />
+      </CarouselComponent>
+    </div>
   )
 }

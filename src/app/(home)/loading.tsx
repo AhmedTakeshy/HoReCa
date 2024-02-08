@@ -5,8 +5,8 @@ import React from 'react'
 export default function loading() {
     return (
         <>
-        <LoadingBanner />
-        <LoadingCard />
+            <LoadingBanner />
+            <LoadingCard />
         </>
     )
 }

@@ -1,10 +1,10 @@
-import Banner from "@/components/home/Banner";
+import Carousel from "@/components/home/Carousel";
 import Categories from "@/components/home/Categoies";
 
 export default function Home() {
   return (
-    <main className="my-8">
-      <Banner />
+    <main className="mt-4 mb-8">
+      <Carousel />
       <Categories />
     </main>
   )
