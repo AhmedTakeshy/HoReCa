@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Account {
@@ -33,7 +34,7 @@ model User {
   email     String    @unique
   username  String
   password  String
-  role      Role?     @default(user)
+  role      Role?     @default(USER)
   accounts  Account[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -42,14 +43,14 @@ model User {
   ratings   Rating[]
   cart      Cart?
   orders    Order[]
-  wishlist  wishlist?
+  wishlist  Wishlist?
 
   @@index([email], type: Hash)
 }
 
 enum Role {
-  user
-  admin
+  USER
+  ADMIN
 }
 
 model Review {
@@ -60,11 +61,11 @@ model Review {
   authorId  Int
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
-  productId Int
+  productId Int      @unique
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   updatedAt DateTime @updatedAt
 
-  @@index(fields: [authorId(createdAt(sort: Desc)), productId(createdAt(sort: Desc))])
+  @@index([authorId(createdAt(sort: Desc)), productId(createdAt(sort: Desc))])
 }
 
 model Rating {
@@ -72,81 +73,117 @@ model Rating {
   rating    Int
   authorId  Int
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  productId Int
+  productId Int      @unique
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([authorId(createdAt(sort: Desc)), productId(createdAt(sort: Desc))])
+  @@index([rating(sort: Desc)])
 }
 
 model Cart {
-  id            Int       @id @default(autoincrement())
-  publicId      String    @unique @default(nanoid())
-  userId        Int       @unique
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  products      Product[]
-  totalAmount   Float
-  totalQuantity Int
+  id        Int        @id @default(autoincrement())
+  publicId  String     @unique @default(nanoid())
+  userId    Int        @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  cartItems CartItem[]
 
   @@index([userId], type: Hash)
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  productId Int      @unique
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cartId    Int
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId], type: Hash)
 }
 
 model Product {
-  id          Int            @id @default(autoincrement())
-  publicId    String         @unique @default(nanoid())
-  title       String
-  description String
-  thumbnail   String
-  images      ProductImage[]
-  price       Float
-  stock       Int
-  category    String
-  brand       String
-  cartId      Int            @unique
-  cart        Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  reviews     Review[]
-  ratings     Rating[]
-  orders      Order[]
-  wishlistId  Int            @unique
-  wishlist    wishlist       @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id            Int           @id @default(autoincrement())
+  publicId      String        @unique @default(nanoid())
+  title         String
+  description   String
+  thumbnail     String
+  images        String[]
+  price         Int
+  stock         Int
+  category      String
+  brand         String
+  reviews       Review?
+  ratings       Rating?
+  cartItems     CartItem?
+  orderItems    OrderItem?
+  wishlistItems WishlistItem?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   @@index([title], type: Hash)
-}
-
-model ProductImage {
-  id        Int     @id @default(autoincrement())
-  url       String
-  productId Int     @unique
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  @@index([category], type: Hash)
+  @@index([brand], type: Hash)
 }
 
 model Order {
-  id            Int       @id @default(autoincrement())
-  publicId      String    @unique @default(nanoid())
-  userId        Int
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  products      Product[]
-  totalAmount   Float
-  totalQuantity Int
+  id         Int         @id @default(autoincrement())
+  publicId   String      @unique @default(nanoid())
+  userId     Int
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  orderItems OrderItem[]
+  totalPrice Float
+  status     Status
 
   @@index([userId], type: Hash)
 }
 
-model wishlist {
-  id        Int       @id @default(autoincrement())
-  publicId  String    @unique @default(nanoid())
-  userId    Int       @unique
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products  Product[]
+enum Status {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  productId Int      @unique
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderId   Int
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId], type: Hash)
+}
+
+model Wishlist {
+  id            Int            @id @default(autoincrement())
+  publicId      String         @unique @default(nanoid())
+  userId        Int            @unique
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  wishlistItems WishlistItem[]
 
   @@index([userId], type: Hash)
+}
+
+model WishlistItem {
+  id         Int      @id @default(autoincrement())
+  productId  Int      @unique
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  wishlistId Int      @unique
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([productId], type: Hash)
 }
