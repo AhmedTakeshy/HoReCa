@@ -39,32 +39,6 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Review" (
-    "id" SERIAL NOT NULL,
-    "publicId" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
-    "body" TEXT NOT NULL,
-    "authorId" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "productId" INTEGER NOT NULL,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Review_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Rating" (
-    "id" SERIAL NOT NULL,
-    "rating" INTEGER NOT NULL,
-    "authorId" INTEGER NOT NULL,
-    "productId" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Rating_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Cart" (
     "id" SERIAL NOT NULL,
     "publicId" TEXT NOT NULL,
@@ -99,6 +73,7 @@ CREATE TABLE "Product" (
     "stock" INTEGER NOT NULL,
     "category" TEXT NOT NULL,
     "brand" TEXT NOT NULL,
+    "ratings" DOUBLE PRECISION,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -168,24 +143,6 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE INDEX "User_email_idx" ON "User" USING HASH ("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Review_publicId_key" ON "Review"("publicId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Review_productId_key" ON "Review"("productId");
-
--- CreateIndex
-CREATE INDEX "Review_authorId_productId_idx" ON "Review"("authorId", "productId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Rating_productId_key" ON "Rating"("productId");
-
--- CreateIndex
-CREATE INDEX "Rating_authorId_productId_idx" ON "Rating"("authorId", "productId");
-
--- CreateIndex
-CREATE INDEX "Rating_rating_idx" ON "Rating"("rating" DESC);
-
--- CreateIndex
 CREATE UNIQUE INDEX "Cart_publicId_key" ON "Cart"("publicId");
 
 -- CreateIndex
@@ -244,18 +201,6 @@ CREATE INDEX "WishlistItem_productId_idx" ON "WishlistItem" USING HASH ("product
 
 -- AddForeignKey
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Review" ADD CONSTRAINT "Review_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Review" ADD CONSTRAINT "Review_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Rating" ADD CONSTRAINT "Rating_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Rating" ADD CONSTRAINT "Rating_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

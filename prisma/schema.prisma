@@ -39,8 +39,6 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
-  reviews   Review[]
-  ratings   Rating[]
   cart      Cart?
   orders    Order[]
   wishlist  Wishlist?
@@ -51,35 +49,6 @@ model User {
 enum Role {
   USER
   ADMIN
-}
-
-model Review {
-  id        Int      @id @default(autoincrement())
-  publicId  String   @unique @default(nanoid())
-  title     String
-  body      String
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  productId Int      @unique
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  updatedAt DateTime @updatedAt
-
-  @@index([authorId(createdAt(sort: Desc)), productId(createdAt(sort: Desc))])
-}
-
-model Rating {
-  id        Int      @id @default(autoincrement())
-  rating    Int
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  productId Int      @unique
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([authorId(createdAt(sort: Desc)), productId(createdAt(sort: Desc))])
-  @@index([rating(sort: Desc)])
 }
 
 model Cart {
@@ -118,8 +87,7 @@ model Product {
   stock         Int
   category      String
   brand         String
-  reviews       Review?
-  ratings       Rating?
+  ratings       Float
   cartItems     CartItem?
   orderItems    OrderItem?
   wishlistItems WishlistItem?

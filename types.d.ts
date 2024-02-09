@@ -4,6 +4,7 @@ type Product = {
     title: string,
     description: string,
     price: number,
+    ratings: number,
     stock: number,
     brand: string,
     category: string,
