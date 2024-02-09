@@ -3,7 +3,7 @@ import Categories from "@/components/home/Categoies";
 
 export default function Home() {
   return (
-    <main className="mt-4 mb-8">
+    <main className="mb-8">
       <Carousel />
       <Categories />
     </main>

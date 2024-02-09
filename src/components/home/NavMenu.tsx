@@ -29,7 +29,7 @@ export default function NavMenu() {
     const cart = useAppSelector(state => state.cart)
 
     return (
-        <header className={`flex my-6 mx-auto md:justify-around justify-between items-center w-full md:px-8 px-3`}>
+        <header className={`flex mt-6 mb-10 mx-auto md:justify-around justify-between items-center w-full md:px-8 px-3`}>
             <h1 className="text-3xl font-bold xl:text-6xl lg:text-4xl te text-blue-950 dark:text-sky-700">HoReCa</h1>
             <NavigationMenu className={` items-center  justify-between hidden gap-2 md:flex`}>
                 <NavigationMenuList className="items-center justify-between hidden gap-2 md:flex ">

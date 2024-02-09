@@ -30,11 +30,11 @@ export default function SimpleProduct({ data }: Props) {
                         {data.title}
                     </h2>
                     <p className="text-sm font-medium text-gray-500 dark:text-inherit">
-                        ${data.price}
+                        ${data.price.toFixed(2)}
                     </p>
                 </div>
             </Link>
-            <div className="flex flex-col justify-between items-center h-full">
+            <div className="flex flex-col justify-between items-center h-full py-px">
                 <FaRegTrashCan className="w-5 h-5 hover:text-red-700 hover:cursor-pointer" onClick={removeProduct} />
                 <p className="text-sm font-medium text-gray-500 dark:text-inherit">(X{data.quantity})</p>
             </div>
