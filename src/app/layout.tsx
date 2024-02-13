@@ -30,8 +30,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ProviderWrapper>
-            <Toaster />
-              {children}
+            <Toaster richColors />
+            {children}
           </ProviderWrapper>
         </ThemeProvider>
       </body>
