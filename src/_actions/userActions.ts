@@ -27,9 +27,9 @@ export async function getProducts({ page = 1, search }: ProductsProps): Promise<
             take: 10
         })
 
-        const totalProducts = await prisma.product.count()
 
         if (products.length > 0) {
+            const totalProducts = await prisma.product.count()
             return {
                 data: {
                     products,
@@ -52,15 +52,81 @@ export async function getProducts({ page = 1, search }: ProductsProps): Promise<
     }
 }
 
-export async function getProductsByCategory(category: string): Promise<ServerResponse<Product[]>> {
+export async function getProductsByCategory(category: string): Promise<ServerResponse<Metadata>> {
     try {
         const products = await prisma.product.findMany({
             where: {
-                category
-            },
+                category,
+            }
         })
         if (products.length > 0) {
-            return { data: products, status: "Success", statusCode: 200, successMessage: "Products fetched successfully!" };
+            const totalProducts = await prisma.product.count()
+            return {
+                data: {
+                    products,
+                    metadata: {
+                        hastNextPage: totalProducts > 10,
+                        totalPages: Math.ceil(totalProducts / 10)
+                    }
+                }, status: "Success", statusCode: 200, successMessage: "Products fetched successfully!"
+            };
+        } else {
+            return { errorMessage: "There are no products at the moment!", status: "Error", statusCode: 400, };
+        }
+    }
+    catch (err) {
+        console.log(err)
+        return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error", }
+    }
+}
+
+
+type FilterWithSort = {
+    category: string;
+    params: { [key: string]: string | undefined }
+}
+export async function getProductsByFilterAndSort({ category, params }: FilterWithSort): Promise<ServerResponse<Metadata>> {
+    const sortMappings = {
+        "highest-ratings": { type: "ratings", order: "desc" },
+        "lowest-ratings": { type: "ratings", order: "asc" },
+        "highest-price": { type: "price", order: "desc" },
+        "lowest-price": { type: "price", order: "asc" },
+    };
+
+    const sortType = sortMappings[params.sorting as keyof typeof sortMappings] || sortMappings["highest-ratings"];
+
+    try {
+        const products = await prisma.product.findMany({
+            where: {
+                category,
+                ratings: {
+                    gte: params.ratings ? Number(params.ratings) : 0,
+                    lte: 5
+                },
+                price: {
+                    gte: params.price?.split("-")[0] ? Number(params.price?.split("-")[0]) : 0,
+                    lte: params.price?.split("-")[1] ? Number(params.price?.split("-")[1]) : 10000,
+                }
+            },
+            orderBy: {
+                [sortType.type]: sortType.order
+            }
+        })
+        if (products.length > 0) {
+            const totalProducts = await prisma.product.count()
+
+            return {
+                data: {
+                    products,
+                    metadata: {
+                        hastNextPage: totalProducts > 10,
+                        totalPages: Math.ceil(totalProducts / 10)
+                    }
+                },
+                status: "Success",
+                statusCode: 200,
+                successMessage: "Products fetched successfully!"
+            };
         } else {
             return { errorMessage: "There are no products at the moment!", status: "Error", statusCode: 400, };
         }

@@ -8,11 +8,11 @@ import Image from 'next/image';
 import ActionButton from '../shared/ActionButton';
 import { BackgroundGradient } from '../ui/background-gradient';
 
-type Props = {
+type CategoryItemProps = {
     data: Product
 }
 
-export default function CategoryItem({ data }: Props) {
+export default function CategoryItem({ data }: CategoryItemProps) {
 
 
     return (
