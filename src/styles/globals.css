@@ -89,17 +89,6 @@ html {
   border-radius: 6px;
 }
 
-ul:hover .item:not(:hover) {
-  @apply border-r border-[#ccc] dark:border-slate-950
-}
-ul:hover .item:has(~ .no-click:hover), .no-click:hover {
-  @apply border-r-2 border-white dark:border-slate-950
-}
-
-ul:hover .no-click:hover ~.item:not(:hover){
-  @apply border-r-2 border-white dark:border-slate-950
-}
-
 .flex-center {
   @apply flex items-center justify-center
 }
