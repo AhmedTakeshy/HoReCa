@@ -10,7 +10,7 @@ type Product = {
     category: string,
     thumbnail: string,
     images: string[],
-    quantity?: number,
+    quantity: number
 }
 
 type Cart = {

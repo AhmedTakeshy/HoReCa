@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction, } from "@reduxjs/toolkit";
 
-
-const initialState:Cart = {
+const initialState: Cart = {
     items: [],
     totalAmount: 0,
     totalQuantity: 0,
-    };
+};
 
 const cartSlice = createSlice({
     initialState,

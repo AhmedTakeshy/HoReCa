@@ -3,9 +3,8 @@ import cartReducer from "./cartSlice";
 
 const store = configureStore({
   reducer: {
-  cart: cartReducer,
-  // reviews: reviewsReducer,
-},
+    cart: cartReducer,
+  },
 
 
 });
