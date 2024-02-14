@@ -11,8 +11,8 @@ type ProductsProps = {
 type Metadata = {
     products: Product[]
     metadata: {
-        hastNextPage?: boolean;
-        totalPages?: number;
+        hastNextPage: boolean;
+        totalPages: number;
     }
 }
 export async function getProducts({ page = 1, search }: ProductsProps): Promise<ServerResponse<Metadata>> {
@@ -23,10 +23,9 @@ export async function getProducts({ page = 1, search }: ProductsProps): Promise<
                     contains: search
                 }
             },
-            skip: (page - 1) * 10,
-            take: 10
+            skip: (page - 1) * 6,
+            take: 6
         })
-
 
         if (products.length > 0) {
             const totalProducts = await prisma.product.count()
@@ -34,8 +33,8 @@ export async function getProducts({ page = 1, search }: ProductsProps): Promise<
                 data: {
                     products,
                     metadata: {
-                        hastNextPage: totalProducts > page * 10,
-                        totalPages: Math.ceil(totalProducts / 10)
+                        hastNextPage: totalProducts > page * 6,
+                        totalPages: Math.ceil(totalProducts / 6)
                     }
                 },
                 status: "Success",
@@ -52,21 +51,32 @@ export async function getProducts({ page = 1, search }: ProductsProps): Promise<
     }
 }
 
-export async function getProductsByCategory(category: string): Promise<ServerResponse<Metadata>> {
+type Category = {
+    category: string;
+    page: number;
+
+}
+export async function getProductsByCategory({ category, page = 1 }: Category): Promise<ServerResponse<Metadata>> {
     try {
         const products = await prisma.product.findMany({
             where: {
                 category,
-            }
+            },
+            skip: (page - 1) * 6,
+            take: 6
         })
         if (products.length > 0) {
-            const totalProducts = await prisma.product.count()
+            const totalProducts = await prisma.product.count({
+                where: {
+                    category
+                }
+            })
             return {
                 data: {
                     products,
                     metadata: {
-                        hastNextPage: totalProducts > 10,
-                        totalPages: Math.ceil(totalProducts / 10)
+                        hastNextPage: totalProducts > 6,
+                        totalPages: Math.ceil(totalProducts / 6)
                     }
                 }, status: "Success", statusCode: 200, successMessage: "Products fetched successfully!"
             };
@@ -110,17 +120,31 @@ export async function getProductsByFilterAndSort({ category, params }: FilterWit
             },
             orderBy: {
                 [sortType.type]: sortType.order
-            }
+            },
+            skip: (Number(params.page || 1) - 1) * 6,
+            take: 6
         })
         if (products.length > 0) {
-            const totalProducts = await prisma.product.count()
+            const totalProducts = await prisma.product.count({
+                where: {
+                    category,
+                    ratings: {
+                        gte: params.ratings ? Number(params.ratings) : 0,
+                        lte: 5
+                    },
+                    price: {
+                        gte: params.price?.split("-")[0] ? Number(params.price?.split("-")[0]) : 0,
+                        lte: params.price?.split("-")[1] ? Number(params.price?.split("-")[1]) : 10000,
+                    }
+                }
+            })
 
             return {
                 data: {
                     products,
                     metadata: {
-                        hastNextPage: totalProducts > 10,
-                        totalPages: Math.ceil(totalProducts / 10)
+                        hastNextPage: totalProducts > 6,
+                        totalPages: Math.ceil(totalProducts / 6)
                     }
                 },
                 status: "Success",
