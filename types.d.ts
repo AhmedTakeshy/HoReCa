@@ -22,3 +22,18 @@ type Cart = {
 type ServerResponse<T> =
     { successMessage: string, data: T; status: "Success"; statusCode: number } |
     { errorMessage: string; status: "Error"; statusCode: number };
+
+type User = {
+    id: number;
+    name: string;
+    role: Role;
+    email: string;
+    updatedAt: Date;
+    publicId: string;
+    createdAt: Date;
+}
+
+enum Role {
+    ADMIN,
+    USER,
+}
