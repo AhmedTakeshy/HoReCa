@@ -72,7 +72,7 @@ export default function FilterForm() {
     }
 
     return (
-        <div className='flex flex-col items-start gap-5 border-2 rounded-xl py-4 px-8 h-fit'>
+        <div className='md:flex flex-col grid sm:grid-cols-2 items-start gap-5 border-2 rounded-xl py-4 px-8 h-fit'>
             <h2 className="text-lg">Filter</h2>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
@@ -164,7 +164,9 @@ export default function FilterForm() {
                     </div>
                 </RadioGroup>
             </div>
-            <Link className={`${buttonVariants({ variant: "default" })}`} href={`${pathname}`}>Reset filters</Link>
+            <Link className={`${buttonVariants({ variant: "default" })} w-full sm:col-span-2 `} href={`${pathname}`}>Reset filters</Link>
         </div>
     )
 }
+
+//fix the mobile version of the filter form

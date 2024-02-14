@@ -6,9 +6,9 @@ type ProductsProps = {
 }
 
 export default async function CategoryProducts({ category }: ProductsProps) {
-    const response = await getProductsByCategory(category);
+    const response = await getProductsByCategory({ category, page: 1 });
 
-    return response.status === "Success" && response.data.map((product: Product) => (
+    return response.status === "Success" && response.data.products.map((product: Product) => (
         <CarouselItem key={product.id} className="xl:basis-1/4 lg:basis-2/6 md:basis-2/4 sm:pl-3 md:pl-6">
             <CategoryItem data={product} />
         </CarouselItem>
