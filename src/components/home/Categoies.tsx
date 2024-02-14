@@ -6,7 +6,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel"
 
-import { getCategories } from "@/_actions/userActions";
+import { getCategories } from "@/_actions/productActions";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import CategoryProducts from "./CategoryProducts";

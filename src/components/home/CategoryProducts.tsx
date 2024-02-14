@@ -1,4 +1,4 @@
-import { getProductsByCategory } from "@/_actions/userActions";
+import { getProductsByCategory } from "@/_actions/productActions";
 import CategoryItem from "./CategoryItem";
 import { CarouselItem } from "@/components/ui/carousel";
 type ProductsProps = {

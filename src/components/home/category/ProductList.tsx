@@ -1,4 +1,4 @@
-import { getProductsByFilterAndSort } from "@/_actions/userActions";
+import { getProductsByFilterAndSort } from "@/_actions/productActions";
 import SortingForm from "./SortingForm";
 import { ProductItem } from "./ProductItem";
 import FilterForm from "./FilterForm";
