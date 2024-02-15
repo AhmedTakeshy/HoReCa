@@ -1,7 +1,7 @@
 "use client"
 
 import { useAppDispatch } from "@/_store/hooks"
-import { Button, ButtonProps } from "../ui/button"
+import { Button, ButtonProps } from "./ui/button"
 import { addToCart, removeFromCart } from "@/_store/cartSlice"
 import { toast } from "sonner"
 

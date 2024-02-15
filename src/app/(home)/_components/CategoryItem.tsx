@@ -3,10 +3,10 @@ import Link from 'next/link';
 import React from 'react'
 import { BsCart3 } from "react-icons/bs"
 import { GoHeartFill } from "react-icons/go";
-import { Button } from '../ui/button';
+import { Button } from '../../../components/ui/button';
 import Image from 'next/image';
-import ActionButton from '../shared/ActionButton';
-import { BackgroundGradient } from '../ui/background-gradient';
+import ActionButton from '../../../components/ActionButton';
+import { BackgroundGradient } from '../../../components/background-gradient';
 
 type CategoryItemProps = {
     data: Product

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/carousel"
 
 import { getCategories } from "@/_actions/productActions";
-import { Button } from "../ui/button";
+import { Button } from "../../../components/ui/button";
 import Link from "next/link";
 import CategoryProducts from "./CategoryProducts";
 

@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { IoIosArrowUp } from "react-icons/io"
-import { Button } from '../ui/button'
+import { Button } from './ui/button'
 
 export default function ScrollButton() {
     const [showBtn, setShowBtn] = useState(false);

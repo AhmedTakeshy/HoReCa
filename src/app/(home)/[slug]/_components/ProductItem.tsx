@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { BackgroundGradient } from "@/components/background-gradient";
 import Image from "next/image";
-import ActionButton from "@/components/shared/ActionButton";
+import ActionButton from "@/components/ActionButton";
 import { BsCart3 } from "react-icons/bs";
-import Stars from "@/components/ui/Stars";
+import Stars from "./Stars";
 import { Button } from "@/components/ui/button";
 
 

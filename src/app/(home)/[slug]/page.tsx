@@ -1,5 +1,5 @@
-import ProductList from '@/components/home/category/ProductList'
-import { SparklesPreview } from '@/components/home/category/SparklesPreview'
+import ProductList from './_components/ProductList'
+import { SparklesPreview } from './_components/SparklesPreview'
 import React from 'react'
 
 type Props = {

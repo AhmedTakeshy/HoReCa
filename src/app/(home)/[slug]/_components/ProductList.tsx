@@ -2,7 +2,7 @@ import { getProductsByFilterAndSort } from "@/_actions/productActions";
 import SortingForm from "./SortingForm";
 import { ProductItem } from "./ProductItem";
 import FilterForm from "./FilterForm";
-import PaginationControl from "@/components/shared/PaginationControl";
+import PaginationControl from "@/components/PaginationControl";
 
 
 type ProductListProps = {

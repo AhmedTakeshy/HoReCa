@@ -7,11 +7,11 @@ import {
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import Link from "next/link"
-import { ModeToggler } from "../shared/ModeToggler"
+import { ModeToggler } from "@/components/ModeToggler"
 import Image from "next/image"
 import { useState } from "react"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
-import { Button, buttonVariants } from "../ui/button"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
     HoverCard,
     HoverCardContent,
@@ -21,7 +21,7 @@ import { GoHeartFill } from "react-icons/go";
 import { BsCart3 } from "react-icons/bs";
 import { LuUserCircle2 } from "react-icons/lu";
 import { useAppSelector } from "@/_store/hooks"
-import SimpleProduct from "./SimpleProduct"
+import SimpleProduct from "@/components/SimpleProduct"
 
 
 export default function NavMenu() {

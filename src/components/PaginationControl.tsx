@@ -3,7 +3,7 @@ import {
     ChevronRightIcon,
 } from "@radix-ui/react-icons"
 import Link from "next/link"
-import { Button } from "../ui/button"
+import { Button } from "./ui/button"
 
 
 type PaginationControlProps = {
