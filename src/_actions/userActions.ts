@@ -1,183 +1,100 @@
 "use server"
 
+import { PasswordSchema, SignUpFormSchema, UserUpdateSchema, passwordSchema, signUpFormSchema, userUpdateSchema } from "@/lib/formSchemas";
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import bcrypt, { hash } from "bcryptjs";
 
-type ProductsProps = {
-    page?: number;
-    search?: string | undefined;
-
-}
-
-type Metadata = {
-    products: Product[]
-    metadata: {
-        hastNextPage: boolean;
-        totalPages: number;
-    }
-}
-export async function getProducts({ page = 1, search }: ProductsProps): Promise<ServerResponse<Metadata>> {
+export async function signUpAction(values: SignUpFormSchema) {
     try {
-        const products = await prisma.product.findMany({
-            where: {
-                title: {
-                    contains: search
-                }
-            },
-            skip: (page - 1) * 6,
-            take: 6
-        })
-
-        if (products.length > 0) {
-            const totalProducts = await prisma.product.count()
-            return {
-                data: {
-                    products,
-                    metadata: {
-                        hastNextPage: totalProducts > page * 6,
-                        totalPages: Math.ceil(totalProducts / 6)
-                    }
-                },
-                status: "Success",
-                statusCode: 200,
-                successMessage: "Products fetched successfully!",
-            };
-        } else {
-            return { errorMessage: "There are no products at the moment!", status: "Error", statusCode: 400, };
+        const result = await signUpFormSchema.safeParseAsync(values)
+        if (!result.success) {
+            return { error: true, message: "Something wrong with entered data.", status: 401 }
         }
-
-    } catch (err) {
-        console.log(err)
-        return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error", }
-    }
-}
-
-type Category = {
-    category: string;
-    page: number;
-
-}
-export async function getProductsByCategory({ category, page = 1 }: Category): Promise<ServerResponse<Metadata>> {
-    try {
-        const products = await prisma.product.findMany({
+        const { username, email, password, role } = result.data
+        const existedUserEmail = await prisma.user.findUnique({
             where: {
-                category,
-            },
-            skip: (page - 1) * 6,
-            take: 6
+                email,
+            }
         })
-        if (products.length > 0) {
-            const totalProducts = await prisma.product.count({
-                where: {
-                    category
+        if (existedUserEmail) {
+            return { error: true, message: "There is a user already with this email!", status: 409 }
+        }
+        const hashedPassword = await hash(password, 10)
+        if (!existedUserEmail) {
+            const user = await prisma.user.create({
+                data: {
+                    name: username,
+                    email: email.toLowerCase(),
+                    password: hashedPassword,
+                    role,
                 }
             })
-            return {
-                data: {
-                    products,
-                    metadata: {
-                        hastNextPage: totalProducts > 6,
-                        totalPages: Math.ceil(totalProducts / 6)
-                    }
-                }, status: "Success", statusCode: 200, successMessage: "Products fetched successfully!"
-            };
-        } else {
-            return { errorMessage: "There are no products at the moment!", status: "Error", statusCode: 400, };
+            const { email: userEmail } = user
+            revalidatePath("/admin/accounts")
+            return { error: false, message: `User has been created successfully with this email ${userEmail}`, status: 201 }
         }
+    } catch (error) {
+        console.log(error);
+        return { error: true, message: "Something went wrong!", status: 401 }
     }
-    catch (err) {
-        console.log(err)
-        return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error", }
-    }
+
 }
 
-
-type FilterWithSort = {
-    category: string;
-    params: { [key: string]: string | undefined }
-}
-export async function getProductsByFilterAndSort({ category, params }: FilterWithSort): Promise<ServerResponse<Metadata>> {
-    const sortMappings = {
-        "highest-ratings": { type: "ratings", order: "desc" },
-        "lowest-ratings": { type: "ratings", order: "asc" },
-        "highest-price": { type: "price", order: "desc" },
-        "lowest-price": { type: "price", order: "asc" },
-    };
-
-    const sortType = sortMappings[params.sorting as keyof typeof sortMappings] || sortMappings["highest-ratings"];
-
+export async function updateUser(values: UserUpdateSchema) {
     try {
-        const products = await prisma.product.findMany({
+        const result = await userUpdateSchema.safeParseAsync(values)
+        if (!result.success) {
+            return { error: true, message: "Something wrong with entered data!", status: 401 }
+        }
+        const { username, email, id, role } = result.data
+        const res = await prisma.user.update({
             where: {
-                category,
-                ratings: {
-                    gte: params.ratings ? Number(params.ratings) : 0,
-                    lte: 5
-                },
-                price: {
-                    gte: params.price?.split("-")[0] ? Number(params.price?.split("-")[0]) : 0,
-                    lte: params.price?.split("-")[1] ? Number(params.price?.split("-")[1]) : 10000,
-                }
+                id,
             },
-            orderBy: {
-                [sortType.type]: sortType.order
-            },
-            skip: (Number(params.page || 1) - 1) * 6,
-            take: 6
+            data: {
+                name: username,
+                email,
+                role
+            }
         })
-        if (products.length > 0) {
-            const totalProducts = await prisma.product.count({
-                where: {
-                    category,
-                    ratings: {
-                        gte: params.ratings ? Number(params.ratings) : 0,
-                        lte: 5
-                    },
-                    price: {
-                        gte: params.price?.split("-")[0] ? Number(params.price?.split("-")[0]) : 0,
-                        lte: params.price?.split("-")[1] ? Number(params.price?.split("-")[1]) : 10000,
-                    }
-                }
-            })
-
-            return {
-                data: {
-                    products,
-                    metadata: {
-                        hastNextPage: totalProducts > 6,
-                        totalPages: Math.ceil(totalProducts / 6)
-                    }
-                },
-                status: "Success",
-                statusCode: 200,
-                successMessage: "Products fetched successfully!"
-            };
-        } else {
-            return { errorMessage: "There are no products at the moment!", status: "Error", statusCode: 400, };
-        }
-    }
-    catch (err) {
-        console.log(err)
-        return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error", }
+        revalidatePath("/admin/accounts")
+        return { error: false, message: `User has been updated successfully.`, status: 200 }
+    } catch (error) {
+        console.log(error);
+        return { error: true, message: "Something went wrong!", status: 401 }
     }
 }
 
-export async function getCategories(): Promise<ServerResponse<string[]>> {
+export async function updatePassword(values: PasswordSchema) {
     try {
-        const categories: { category: string }[] = await prisma.product.findMany({
-            select: {
-
-                category: true,
-            },
-            distinct: ['category']
-        })
-        if (categories.length > 0) {
-            const uniqueCategories = categories.map((category) => category.category)
-            return { data: uniqueCategories, status: "Success", statusCode: 200, successMessage: "Categories fetched successfully!" };
-        } else {
-            return { errorMessage: "There are no categories at the moment!", status: "Error", statusCode: 400 };
+        const result = await passwordSchema.safeParseAsync(values)
+        if (!result.success) {
+            return { error: true, message: "Something wrong with entered data!", status: 401 }
         }
-    } catch (err) {
-        console.log(err)
-        return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error" }
+        const { currentPassword, newPassword, id } = result.data
+        const user = await prisma.user.findUnique({
+            where: {
+                id
+            }
+        })
+        const isMatch = await bcrypt.compare(currentPassword, user?.password!)
+        if (!isMatch) {
+            return { error: true, message: "Current password is not correct!", status: 401 }
+        }
+        const hashedPassword = await hash(newPassword, 10)
+        await prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                password: hashedPassword
+            }
+        })
+        revalidatePath("/admin/accounts")
+        return { error: false, message: "Password has been updated successfully.", status: 200 }
+    } catch (error) {
+        console.log(error);
+        return { error: true, message: "Something went wrong!", status: 401 }
     }
 }

@@ -25,6 +25,7 @@ type ServerResponse<T> =
 
 type User = {
     id: number;
+    publicId: string;
     name: string;
     role: Role;
     email: string;
