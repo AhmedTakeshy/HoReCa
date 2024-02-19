@@ -1,16 +1,20 @@
-import NavMenu from "@/components/home/NavMenu"
-import ScrollButton from "@/components/shared/ScrollButton"
+import AuthProvider from "@/context/AuthProvider"
+import NavMenu from "./_components/NavMenu"
+import ScrollButton from "@/components/ScrollButton"
 
 export default function MainLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+
     return (
         <>
-            <NavMenu />
-            {children}
-            <ScrollButton />
+            <AuthProvider>
+                <NavMenu />
+                {children}
+                <ScrollButton />
+            </AuthProvider>
         </>
     )
 }

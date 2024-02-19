@@ -11,7 +11,9 @@ export default function NotFound() {
                     <p className="mb-8 text-2xl font-light leading-normal md:text-3xl">
                         Sorry we couldn&apos;t find this page.
                     </p>
-                    <Link href="/" className="inline px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-500 bg-blue-600 border border-transparent rounded-lg shadow-2xl focus:outline-none active:bg-purple-600 hover:bg-purple-700">ارجع الي الصفحة الرئيسية</Link>
+                    <Link href="/" className="inline px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-500 bg-blue-600 border border-transparent rounded-lg shadow-2xl focus:outline-none active:bg-purple-600 hover:bg-purple-700">
+                        Go back home
+                    </Link>
                 </div>
                 <div className="w-full mx-5 my-12 lg:flex lg:justify-end lg:w-1/2">
                     <Image width={700} height={436} src="/images/not-found.png" className="w-full" alt="Page not found" />

@@ -17,7 +17,7 @@ export default function Error({
     }, [error])
 
     return (
-        <div className="flex flex-col items-center w-full h-[calc(100vh-13.68rem)] space-x-8 space-y-16 lg:flex-row lg:space-y-0 2xl:space-x-0">
+        <div className="flex flex-col items-center w-full mt-8 h-[calc(100vh-13.68rem)] space-x-8 space-y-16 lg:flex-row lg:space-y-0 2xl:space-x-0">
             <div className="flex flex-col items-center justify-center w-full text-center lg:w-1/2 lg:px-2 xl:px-0">
                 <span className="font-bold tracking-wider text-gray-300 text-7xl md:text-8xl lg:text-9xl">500</span>
                 <p className="mt-2 text-4xl font-bold tracking-wider text-gray-300 md:text-5xl lg:text-6xl">Server error.</p>

@@ -4,7 +4,6 @@ import '../styles/globals.css'
 import ProviderWrapper from '@/_store/provider'
 import { ThemeProvider } from '@/context/ThemeProvider'
 import { Toaster } from "@/components/ui/sonner"
-import AuthProvider from '@/context/AuthProvider'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -31,10 +30,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ProviderWrapper>
-            <AuthProvider>
-              <Toaster richColors />
-              {children}
-            </AuthProvider>
+            <Toaster richColors />
+            {children}
           </ProviderWrapper>
         </ThemeProvider>
       </body>
