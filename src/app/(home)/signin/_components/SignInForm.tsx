@@ -16,8 +16,9 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { SignInFormSchema, signInFormSchema } from "@/lib/formSchemas"
-import SubmitButton from "./SubmitButton"
+import SubmitButton from "@/components/SubmitButton"
 import { signIn } from "@/lib/auth"
+import Link from "next/link"
 
 
 
@@ -73,8 +74,9 @@ export function SignInForm() {
 
     return (
         <Form {...form} >
-            <div className="w-full p-4 mb-4 space-y-2 border-2 rounded-md max-sm:max-w-xs border-slate-800 dark:border-slate-400">
-                <form onSubmit={form.handleSubmit(signInCredentials)} className="">
+            <div className="w-full max-sm:max-w-xs p-4 mb-4 space-y-2 border-2 rounded-md border-slate-800 dark:border-slate-400">
+                <form onSubmit={form.handleSubmit(signInCredentials)}
+                    className="space-y-2">
                     <FormField
                         control={form.control}
                         name="email"
@@ -110,8 +112,15 @@ export function SignInForm() {
                             </FormItem>
                         )}
                     />
-                    <SubmitButton className="mt-4 w-full" text="Login" pending={isPending} />
+
+                    <SubmitButton className="w-full !mt-6" text="Login" pending={isPending} />
                 </form>
+                <div className="flex items-center justify-center !mt-6 md:justify-between">
+                    <div className="block w-5/12 h-px dark:bg-gray-300 bg-slate-800"></div>
+                    <p className="mx-2 text-sm font-semibold dark:text-gray-400 text-slate-900">OR</p>
+                    <div className="block w-5/12 h-px dark:bg-gray-300 bg-slate-800"></div>
+                </div>
+                <p className="mt-3 text-center">If you don&apos;t have an account, please <Link href="/signup" className="text-blue-500 hover:text-blue-700">Sign up</Link></p>
             </div>
         </Form>
     )
