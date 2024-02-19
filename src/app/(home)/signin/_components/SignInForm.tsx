@@ -33,7 +33,6 @@ export default function SignInForm() {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const router = useRouter()
     const cart = useAppSelector(state => state.cart)
-    console.log("🚀 ~ SignInForm ~ cart:", cart)
     const dispatch = useAppDispatch()
 
 
@@ -67,10 +66,8 @@ export default function SignInForm() {
                 toast.success(`Welcome back!`, {
                     description: "You have successfully signed in",
                 })
-                console.log("🚀 ~ signInCredentials ~ res:", res)
                 if (cart.isChanged) {
                     const response = await addCartToDatabase(cart, email)
-                    console.log("🚀 ~ signInCredentials ~ response:", response)
                     response.status === "Success" && dispatch(replaceCart({
                         cartProducts: response.data.cartProducts,
                         totalAmount: response.data.totalAmount,

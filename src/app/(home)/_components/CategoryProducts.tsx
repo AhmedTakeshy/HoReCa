@@ -1,6 +1,7 @@
 import { getProductsByCategory } from "@/_actions/productActions";
 import CategoryItem from "./CategoryItem";
 import { CarouselItem } from "@/components/ui/carousel";
+
 type ProductsProps = {
     category: string;
 }
