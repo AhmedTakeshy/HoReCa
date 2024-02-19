@@ -4,18 +4,18 @@ import React from 'react'
 
 type Props = {
     params: {
-        slug: string
+        categorySlug: string
     }
     searchParams: { [key: string]: string | undefined }
 }
 
-export default function page({ params: { slug }, searchParams }: Props) {
+export default function page({ params: { categorySlug }, searchParams }: Props) {
 
     return (
         <div className='flex flex-col'>
             <SparklesPreview text="HoReCa" />
             <div className='flex flex-col container gap-8 my-12'>
-                <ProductList category={slug} searchParams={searchParams} />
+                <ProductList category={categorySlug} searchParams={searchParams} />
             </div>
         </div>
     )
