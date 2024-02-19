@@ -24,7 +24,7 @@ export async function signUpAction(values: SignUpFormSchema) {
         if (!existedUserEmail) {
             const user = await prisma.user.create({
                 data: {
-                    name: username,
+                    username,
                     email: email.toLowerCase(),
                     password: hashedPassword,
                     role,
@@ -38,8 +38,8 @@ export async function signUpAction(values: SignUpFormSchema) {
         console.log(error);
         return { error: true, message: "Something went wrong!", status: 401 }
     }
-
 }
+
 
 export async function updateUser(values: UserUpdateSchema) {
     try {
@@ -53,7 +53,7 @@ export async function updateUser(values: UserUpdateSchema) {
                 id,
             },
             data: {
-                name: username,
+                username,
                 email,
                 role
             }

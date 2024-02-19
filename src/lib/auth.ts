@@ -1,16 +1,11 @@
-import NextAuth from "next-auth"
+import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs";
 
 
-export const {
-    handlers: { GET, POST },
-    auth,
-    signIn,
-    signOut,
-} = NextAuth({
+export const authOptions: NextAuthOptions = {
     pages: {
         signIn: '/signin',
     },
@@ -32,17 +27,16 @@ export const {
 
                 const existingUser = await prisma.user.findUnique({
                     where: {
-                        email: credentials.email
+                        email: credentials.email.toString().toLowerCase(),
                     }
                 })
                 if (!existingUser) return null;
 
-                const isPasswordValid = await bcrypt.compare(credentials.password as string, existingUser.password)
+                const isPasswordValid = await bcrypt.compare(credentials.password, existingUser.password)
                 if (!isPasswordValid) return null;
                 return {
-                    id: existingUser.id,
-                    publicId: existingUser.publicId,
-                    username: existingUser.username,
+                    id: existingUser.id.toString(),
+                    name: existingUser.username,
                     email: existingUser.email,
                     role: existingUser.role,
                 }
@@ -52,8 +46,8 @@ export const {
 
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
-        async jwt({ token, user, account, profile }) {
-            if (user) token.role = user.role
+        async jwt({ token, user, account, profile, }) {
+            user && (token.role = user.role)
             return token
         },
         async signIn({ user, account, profile, email, credentials }) {
@@ -64,4 +58,4 @@ export const {
             return session
         },
     }
-})
+}

@@ -1,9 +1,7 @@
-import { SignInForm } from './_componenets/SignInForm'
-
+import SignInForm from './_components/SignInForm'
 export default function SignIn() {
   return (
-    <div className='flex flex-col items-center justify-center gap-8 mx-auto max-w-xs w-full mt-12'>
-      <p className='text-2xl'>Please sign In</p>
+    <div className='flex items-center justify-center mt-12 max-w-md w-full mx-auto'>
       <SignInForm />
     </div>
 
