@@ -17,17 +17,24 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { SignInFormSchema, signInFormSchema } from "@/lib/formSchemas"
 import SubmitButton from "@/components/SubmitButton"
-import { signIn } from "@/lib/auth"
 import Link from "next/link"
+import { signIn } from "next-auth/react"
+import { useAppDispatch, useAppSelector } from "@/_store/hooks"
+import { addCartToDatabase, getCartFromDatabase } from "@/_actions/cartActions"
+import { replaceCart } from "@/_store/cartSlice"
 
 
 
 
-export function SignInForm() {
+
+export default function SignInForm() {
 
     const [isPending, setIsPending] = useState<boolean>(false)
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const router = useRouter()
+    const cart = useAppSelector(state => state.cart)
+    console.log("🚀 ~ SignInForm ~ cart:", cart)
+    const dispatch = useAppDispatch()
 
 
     const form = useForm<SignInFormSchema>({
@@ -37,6 +44,8 @@ export function SignInForm() {
             password: "",
         },
     })
+
+
 
     async function signInCredentials(data: SignInFormSchema) {
         setIsPending(true)
@@ -48,23 +57,42 @@ export function SignInForm() {
                 })
                 return
             }
-            const values = result.data
-            const signInData = await signIn("credentials", {
+            const { email, password } = result.data
+            const res = await signIn("credentials", {
                 redirect: false,
-                email: values.email.toLowerCase(),
-                password: values.password,
+                email: email.toLowerCase(),
+                password,
             })
-            if (signInData?.status === 200) {
+            if (res?.status === 200) {
                 toast.success(`Welcome back!`, {
                     description: "You have successfully signed in",
                 })
-                router.replace("/admin")
+                console.log("🚀 ~ signInCredentials ~ res:", res)
+                if (cart.isChanged) {
+                    const response = await addCartToDatabase(cart, email)
+                    console.log("🚀 ~ signInCredentials ~ response:", response)
+                    response.status === "Success" && dispatch(replaceCart({
+                        cartProducts: response.data.cartProducts,
+                        totalAmount: response.data.totalAmount,
+                        totalQuantity: response.data.totalQuantity
+                    }));
+                } else {
+                    const response = await getCartFromDatabase(email)
+                    console.log("🚀 ~ signInCredentials ~ response:", response)
+                    response.status === "Success" && dispatch(replaceCart({
+                        cartProducts: response.data.cartProducts,
+                        totalAmount: response.data.totalAmount,
+                        totalQuantity: response.data.totalQuantity
+                    }));
+                }
+                router.push("/")
             } else {
                 toast("Oops!", {
                     description: "Please check your email and password and try again.",
                 })
             }
         } catch (error) {
+            console.log("🚀 ~ signInCredentials ~ error:", error)
             toast("Error!", {
                 description: "Something went wrong. Please try again.",
             })

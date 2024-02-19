@@ -29,19 +29,21 @@ model Account {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  publicId  String    @unique @default(nanoid())
-  email     String    @unique
-  username  String
-  password  String
-  role      Role      @default(USER)
-  accounts  Account[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-  cart      Cart?
-  orders    Order[]
-  wishlist  Wishlist?
+  id         Int       @id @default(autoincrement())
+  publicId   String    @unique @default(nanoid())
+  email      String    @unique
+  username   String
+  password   String
+  role       Role      @default(USER)
+  accounts   Account[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+  cart       Cart?
+  cartId     Int?
+  wishlist   Wishlist?
+  wishlistId Int?
+  orders     Order[]
 
   @@index([email], type: Hash)
 }
@@ -52,35 +54,49 @@ enum Role {
 }
 
 model Cart {
-  id        Int       @id @default(autoincrement())
-  publicId  String    @unique @default(nanoid())
-  userId    Int       @unique
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  product   Product[]
+  id         Int        @id @default(autoincrement())
+  publicId   String     @unique @default(nanoid())
+  userId     Int        @unique
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  cart_items CartItem[]
 
   @@index([userId], type: Hash)
 }
 
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  publicId  String   @unique @default(nanoid())
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int
+  cartId    Int
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId], type: Hash)
+  @@index([cartId], type: Hash)
+}
+
 model Product {
-  id          Int        @id @default(autoincrement())
-  publicId    String     @unique @default(nanoid())
-  title       String
-  description String
-  thumbnail   String
-  images      String[]
-  price       Int
-  stock       Int
-  category    String
-  brand       String
-  ratings     Float
-  quantity    Int        @default(0)
-  orders      Order[]
-  wishlist    Wishlist[]
-  cart        Cart[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id             Int            @id @default(autoincrement())
+  publicId       String         @unique @default(nanoid())
+  title          String
+  description    String
+  thumbnail      String
+  images         String[]
+  price          Int
+  stock          Int
+  category       String
+  brand          String
+  ratings        Float
+  order_items    OrderItem[]
+  wishlist_items WishlistItem[]
+  cart_items     CartItem[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
   @@index([title], type: Hash)
   @@index([category], type: Hash)
@@ -88,17 +104,33 @@ model Product {
 }
 
 model Order {
-  id         Int       @id @default(autoincrement())
-  publicId   String    @unique @default(nanoid())
-  userId     Int
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  products   Product[]
-  totalPrice Float
-  status     Status
+  id             Int         @id @default(autoincrement())
+  publicId       String      @unique @default(nanoid())
+  userId         Int
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  order_items    OrderItem[]
+  total_quantity Int
+  total_price    Int
+  status         Status
 
   @@index([userId], type: Hash)
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  publicId  String   @unique @default(nanoid())
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderId   Int
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId], type: Hash)
+  @@index([orderId], type: Hash)
 }
 
 enum Status {
@@ -108,13 +140,27 @@ enum Status {
 }
 
 model Wishlist {
-  id        Int       @id @default(autoincrement())
-  publicId  String    @unique @default(nanoid())
-  userId    Int       @unique
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products  Product[]
+  id             Int            @id @default(autoincrement())
+  publicId       String         @unique @default(nanoid())
+  userId         Int            @unique
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  wishlist_items WishlistItem[]
 
   @@index([userId], type: Hash)
+}
+
+model WishlistItem {
+  id         Int      @id @default(autoincrement())
+  publicId   String   @unique @default(nanoid())
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  wishlistId Int
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([productId], type: Hash)
+  @@index([wishlistId], type: Hash)
 }

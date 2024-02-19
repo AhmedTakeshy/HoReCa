@@ -26,7 +26,7 @@ export default async function ProductList({ category, searchParams }: ProductLis
                         <SortingForm />
                     </div>
                     <div className="grid lg:grid-cols-2 gap-12 place-items-center">
-                        {response.data.products.map((product) => <ProductItem key={product.id} data={product} />)}
+                        {response.data.products.map((product) => <ProductItem key={product.product.id} data={product.product} quantity={product.quantity} />)}
                     </div>
                     <PaginationControl
                         className=" w-full"

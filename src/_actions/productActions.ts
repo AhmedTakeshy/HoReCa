@@ -1,8 +1,6 @@
 "use server"
-
-import { PasswordSchema, UserUpdateSchema, passwordSchema, userUpdateSchema } from "@/lib/formSchemas";
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+
 
 type ProductsProps = {
     page?: number;
@@ -11,7 +9,7 @@ type ProductsProps = {
 }
 
 type Metadata = {
-    products: Product[]
+    products: CartProduct[]
     metadata: {
         hastNextPage: boolean;
         totalPages: number;
@@ -31,9 +29,10 @@ export async function getProducts({ page = 1, search }: ProductsProps): Promise<
 
         if (products.length > 0) {
             const totalProducts = await prisma.product.count()
+            const formattedProducts: CartProduct[] = products.map(product => ({ product: { ...product, quantity: 0 }, quantity: 0 }))
             return {
                 data: {
-                    products,
+                    products: formattedProducts,
                     metadata: {
                         hastNextPage: totalProducts > page * 6,
                         totalPages: Math.ceil(totalProducts / 6)
@@ -73,9 +72,10 @@ export async function getProductsByCategory({ category, page = 1 }: Category): P
                     category
                 }
             })
+            const formattedProducts: CartProduct[] = products.map(product => ({ product: { ...product, quantity: 0 }, quantity: 0 }))
             return {
                 data: {
-                    products,
+                    products: formattedProducts,
                     metadata: {
                         hastNextPage: totalProducts > 6,
                         totalPages: Math.ceil(totalProducts / 6)
@@ -140,10 +140,10 @@ export async function getProductsByFilterAndSort({ category, params }: FilterWit
                     }
                 }
             })
-
+            const formattedProducts: CartProduct[] = products.map(product => ({ product: { ...product, quantity: 0 }, quantity: 0 }))
             return {
                 data: {
-                    products,
+                    products: formattedProducts,
                     metadata: {
                         hastNextPage: totalProducts > 6,
                         totalPages: Math.ceil(totalProducts / 6)

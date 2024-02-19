@@ -10,13 +10,18 @@ type Product = {
     category: string,
     thumbnail: string,
     images: string[],
-    quantity: number
+}
+
+type CartProduct = {
+    product: Product,
+    quantity: number,
 }
 
 type Cart = {
-    items: Product[],
+    cartProducts: CartProduct[],
     totalAmount: number,
     totalQuantity: number,
+    isChanged?: boolean,
 }
 
 type ServerResponse<T> =

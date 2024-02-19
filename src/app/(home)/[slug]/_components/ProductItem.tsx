@@ -10,8 +10,10 @@ import { Button } from "@/components/ui/button";
 
 type ProductItemProps = {
     data: Product
+    quantity?: number
 }
-export function ProductItem({ data }: ProductItemProps) {
+export function ProductItem({ data, quantity }: ProductItemProps) {
+    console.log("🚀 ~ ProductItem ~ data:", data)
     return (
         <div className="mt-8">
             <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10 bg-white dark:bg-zinc-900 h-[500px] flex flex-col justify-start">
@@ -37,7 +39,7 @@ export function ProductItem({ data }: ProductItemProps) {
                     <div className="rounded-full pl-4 pr-2 py-1 text-white flex items-center justify-between space-x-4 bg-black mt-4 text-xs font-bold hover:bg-black">
                         <span className="">${data.price.toFixed(2)}</span>
                         <span className="bg-zinc-700 rounded-full text-[0.6rem] px-2 py-0 text-white">
-                            <ActionButton data={data} size="icon" className="flex justify-center items-center hover:bg-transparent bg-transparent text-white">
+                            <ActionButton quantity={quantity ?? 1} data={data} size="icon" className="flex justify-center items-center hover:bg-transparent bg-transparent text-white">
                                 <BsCart3 className="w-5 h-5 hover:text-sky-500 " />
                             </ActionButton>
                         </span>
