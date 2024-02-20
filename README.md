@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-### First, rename env.example file to .env to be apple to connect to the database, and to be able to use next-auth.
+### First, rename env.example file to .env to be able to connect to the database, and to be able to use next-auth.
 
 ### Second, run the development server:
 
