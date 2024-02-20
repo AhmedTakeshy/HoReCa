@@ -3,9 +3,9 @@ import Link from 'next/link';
 import React from 'react'
 import { BsCart3 } from "react-icons/bs"
 import { GoHeartFill } from "react-icons/go";
-import { Button } from '../../../components/ui/button';
+import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import ActionButton from '../../../components/ActionButton';
+import ActionButton from '@/components/ActionButton';
 
 type CategoryItemProps = {
     data: Product
@@ -13,7 +13,7 @@ type CategoryItemProps = {
 }
 
 export default function CategoryItem({ data, quantity }: CategoryItemProps) {
-
+    const publicId = data.publicId.slice(0, 11) + data.id + data.publicId.slice(-10)
 
     return (
         <div className="relative flex flex-col justify-between p-2 mx-1 my-3 shadow-md max-w-64 bg-slate-50 dark:bg-zinc-900 rounded-xl">
@@ -33,7 +33,7 @@ export default function CategoryItem({ data, quantity }: CategoryItemProps) {
                 </ActionButton>
             </div>
             <Button asChild className="w-full px-4 py-2 mt-auto font-semibold transition-colors duration-300 ease-in rounded-lg hover:bg-blue-400">
-                <Link href={`/${data.category}/${data.id}`} >
+                <Link href={`/product?query=${data.title.split(" ").join("-")}-${publicId}`} >
                     View details
                 </Link>
             </Button>

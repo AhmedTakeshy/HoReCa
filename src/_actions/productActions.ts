@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 type ProductsProps = {
     page?: number;
-    search?: string | undefined;
+    search?: number;
 
 }
 
@@ -15,14 +15,29 @@ type Metadata = {
         totalPages: number;
     }
 }
-export async function getProducts({ page = 1, search }: ProductsProps): Promise<ServerResponse<Metadata>> {
+
+export const getProductBySearch = async ({ search }: ProductsProps): Promise<ServerResponse<Product>> => {
+    try {
+        const product = await prisma.product.findUnique({
+            where: {
+                id: search
+            }
+        })
+        if (product) {
+            return { data: product, status: "Success", statusCode: 200, successMessage: "Product fetched successfully!" }
+        } else {
+            return { errorMessage: "Product not found!", status: "Error", statusCode: 400, }
+        }
+    } catch (err) {
+        console.log(err)
+        return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error", }
+    }
+
+}
+
+export async function getProducts({ page = 1 }: ProductsProps): Promise<ServerResponse<Metadata>> {
     try {
         const products = await prisma.product.findMany({
-            where: {
-                title: {
-                    contains: search
-                }
-            },
             skip: (page - 1) * 6,
             take: 6
         })
@@ -94,10 +109,10 @@ export async function getProductsByCategory({ category, page = 1 }: Category): P
 
 
 type FilterWithSort = {
-    category: string;
+
     params: { [key: string]: string | undefined }
 }
-export async function getProductsByFilterAndSort({ category, params }: FilterWithSort): Promise<ServerResponse<Metadata>> {
+export async function getProductsByFilterAndSort({ params }: FilterWithSort): Promise<ServerResponse<Metadata>> {
     const sortMappings = {
         "highest-ratings": { type: "ratings", order: "desc" },
         "lowest-ratings": { type: "ratings", order: "asc" },
@@ -106,7 +121,7 @@ export async function getProductsByFilterAndSort({ category, params }: FilterWit
     };
 
     const sortType = sortMappings[params.sorting as keyof typeof sortMappings] || sortMappings["highest-ratings"];
-
+    const category = params.query
     try {
         const products = await prisma.product.findMany({
             where: {

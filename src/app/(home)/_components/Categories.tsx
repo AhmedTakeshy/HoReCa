@@ -22,7 +22,7 @@ export default async function Categories() {
                 <div className="flex items-center justify-start w-full gap-8 px-4">
                     <h2 className="text-2xl font-bold capitalize">{category}</h2>
                     <Button asChild className="px-4 py-2 mt-auto font-semibold transition-colors duration-300 ease-in border rounded-lg hover:bg-transparent hover:text-black hover:border-sky-800">
-                        <Link href={{ pathname: `/${category}`, query: { page: 1 } }}>
+                        <Link href={{ pathname: `/category`, query: { query: category, page: 1 } }}>
                             View all
                         </Link>
                     </Button>
