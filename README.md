@@ -18,9 +18,7 @@ bun dev
 
 ## Structure
 
-### Home page has categories of the products can see all the products of that category by clicking on `View all` button,
-
-### or click on view details to preview that all details of that product.
+### Home page has categories of the products can see all the products of that category by clicking on `View all` button, or click on view details to preview that all details of that product.
 
 #### Within the category there are filtering and sorting.
 
