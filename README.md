@@ -2,7 +2,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+### First, rename env.example file to .env to be apple to connect to the database, and to be able to use next-auth.
+
+### Second, run the development server:
 
 ```bash
 npm run dev
@@ -14,23 +16,28 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Home page has categories of the products can see all the products of that category by clicking on `View all` button,
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### or click on view details to preview that all details of that product.
 
-## Learn More
+#### Within the category there are filtering and sorting.
 
-To learn more about Next.js, take a look at the following resources:
+#### Redux used to manage the cart process like adding, and removing.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### The app is connected to the database by prisma to save the cart of the user in the database and sync the cart of a user, when they sign in.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### There are already 2 accounts made to make the process smoother but also you can sign-up.
 
-## Deploy on Vercel
+## For normal user email: `user@user.com` password: `user1234`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## For admin has access to the dashboard email: `admin@admin.com` password: `admin123`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## The dashboard route is protected, only accessible with account has role=ADMIN
+
+### Some extra features are not implemented yet such as:
+
+#### wishlist
+
+#### The content of dashboard for admins as well as profile for users
