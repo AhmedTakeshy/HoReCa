@@ -5,7 +5,7 @@ import Image from "next/image";
 import ActionButton from "@/components/ActionButton";
 import { BsCart3 } from "react-icons/bs";
 import Stars from "./Stars";
-import { Button } from "@/components/ui/button";
+
 
 
 type ProductItemProps = {
@@ -13,7 +13,6 @@ type ProductItemProps = {
     quantity?: number
 }
 export function ProductItem({ data, quantity }: ProductItemProps) {
-    console.log("🚀 ~ ProductItem ~ data:", data)
     return (
         <div className="mt-8">
             <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10 bg-white dark:bg-zinc-900 h-[500px] flex flex-col justify-start">

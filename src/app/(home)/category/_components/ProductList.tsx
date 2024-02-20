@@ -6,16 +6,15 @@ import PaginationControl from "@/components/PaginationControl";
 
 
 type ProductListProps = {
-    category: string
     searchParams: { [key: string]: string | undefined }
 }
 
-export default async function ProductList({ category, searchParams }: ProductListProps) {
+export default async function ProductList({ searchParams }: ProductListProps) {
 
-    const response = await getProductsByFilterAndSort({ category, params: searchParams });
+    const response = await getProductsByFilterAndSort({ params: searchParams });
     const page = Number(searchParams.page) || 1;
 
-
+    const category = searchParams.query
     return (
         <div className="grid md:grid-cols-[1fr,3fr] gap-8 ">
             <FilterForm />
