@@ -101,8 +101,8 @@ export default function NavMenu() {
                         <HoverCardTrigger className="hover:cursor-pointer">
                             {session?.user.name}
                         </HoverCardTrigger>
-                        <HoverCardContent className="p-4 space-y-4 w-32">
-                            <Link href={`${session.user.role === "USER" ? "/profile" : "/admin"}`}
+                        <HoverCardContent className="p-4 space-y-4 w-40">
+                            <Link href={`${session.user.role === "USER" ? "/profile" : "/dashboard"}`}
                                 aria-description="open profile"
                                 aria-label="open profile"
                                 aria-controls="navbar-default"
@@ -110,7 +110,7 @@ export default function NavMenu() {
                                 className="flex items-center justify-start gap-3 group hover:text-cyan-700">
                                 <LuUserCircle2 className="w-6 h-6 group-hover:text-cyan-700" />
                                 {" "}
-                                {session.user.role === "USER" ? "User" : "Admin"}
+                                {session.user.role === "USER" ? "Profile" : "Dashboard"}
                             </Link>
                             <Button
                                 className="w-full md:w-auto"
