@@ -81,7 +81,7 @@ export default function NavMenu() {
                     <HoverCardTrigger asChild>
                         <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className="relative group">
                             <BsCart3 className="w-6 h-6 group-hover:text-blue-700" />
-                            <span className="absolute w-6 h-6 text-xs rounded-lg flex-center -top-5 -right-3 bg-sky-500">{cart.totalQuantity}</span>
+                            {cart.totalQuantity > 0 && <span className="absolute w-6 h-6 text-xs rounded-lg flex-center -top-5 -right-3 bg-sky-500">{cart.totalQuantity}</span>}
                         </Link>
                     </HoverCardTrigger>
                     <HoverCardContent className="p-4 overflow-y-auto w-80 max-h-96">
@@ -102,7 +102,7 @@ export default function NavMenu() {
                             {session?.user.name}
                         </HoverCardTrigger>
                         <HoverCardContent className="p-4 space-y-4 w-32">
-                            <Link href="/profile"
+                            <Link href={`${session.user.role === "USER" ? "/profile" : "/admin"}`}
                                 aria-description="open profile"
                                 aria-label="open profile"
                                 aria-controls="navbar-default"
@@ -110,7 +110,7 @@ export default function NavMenu() {
                                 className="flex items-center justify-start gap-3 group hover:text-cyan-700">
                                 <LuUserCircle2 className="w-6 h-6 group-hover:text-cyan-700" />
                                 {" "}
-                                Profile
+                                {session.user.role === "USER" ? "User" : "Admin"}
                             </Link>
                             <Button
                                 className="w-full md:w-auto"
