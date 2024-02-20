@@ -21,10 +21,10 @@ export default function ActionButton({ children, data, quantity, ...props }: Pro
 
     const addProduct = async () => {
         if (data) {
-            const productToAdd = { ...data, quantity: quantity > 0 ? quantity : 1 };
+            const productToAdd = { data, quantity: quantity > 0 ? quantity : 1 };
 
 
-            dispatch(addToCart(productToAdd));
+            dispatch(addToCart({ newProduct: productToAdd.data, quantity: productToAdd.quantity }));
 
             if (session?.user?.email) {
                 try {
@@ -35,7 +35,6 @@ export default function ActionButton({ children, data, quantity, ...props }: Pro
                             label: "Undo",
                             onClick: async () => {
                                 await removeProductFromCart(data.id, session?.user?.email!);
-                                // Roll back optimistic UI update if undo action is taken
                                 dispatch(removeFromCart(data.id));
                             },
                         },

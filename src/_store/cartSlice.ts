@@ -18,18 +18,18 @@ const cartSlice = createSlice({
             state.cartProducts = cartProducts;
             state.isChanged = false;
         },
-        addToCart(state, action: PayloadAction<Product>) {
-            const newProduct = action.payload;
+        addToCart(state, action: PayloadAction<{ newProduct: Product, quantity: number }>) {
+            const { newProduct, quantity } = action.payload;
             const existingProduct = state.cartProducts.find((item) => item.product.id === newProduct.id);
             if (!existingProduct) {
                 state.cartProducts.push({
                     product: newProduct,
-                    quantity: 1,
+                    quantity: quantity,
                 });
             } else {
-                existingProduct.quantity++;
+                existingProduct.quantity += quantity;
             }
-            state.totalQuantity++;
+            state.totalQuantity += quantity;
             state.totalAmount += newProduct.price;
             state.isChanged = true;
         },

@@ -20,7 +20,7 @@ export default function SimpleProduct({ data }: Props) {
     const removeProduct = async () => {
         if (session?.user?.email) {
             const productId = data.product.id;
-            const productToRemove = { ...data.product, quantity: data.quantity };
+            const productToRemove = { data: data.product, quantity: data.quantity };
 
             dispatch(removeFromCart(productId));
 
@@ -32,12 +32,12 @@ export default function SimpleProduct({ data }: Props) {
                         label: "Undo",
                         onClick: async () => {
                             await addProductToCart(productId, data.quantity, session?.user?.email!);
-                            dispatch(addToCart(productToRemove)); // Add back locally if undo is successful
+                            dispatch(addToCart({ newProduct: productToRemove.data, quantity: 1 })); // Add back locally if undo is successful
                         },
                     },
                 });
             } catch (error) {
-                dispatch(addToCart(productToRemove));
+                dispatch(addToCart({ newProduct: productToRemove.data, quantity: 1 }));
                 toast.error("Error", {
                     description: "Failed to remove item from the cart. Please try again.",
                 });
@@ -48,7 +48,7 @@ export default function SimpleProduct({ data }: Props) {
                 description: `${data.product.title} has been removed from the cart`,
                 action: {
                     label: "Undo",
-                    onClick: () => dispatch(addToCart(data.product)),
+                    onClick: () => dispatch(addToCart({ newProduct: data.product, quantity: 1 })),
                 },
             });
         }
