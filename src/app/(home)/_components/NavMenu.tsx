@@ -43,7 +43,7 @@ export default function NavMenu() {
             }
             fetchCart()
         }
-    }, [session?.user.email])
+    }, [session?.user.email, dispatch])
 
 
 
