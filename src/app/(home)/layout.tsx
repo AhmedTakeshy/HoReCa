@@ -4,8 +4,10 @@ import ScrollButton from "@/components/ScrollButton"
 
 export default function MainLayout({
     children,
+    auth,
 }: {
     children: React.ReactNode
+    auth: React.ReactNode
 }) {
 
     return (
@@ -13,6 +15,7 @@ export default function MainLayout({
             <AuthProvider>
                 <NavMenu />
                 {children}
+                {auth}
                 <ScrollButton />
             </AuthProvider>
         </>

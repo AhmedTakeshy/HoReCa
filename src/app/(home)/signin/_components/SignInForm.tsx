@@ -75,21 +75,19 @@ export default function SignInForm() {
                     }));
                 } else {
                     const response = await getCartFromDatabase(email)
-                    console.log("🚀 ~ signInCredentials ~ response:", response)
                     response.status === "Success" && dispatch(replaceCart({
                         cartProducts: response.data.cartProducts,
                         totalAmount: response.data.totalAmount,
                         totalQuantity: response.data.totalQuantity
                     }));
                 }
-                router.push("/")
+                router.push(`/cart`)
             } else {
                 toast("Oops!", {
                     description: "Please check your email and password and try again.",
                 })
             }
         } catch (error) {
-            console.log("🚀 ~ signInCredentials ~ error:", error)
             toast("Error!", {
                 description: "Something went wrong. Please try again.",
             })

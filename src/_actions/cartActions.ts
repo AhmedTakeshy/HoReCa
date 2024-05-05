@@ -337,7 +337,7 @@ export const clearCart = async (email: string): Promise<ServerResponse<Cart>> =>
             },
         })
 
-        revalidatePath("/")
+        revalidatePath("/cart")
         return {
             data: {
                 cartProducts: [],
