@@ -1,7 +1,4 @@
-import Link from 'next/link';
-import React from 'react'
 import { Skeleton } from "../../../components/ui/skeleton";
-import { MdOutlinePhoneAndroid } from 'react-icons/md';
 
 export default function LoadingBanner() {
 
