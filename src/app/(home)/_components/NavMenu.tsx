@@ -24,7 +24,8 @@ import SimpleProduct from "@/components/SimpleProduct"
 import { signOut, useSession } from "next-auth/react"
 import { getCartFromDatabase } from "@/_actions/cartActions"
 import { replaceCart } from "@/_store/cartSlice"
-import React from "react"
+import Image from "next/image"
+import logo from "@/../public/images/logo.png"
 
 
 export default function NavMenu() {
@@ -48,7 +49,7 @@ export default function NavMenu() {
 
     return (
         <header className={`flex mt-6 mb-10 mx-auto md:justify-around justify-between items-center w-full md:px-8 px-3`}>
-            <h1 className="text-3xl font-bold xl:text-6xl lg:text-4xl te text-blue-950 dark:text-sky-700">HoReCa</h1>
+            <Image src={logo} width={200} height={75} alt="logo" />
             <NavigationMenu className={` items-center  justify-between hidden gap-2 md:flex`}>
                 <NavigationMenuList className="items-center justify-between hidden gap-2 md:flex ">
                     <NavigationMenuItem>

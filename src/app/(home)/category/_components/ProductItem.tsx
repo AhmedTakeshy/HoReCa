@@ -38,7 +38,7 @@ export function ProductItem({ data, quantity }: ProductItemProps) {
                     <div className="rounded-full pl-4 pr-2 py-1 text-white flex items-center justify-between space-x-4 bg-black mt-4 text-xs font-bold hover:bg-black">
                         <span className="">${data.price.toFixed(2)}</span>
                         <span className="bg-zinc-700 rounded-full text-[0.6rem] px-2 py-0 text-white">
-                            <ActionButton quantity={quantity ?? 1} data={data} size="icon" className="flex justify-center items-center hover:bg-transparent bg-transparent text-white">
+                            <ActionButton action="add" quantity={quantity ?? 1} data={data} size="icon" className="flex justify-center items-center hover:bg-transparent bg-transparent text-white">
                                 <BsCart3 className="w-5 h-5 hover:text-sky-500 " />
                             </ActionButton>
                         </span>

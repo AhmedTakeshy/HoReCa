@@ -2,7 +2,7 @@
 
 import { useAppDispatch } from "@/_store/hooks"
 import { Button, ButtonProps } from "./ui/button"
-import { addToCart, removeFromCart, replaceCart } from "@/_store/cartSlice"
+import { addToCart, removeFromCart } from "@/_store/cartSlice"
 import { toast } from "sonner"
 import { addProductToCart, removeProductFromCart } from "@/_actions/cartActions"
 import { useSession } from "next-auth/react"
@@ -10,11 +10,13 @@ import { useSession } from "next-auth/react"
 
 type Props = ButtonProps & {
     children: string | React.ReactNode
-    data?: Product
+    data: Product
     quantity: number
+    action: "add" | "remove"
 }
 
-export default function ActionButton({ children, data, quantity, ...props }: Props) {
+export default function ActionButton({ children, data, action, quantity, ...props }: Props) {
+
 
     const dispatch = useAppDispatch()
     const { data: session } = useSession()
@@ -58,9 +60,50 @@ export default function ActionButton({ children, data, quantity, ...props }: Pro
                 });
             }
         }
+    }
+    const removeProduct = async () => {
+        if (session?.user?.email) {
+            const productId = data.id;
+            const productToRemove = { data: data, quantity: quantity };
+
+            dispatch(removeFromCart(productId));
+
+            try {
+                await removeProductFromCart(productId, session?.user?.email);
+                toast.success("Removed Item", {
+                    description: ` ${data.title} has been removed from the cart`,
+                    action: {
+                        label: "Undo",
+                        onClick: async () => {
+                            await addProductToCart(productId, quantity, session?.user?.email!);
+                            dispatch(addToCart({ newProduct: productToRemove.data, quantity: 1 })); // Add back locally if undo is successful
+                        },
+                    },
+                });
+            } catch (error) {
+                dispatch(addToCart({ newProduct: productToRemove.data, quantity: 1 }));
+                toast.error("Error", {
+                    description: "Failed to remove item from the cart. Please try again.",
+                });
+            }
+        } else {
+            dispatch(removeFromCart(data.id));
+            toast.success("Removed Item", {
+                description: `${data.title} has been removed from the cart`,
+                action: {
+                    label: "Undo",
+                    onClick: () => dispatch(addToCart({ newProduct: data, quantity: 1 })),
+                },
+            });
+        }
     };
+
+
     return (
-        <Button {...props} onClick={addProduct}>
+        <Button
+            {...props}
+            onClick={() => action === "add" ? addProduct() : removeProduct()}
+        >
             {children}
         </Button>
     )
