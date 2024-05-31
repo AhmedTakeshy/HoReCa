@@ -1,3 +1,5 @@
+
+
 type Product = {
     id: number,
     publicId: string,
