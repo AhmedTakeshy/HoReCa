@@ -24,8 +24,8 @@ export async function POST(request: Request) {
             payment_method_types: ["card"],
             line_items: checkoutProducts,
             mode: "payment",
-            success_url: "http://localhost:3000/",
-            cancel_url: "http://localhost:3000/cart",
+            success_url: process.env.NEXTAUTH_URL + `/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: process.env.NEXTAUTH_URL + "/cart",
         });
         return NextResponse.json({ sessionId: session.id }, { status: 200 });
     } catch (err: any) {

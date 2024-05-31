@@ -4,8 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 type ProductsProps = {
     page?: number;
-    search?: number;
-
+    id?: number;
 }
 
 type Metadata = {
@@ -16,11 +15,11 @@ type Metadata = {
     }
 }
 
-export const getProductBySearch = async ({ search }: ProductsProps): Promise<ServerResponse<Product>> => {
+export async function getProductById({ id }: ProductsProps): Promise<ServerResponse<Product>> {
     try {
         const product = await prisma.product.findUnique({
             where: {
-                id: search
+                id
             }
         })
         if (product) {
