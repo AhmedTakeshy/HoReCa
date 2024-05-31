@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 
 
 export const addCartToDatabase = async (cart: Cart, email: string): Promise<ServerResponse<Cart>> => {
-    console.log("🚀 ~ addCartToDatabase ~ cart:", cart)
+
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -65,7 +65,7 @@ export const addCartToDatabase = async (cart: Cart, email: string): Promise<Serv
                 }
             }
         }
-        console.log("🚀 ~ addCartToDatabase ~ userCart:", userCart)
+
         const products = await prisma.cartItem.findMany({
             where: {
                 cartId: userCart.id,
@@ -75,7 +75,7 @@ export const addCartToDatabase = async (cart: Cart, email: string): Promise<Serv
                 quantity: true,
             },
         })
-
+        revalidatePath("/cart")
         return {
             data: {
                 cartProducts: products.map((product) => ({
@@ -220,7 +220,7 @@ export const addProductToCart = async (productId: number, quantity: number, emai
                 quantity: true,
             },
         })
-        revalidatePath("/")
+        revalidatePath("/cart")
         return {
             data: {
                 cartProducts: products.map((product) => ({
@@ -284,7 +284,7 @@ export const removeProductFromCart = async (productId: number, email: string): P
                 quantity: true,
             },
         })
-        revalidatePath("/")
+        revalidatePath("/cart")
         return {
             data: {
                 cartProducts: products.map((product) => ({

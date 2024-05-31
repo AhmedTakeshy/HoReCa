@@ -45,9 +45,6 @@ export default function Cart({ cartDb, user }: CartProps) {
                 }),
             });
             const { sessionId } = await response.json();
-            if (sessionId) {
-                await clearCart(user?.email as string);
-            }
             const result = await stripe?.redirectToCheckout({
                 sessionId,
             });
@@ -104,8 +101,12 @@ export default function Cart({ cartDb, user }: CartProps) {
                             <p className="">${userCart.totalAmount}</p>
                         </div>
                         <div className="flex justify-between">
+                            <p className="dark:text-slate-300">Shipping</p>
+                            <p className="">+ $20.00</p>
+                        </div>
+                        <div className="flex justify-between">
                             <p className="dark:text-slate-300">Discount</p>
-                            <p className="">$0.00</p>
+                            <p className="">- $20.00</p>
                         </div>
                         <hr className="my-4" />
                         <div className="flex justify-between">
