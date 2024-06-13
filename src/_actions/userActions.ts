@@ -47,18 +47,17 @@ export async function updateUser(values: UserUpdateSchema) {
         if (!result.success) {
             return { error: true, message: "Something wrong with entered data!", status: 401 }
         }
-        const { username, email, id, role } = result.data
+        const { username, email } = result.data
         const res = await prisma.user.update({
             where: {
-                id,
+                email,
             },
             data: {
                 username,
                 email,
-                role
             }
         })
-        revalidatePath("/admin/accounts")
+        revalidatePath("/profile")
         return { error: false, message: `User has been updated successfully.`, status: 200 }
     } catch (error) {
         console.log(error);
@@ -72,10 +71,10 @@ export async function updatePassword(values: PasswordSchema) {
         if (!result.success) {
             return { error: true, message: "Something wrong with entered data!", status: 401 }
         }
-        const { currentPassword, newPassword, id } = result.data
+        const { currentPassword, newPassword, email } = result.data
         const user = await prisma.user.findUnique({
             where: {
-                id
+                email
             }
         })
         const isMatch = await bcrypt.compare(currentPassword, user?.password!)
@@ -85,7 +84,7 @@ export async function updatePassword(values: PasswordSchema) {
         const hashedPassword = await hash(newPassword, 10)
         await prisma.user.update({
             where: {
-                id
+                email
             },
             data: {
                 password: hashedPassword

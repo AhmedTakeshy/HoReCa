@@ -30,14 +30,12 @@ export const signUpFormSchema = z.object({
 })
 
 export const userUpdateSchema = z.object({
-    id: z.number().int().positive(),
-    username: z.string().min(3, { message: "Username must be at least 3 characters" }),
-    email: z.string().email({ message: "Please enter a valid email address" }),
-    role: z.enum(["USER", "ADMIN"]),
+    username: z.string().min(3, { message: "Username must be at least 3 characters" }).optional(),
+    email: z.string().email({ message: "Please enter a valid email address" }).optional(),
 })
 
 export const passwordSchema = z.object({
-    id: z.number().int().positive(),
+    email: z.string().email({ message: "Please enter a valid email address" }),
     currentPassword: z.string().min(8, { message: "Password must be at least 8 characters." }),
     newPassword: z.string().min(8, { message: "Password must be at least 8 characters." }),
     confirmPassword: z.string().min(8, { message: "Password must be at least 8 characters." }),

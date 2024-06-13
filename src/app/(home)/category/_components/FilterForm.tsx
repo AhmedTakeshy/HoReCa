@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/popover"
 import { toast } from "sonner"
 import { useCallback, useEffect, useState } from "react"
-import { getCategories } from "@/_actions/productActions"
+import { getCategories } from "@/_actions/categoryActions"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { usePathname, useSearchParams } from "next/navigation"
