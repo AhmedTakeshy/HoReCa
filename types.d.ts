@@ -45,3 +45,13 @@ enum Role {
     ADMIN,
     USER,
 }
+
+type WishlistItem = {
+    id: number;
+    publicId: string;
+    productId: number;
+    product: Product;
+    wishlistId: number;
+    createdAt: Date;
+    updatedAt: Date;
+}

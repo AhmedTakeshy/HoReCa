@@ -11,12 +11,15 @@ const nextConfig = {
         protocol: "https",
         hostname: "i.imgur.com",
       },
+      {
+        protocol: "https",
+        hostname: "tailwindui.com",
+      },
     ],
   },
 };
 
 module.exports = nextConfig;
-
 
 // Injected content via Sentry wizard below
 
