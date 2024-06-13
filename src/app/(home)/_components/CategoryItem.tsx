@@ -2,26 +2,34 @@
 import Link from 'next/link';
 import React from 'react'
 import { BsCart3 } from "react-icons/bs"
-import { GoHeartFill } from "react-icons/go";
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import ActionButton from '@/components/ActionButton';
+import WishlistButton from '@/components/wishlistButton';
+import { WishlistItem } from '@prisma/client';
 
 type CategoryItemProps = {
     data: Product
     quantity: number
+    email: string | null | undefined
+    wishlistItems: WishlistItem[]
 }
 
-export default function CategoryItem({ data, quantity }: CategoryItemProps) {
+export default function CategoryItem({ data, quantity, email, wishlistItems }: CategoryItemProps) {
     const publicId = data.publicId.slice(0, 11) + data.id + data.publicId.slice(-10)
+
 
     return (
         <div className="relative flex flex-col justify-between p-2 mx-1 my-3 shadow-md max-w-64 bg-slate-50 dark:bg-zinc-900 rounded-xl">
             <div className="relative overflow-x-hidden rounded-lg">
                 <Image className="object-cover h-40 rounded-md" src={data.thumbnail} alt={`${data.title}-image`} width={240} height={160} />
-                <ActionButton action='add' data={data} quantity={quantity} size="icon" className="absolute p-2 rounded-full right-2 top-2 group">
-                    <GoHeartFill className="w-6 h-6 group-hover:text-red-600 group-hover:animate-pumping-heart" />
-                </ActionButton>
+                <WishlistButton
+                    productId={data.id}
+                    email={email}
+                    title={data.title}
+                    mode={wishlistItems.some(item => item.productId === data.id) ? "remove" : "add"}
+                    className="absolute p-2 rounded-full right-2 top-2 group"
+                />
             </div>
             <div className="flex items-center justify-between pl-2 my-4 min-w-60">
                 <div className='pointer-events-none'>
