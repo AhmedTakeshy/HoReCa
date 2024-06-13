@@ -26,22 +26,33 @@ import { getCartFromDatabase } from "@/_actions/cartActions"
 import { replaceCart } from "@/_store/cartSlice"
 import Image from "next/image"
 import logo from "@/../public/images/logo.png"
+import { Product } from "@prisma/client"
+import { getWishlistItems } from "@/_actions/wishlistActions"
+import SimpleWishlist from "./simpleWishlist"
 
 
 export default function NavMenu() {
     const [open, setOpen] = useState<boolean>(false)
     const cart = useAppSelector(state => state.cart)
+    const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([])
     const { data: session } = useSession()
     const dispatch = useAppDispatch()
     useEffect(() => {
         if (session?.user.email) {
             const fetchCart = async () => {
-                const response = await getCartFromDatabase(session?.user.email!)
+                const response = await getCartFromDatabase(session?.user.email as string)
                 if (response.status === "Success") {
                     dispatch(replaceCart({ cartProducts: response.data.cartProducts, totalQuantity: response.data.totalQuantity, totalAmount: response.data.totalAmount }))
                 }
             }
+            const fetchWishlist = async () => {
+                const response = await getWishlistItems({ email: session?.user.email as string })
+                if (response.status === "Success") {
+                    setWishlistItems(response.data)
+                }
+            }
             fetchCart()
+            fetchWishlist()
         }
     }, [session?.user.email, dispatch])
 
@@ -75,9 +86,7 @@ export default function NavMenu() {
                 </NavigationMenuList>
             </NavigationMenu>
             <div className="items-center justify-between hidden gap-4 md:flex ">
-                <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false" className="group">
-                    <GoHeartFill className="w-6 h-6 group-hover:animate-pumping-heart group-hover:text-red-600" />
-                </Link>
+
                 <HoverCard openDelay={200} closeDelay={100}>
                     <HoverCardTrigger asChild>
                         <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className="relative group">
@@ -108,10 +117,16 @@ export default function NavMenu() {
                                 aria-label="open profile"
                                 aria-controls="navbar-default"
                                 aria-expanded="false"
-                                className="flex items-center justify-start gap-3 group hover:text-cyan-700">
-                                <LuUserCircle2 className="w-6 h-6 group-hover:text-cyan-700" />
+                                className="flex items-center justify-start gap-3 group hover:text-blue-400">
+                                <LuUserCircle2 className="w-6 h-6 group-hover:text-cyan-400" />
                                 {" "}
                                 {session.user.role === "USER" ? "Profile" : "Dashboard"}
+                            </Link>
+                            <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false" className="flex items-center justify-start gap-3 group hover:text-red-600">
+                                <GoHeartFill className="w-6 h-6 group-hover:animate-pumping-heart group-hover:text-red-600" />{" "}Wishlist
+                            </Link>
+                            <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className="flex items-center justify-start gap-3 group hover:text-blue-700">
+                                <BsCart3 className="w-6 h-6 group-hover:text-blue-700" />{" "}Cart
                             </Link>
                             <Button
                                 className="w-full md:w-auto"
