@@ -8,14 +8,14 @@ import { addProductToCart, removeProductFromCart } from "@/_actions/cartActions"
 import { useSession } from "next-auth/react"
 
 
-type Props = ButtonProps & {
+type ActionButtonProps = ButtonProps & {
     children: string | React.ReactNode
     data: Product
     quantity: number
     action: "add" | "remove"
 }
 
-export default function ActionButton({ children, data, action, quantity, ...props }: Props) {
+export default function ActionButton({ children, data, action, quantity, ...props }: ActionButtonProps) {
 
 
     const dispatch = useAppDispatch()
