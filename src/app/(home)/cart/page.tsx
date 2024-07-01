@@ -10,7 +10,7 @@ export default async function page() {
 
     return (
         <div className='flex flex-col gap-4'>
-            <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
+            <h1 className="mb-10 text-center text-2xl font-semibold tracking-widest">Cart Items</h1>
             <Cart cartDb={cartResponse?.status === "Success" ? cartResponse.data : undefined} user={session?.user} />
         </div>
     )
