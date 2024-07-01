@@ -12,30 +12,38 @@ import { useEffect, useState } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-} from "@/components/ui/hover-card"
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { GoHeartFill } from "react-icons/go";
-import { BsCart3 } from "react-icons/bs";
+import { BsCart3, BsBox2Heart } from "react-icons/bs";
 import { LuUserCircle2 } from "react-icons/lu";
 import { useAppDispatch, useAppSelector } from "@/_store/hooks"
-import SimpleProduct from "@/components/SimpleProduct"
 import { signOut, useSession } from "next-auth/react"
 import { getCartFromDatabase } from "@/_actions/cartActions"
 import { replaceCart } from "@/_store/cartSlice"
 import Image from "next/image"
 import logo from "@/../public/images/logo.png"
-import { Product } from "@prisma/client"
-import { getWishlistItems } from "@/_actions/wishlistActions"
-import SimpleWishlist from "./simpleWishlist"
+import {
+    Sheet,
+    SheetContent,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+import { PiSignInFill, PiSignOutBold } from "react-icons/pi";
+import SideCart from "./sideCart"
+import { usePathname } from "next/navigation"
 
 
 export default function NavMenu() {
     const [open, setOpen] = useState<boolean>(false)
     const cart = useAppSelector(state => state.cart)
-    const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([])
     const { data: session } = useSession()
+    const pathname = usePathname()
     const dispatch = useAppDispatch()
     useEffect(() => {
         if (session?.user.email) {
@@ -45,22 +53,22 @@ export default function NavMenu() {
                     dispatch(replaceCart({ cartProducts: response.data.cartProducts, totalQuantity: response.data.totalQuantity, totalAmount: response.data.totalAmount }))
                 }
             }
-            const fetchWishlist = async () => {
-                const response = await getWishlistItems({ email: session?.user.email as string })
-                if (response.status === "Success") {
-                    setWishlistItems(response.data)
-                }
-            }
             fetchCart()
-            fetchWishlist()
         }
     }, [session?.user.email, dispatch])
+
+    useEffect(() => {
+        setOpen(false)
+    }, [pathname])
+
 
 
 
     return (
         <header className={`flex mt-6 mb-10 mx-auto md:justify-around justify-between items-center w-full md:px-8 px-3`}>
-            <Image src={logo} width={200} height={75} alt="logo" />
+            <Link href="/" aria-description="open home page" aria-label="open home page" aria-controls="navbar-default" aria-expanded="false">
+                <Image src={logo} width={200} height={75} alt="logo" />
+            </Link>
             <NavigationMenu className={` items-center  justify-between hidden gap-2 md:flex`}>
                 <NavigationMenuList className="items-center justify-between hidden gap-2 md:flex ">
                     <NavigationMenuItem>
@@ -87,65 +95,104 @@ export default function NavMenu() {
             </NavigationMenu>
             <div className="items-center justify-between hidden gap-4 md:flex ">
 
-                <HoverCard openDelay={200} closeDelay={100}>
-                    <HoverCardTrigger asChild>
-                        <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className="relative group">
+
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button
+                            size="icon"
+                            aria-description="open cart"
+                            aria-label="open cart"
+                            aria-controls="navbar-default"
+                            aria-expanded="false"
+                            className="relative group !bg-transparent text-slate-900 shadow-none dark:text-white">
                             <BsCart3 className="w-6 h-6 group-hover:text-blue-700" />
-                            {cart.totalQuantity > 0 && <span className="absolute w-6 h-6 text-xs rounded-lg flex-center -top-5 -right-3 bg-sky-500">{cart.totalQuantity}</span>}
-                        </Link>
-                    </HoverCardTrigger>
-                    <HoverCardContent className="p-4 overflow-y-auto w-80 max-h-96">
-                        {
-                            cart.cartProducts.length > 0
-                                ?
-                                cart.cartProducts.map(product => (
-                                    <SimpleProduct key={product.product.id} data={product} />
-                                ))
-                                :
-                                <p>The cart is empty.</p>
-                        }
-                    </HoverCardContent>
-                </HoverCard>
+                            {cart.totalQuantity > 0 && <span className="absolute w-6 h-6 text-xs transition-colors duration-300 rounded-lg flex-center -top-4 -right-2 bg-sky-500">{cart.totalQuantity}</span>}
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
+                        <SideCart
+                            cartProducts={cart.cartProducts}
+                            totalAmount={cart.totalAmount}
+                            email={session?.user.email}
+                        />
+                    </SheetContent>
+                </Sheet>
                 {session?.user ?
-                    <HoverCard openDelay={200} closeDelay={100}>
-                        <HoverCardTrigger className="hover:cursor-pointer">
-                            {session?.user.name}
-                        </HoverCardTrigger>
-                        <HoverCardContent className="p-4 space-y-4 w-40">
-                            <Link href={`${session.user.role === "USER" ? "/profile" : "/dashboard"}`}
-                                aria-description="open profile"
-                                aria-label="open profile"
-                                aria-controls="navbar-default"
-                                aria-expanded="false"
-                                className="flex items-center justify-start gap-3 group hover:text-blue-400">
-                                <LuUserCircle2 className="w-6 h-6 group-hover:text-cyan-400" />
-                                {" "}
-                                {session.user.role === "USER" ? "Profile" : "Dashboard"}
-                            </Link>
-                            <Link href="/wishlist" aria-description="open wishlist" aria-label="open wishlist" aria-controls="navbar-default" aria-expanded="false" className="flex items-center justify-start gap-3 group hover:text-red-600">
-                                <GoHeartFill className="w-6 h-6 group-hover:animate-pumping-heart group-hover:text-red-600" />{" "}Wishlist
-                            </Link>
-                            <Link href="/cart" aria-description="open cart" aria-label="open cart" aria-controls="navbar-default" aria-expanded="false" className="flex items-center justify-start gap-3 group hover:text-blue-700">
-                                <BsCart3 className="w-6 h-6 group-hover:text-blue-700" />{" "}Cart
-                            </Link>
-                            <Button
-                                className="w-full md:w-auto"
-                                variant="destructive"
-                                onClick={() => signOut({ callbackUrl: "/" })}
-                            >
-                                Sign out
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant={"outline"}>
+                                {session?.user.name}
                             </Button>
-                        </HoverCardContent>
-                    </HoverCard >
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem className="group">
+                                    <LuUserCircle2 className="w-5 h-5 mr-2 group-hover:text-blue-400" />
+                                    <Link href={`${session.user.role === "USER" ? "/profile?type=membership" : "/dashboard"}`}
+                                        aria-description="open profile"
+                                        aria-label="open profile"
+                                        aria-controls="navbar-default"
+                                        aria-expanded="false"
+                                        className="">
+                                        {session.user.role === "USER" ? "Profile" : "Dashboard"}
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="group">
+                                    <GoHeartFill className="w-5 h-5 group-hover:animate-pumping-heart group-hover:text-red-600 mr-2" />
+                                    <Link
+                                        href="/wishlist"
+                                        aria-description="open wishlist"
+                                        aria-label="open wishlist"
+                                        aria-controls="navbar-default"
+                                        aria-expanded="false">
+                                        Wishlist
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="group">
+                                    <BsBox2Heart className="w-5 h-5 mr-2 group-hover:text-orange-600" />
+                                    <Link
+                                        href="/orders"
+                                        aria-description="open cart"
+                                        aria-label="open cart"
+                                        aria-controls="navbar-default"
+                                        aria-expanded="false"
+                                    >
+                                        Orders
+                                    </Link>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem
+                                    className="group hover:cursor-pointer"
+                                    onClick={() => signOut({ callbackUrl: "/" })}>
+                                    <PiSignOutBold className="w-5 h-5 group-hover:text-indigo-700 mr-2" />
+                                    <span>Logout</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                     :
-                    <Link href="/signin" aria-description="open profile" aria-label="open profile" aria-controls="navbar-default" aria-expanded="false" className="group">
-                        <LuUserCircle2 className="w-6 h-6 hover:text-cyan-700" />
-                    </Link>}
+                    <Button asChild variant={"outline"}>
+                        <Link
+                            href="/signin"
+                            aria-description="open profile"
+                            aria-label="open profile"
+                            aria-controls="navbar-default"
+                            aria-expanded="false"
+                            className="group flex justify-center items-center">
+                            <PiSignInFill className="w-5 h-5 group-hover:text-cyan-700 mr-2" />
+                            Login
+                        </Link>
+                    </Button>
+                }
                 <ModeToggler />
-            </div>
+            </div >
 
             {/* Nav for small screens */}
-            <div className={`flex items-center justify-between h-full md:hidden rounded-xl `}>
+            < div className={`flex items-center justify-between h-full md:hidden rounded-xl `}>
                 <Popover onOpenChange={setOpen} open={open}>
                     <PopoverTrigger aria-controls="2" aria-labelledby="open menu button" asChild>
                         <div className="flex items-center gap-2">
@@ -188,18 +235,98 @@ export default function NavMenu() {
                                 <Link href="/wishlist" className={`${buttonVariants({ variant: "default" })} w-full group`}>
                                     <GoHeartFill className="w-6 h-6 group-hover:animate-pumping-heart group-hover:text-red-600 " />
                                 </Link>
-                                <Link href="/cart" className={`${buttonVariants({ variant: "default" })} w-full group relative overflow-hidden`}>
-                                    <BsCart3 className="absolute w-6 h-6 group-hover:animate-move-out group-hover:text-blue-700" />
-                                </Link>
+                                <Sheet>
+                                    <SheetTrigger asChild>
+                                        <Button className={` w-full group relative overflow-hidden`}>
+                                            <BsCart3 className="absolute w-6 h-6 group-hover:animate-move-out group-hover:text-blue-700" />
+                                        </Button>
+                                    </SheetTrigger>
+                                    <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
+                                        <SideCart
+                                            cartProducts={cart.cartProducts}
+                                            totalAmount={cart.totalAmount}
+                                            email={session?.user.email}
+                                        />
+                                    </SheetContent>
+                                </Sheet>
                             </div>
-                            <Link href="/signin" className={`${buttonVariants({ variant: "default" })} my-2 w-full mx-4 relative group hover:animate-flip perspective hover:bg-cyan-950`}>
-                                <LuUserCircle2 className="w-6 h-6" />
-                                <span className="flex items-center justify-center text-lg shadow-md shadow-blue-500 backface">Sign in</span>
-                            </Link>
+                            {session?.user ? (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button className="w-full my-2 mx-2">
+                                            {session?.user.name}
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-screen ">
+                                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem className="group">
+                                                <LuUserCircle2 className="w-5 h-5 mr-2 group-hover:text-blue-400" />
+                                                <Link href={`${session.user.role === "USER" ? "/profile?type=membership" : "/dashboard"}`}
+                                                    aria-description="open profile"
+                                                    aria-label="open profile"
+                                                    aria-controls="navbar-default"
+                                                    aria-expanded="false"
+                                                    className="">
+                                                    {session.user.role === "USER" ? "Profile" : "Dashboard"}
+                                                </Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="group">
+                                                <GoHeartFill className="w-5 h-5 group-hover:animate-pumping-heart group-hover:text-red-600 mr-2" />
+                                                <Link
+                                                    href="/wishlist"
+                                                    aria-description="open wishlist"
+                                                    aria-label="open wishlist"
+                                                    aria-controls="navbar-default"
+                                                    aria-expanded="false">
+                                                    Wishlist
+                                                </Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="group">
+                                                <BsBox2Heart className="w-5 h-5 mr-2 group-hover:text-orange-600" />
+                                                <Link
+                                                    href="/orders"
+                                                    aria-description="open cart"
+                                                    aria-label="open cart"
+                                                    aria-controls="navbar-default"
+                                                    aria-expanded="false"
+                                                >
+                                                    Orders
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem
+                                                className="group hover:cursor-pointer"
+                                                onClick={() => signOut({ callbackUrl: "/" })}>
+                                                <PiSignOutBold className="w-5 h-5 group-hover:text-indigo-700 mr-2" />
+                                                <span>Logout</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                                // <Link href={`${session.user.role === "USER" ? "/profile?type=membership" : "/dashboard"}`}
+                                //     aria-description="open profile"
+                                //     aria-label="open profile"
+                                //     aria-controls="navbar-default"
+                                //     aria-expanded="false"
+                                //     className="">
+                                //         <LuUserCircle2 className="w-5 h-5 mr-2 group-hover:text-blue-400" />
+                                //     {session.user.role === "USER" ? "Profile" : "Dashboard"}
+                                // </Link>
+                            ) : (
+                                <Link href="/signin" className={`${buttonVariants({ variant: "default" })} my-2 w-full mx-4 relative group hover:animate-flip perspective hover:bg-cyan-950`}>
+                                    <LuUserCircle2 className="w-6 h-6" />
+                                    <span className="flex items-center justify-center text-lg shadow-md shadow-blue-500 backface">Sign in</span>
+                                </Link>
+                            )}
+
                         </div>
                     </PopoverContent>
                 </Popover>
-            </div>
-        </header>
+            </div >
+        </header >
     )
 }

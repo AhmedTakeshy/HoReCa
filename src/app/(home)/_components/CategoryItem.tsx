@@ -33,7 +33,7 @@ export default function CategoryItem({ data, quantity, email, wishlistItems }: C
             </div>
             <div className="flex items-center justify-between pl-2 my-4 min-w-60">
                 <div className='pointer-events-none'>
-                    <p className="mb-0 text-lg font-semibold">{data.title.split(" ").slice(0, 2).join(" ")}</p>
+                    <p className="mb-0 text-lg font-semibold">{data.title.split(/[\s-]+/).slice(0, 2).join(" ")}</p>
                     <p className="mt-0 text-md">${data.price.toFixed(2)}</p>
                 </div>
                 <ActionButton action='add' data={data} quantity={quantity} size="icon" className="flex flex-col-reverse mb-1 mr-2 group">
