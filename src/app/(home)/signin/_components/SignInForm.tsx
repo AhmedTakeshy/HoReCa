@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { PiEyeBold, PiEyeClosedBold } from "react-icons/pi";
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { useRouter, usePathname } from "next/navigation"
 import { toast } from "sonner"
 import { SignInFormSchema, signInFormSchema } from "@/lib/formSchemas"
 import SubmitButton from "@/components/SubmitButton"
@@ -81,7 +81,7 @@ export default function SignInForm() {
                         totalQuantity: response.data.totalQuantity
                     }));
                 }
-                router.push(`/cart`)
+                router.push(`/`)
             } else {
                 toast("Oops!", {
                     description: "Please check your email and password and try again.",

@@ -30,12 +30,19 @@ export const signUpFormSchema = z.object({
 })
 
 export const userUpdateSchema = z.object({
-    username: z.string().min(3, { message: "Username must be at least 3 characters" }).optional(),
-    email: z.string().email({ message: "Please enter a valid email address" }).optional(),
-})
+    username: z.union([
+        z.string().min(3, { message: "Username must be at least 3 characters" }).optional(),
+        z.literal("").optional(),
+    ]).transform(e => e === "" ? undefined : e),
+    email: z.string().email(),
+    newEmail: z.union([
+        z.string().email({ message: "Please enter a valid email address" }).optional(),
+        z.literal("").optional(),
+    ]).transform(e => e === "" ? undefined : e),
+});
 
 export const passwordSchema = z.object({
-    email: z.string().email({ message: "Please enter a valid email address" }),
+    email: z.string().email(),
     currentPassword: z.string().min(8, { message: "Password must be at least 8 characters." }),
     newPassword: z.string().min(8, { message: "Password must be at least 8 characters." }),
     confirmPassword: z.string().min(8, { message: "Password must be at least 8 characters." }),

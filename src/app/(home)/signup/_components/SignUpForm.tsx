@@ -31,6 +31,7 @@ export default function SignUpForm() {
 
     const [isPending, setIsPending] = useState<boolean>(false)
     const [open, setOpen] = useState<boolean>(false)
+
     const [showPassword, setShowPassword] = useState<{
         password: boolean,
         confirmPassword: boolean

@@ -4,6 +4,8 @@ import { PasswordSchema, SignUpFormSchema, UserUpdateSchema, passwordSchema, sig
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import bcrypt, { hash } from "bcryptjs";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function signUpAction(values: SignUpFormSchema) {
     try {
@@ -31,7 +33,7 @@ export async function signUpAction(values: SignUpFormSchema) {
                 }
             })
             const { email: userEmail } = user
-            revalidatePath("/admin/accounts")
+            revalidatePath("/signin")
             return { error: false, message: `User has been created successfully with this email ${userEmail}`, status: 201 }
         }
     } catch (error) {
@@ -47,14 +49,25 @@ export async function updateUser(values: UserUpdateSchema) {
         if (!result.success) {
             return { error: true, message: "Something wrong with entered data!", status: 401 }
         }
-        const { username, email } = result.data
+        const { username, email, newEmail } = result.data
+
+        if (newEmail) {
+            const existedUserEmail = await prisma.user.findUnique({
+                where: {
+                    email: newEmail,
+                }
+            })
+            if (existedUserEmail) {
+                return { error: true, message: "There is a user already with this email!", status: 409 }
+            }
+        }
         const res = await prisma.user.update({
             where: {
                 email,
             },
             data: {
                 username,
-                email,
+                email: newEmail,
             }
         })
         revalidatePath("/profile")
@@ -90,7 +103,7 @@ export async function updatePassword(values: PasswordSchema) {
                 password: hashedPassword
             }
         })
-        revalidatePath("/admin/accounts")
+        revalidatePath("/profile")
         return { error: false, message: "Password has been updated successfully.", status: 200 }
     } catch (error) {
         console.log(error);
