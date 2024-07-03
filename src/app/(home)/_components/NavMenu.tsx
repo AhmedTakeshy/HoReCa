@@ -37,12 +37,13 @@ import {
 import { PiSignInFill, PiSignOutBold } from "react-icons/pi";
 import SideCart from "./sideCart"
 import { usePathname } from "next/navigation"
+import { ImSpinner9 } from "react-icons/im"
 
 
 export default function NavMenu() {
     const [open, setOpen] = useState<boolean>(false)
     const cart = useAppSelector(state => state.cart)
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
     const pathname = usePathname()
     const dispatch = useAppDispatch()
     useEffect(() => {
@@ -117,8 +118,12 @@ export default function NavMenu() {
                         />
                     </SheetContent>
                 </Sheet>
-                {session?.user ?
-                    <DropdownMenu>
+                {status === "loading" ? (
+                    <Button variant={"outline"} >
+                        <ImSpinner9 className=" animate-spin" />
+                    </Button>
+                ) : status === "authenticated" ? (
+                    <DropdownMenu >
                         <DropdownMenuTrigger asChild>
                             <Button variant={"outline"}>
                                 {session?.user.name}
@@ -128,37 +133,39 @@ export default function NavMenu() {
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                                <DropdownMenuItem className="group">
-                                    <LuUserCircle2 className="w-5 h-5 mr-2 group-hover:text-blue-400" />
+                                <DropdownMenuItem asChild>
                                     <Link href={`${session.user.role === "USER" ? "/profile?type=membership" : "/dashboard"}`}
                                         aria-description="open profile"
                                         aria-label="open profile"
                                         aria-controls="navbar-default"
                                         aria-expanded="false"
-                                        className="">
+                                        className="group hover:cursor-pointer">
+                                        <LuUserCircle2 className="w-5 h-5 mr-2 group-hover:text-blue-400" />
                                         {session.user.role === "USER" ? "Profile" : "Dashboard"}
                                     </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="group">
-                                    <GoHeartFill className="w-5 h-5 group-hover:animate-pumping-heart group-hover:text-red-600 mr-2" />
+                                <DropdownMenuItem asChild>
                                     <Link
                                         href="/wishlist"
                                         aria-description="open wishlist"
                                         aria-label="open wishlist"
                                         aria-controls="navbar-default"
-                                        aria-expanded="false">
+                                        aria-expanded="false"
+                                        className="group hover:cursor-pointer" >
+                                        <GoHeartFill className="w-5 h-5 group-hover:animate-pumping-heart group-hover:text-red-600 mr-2" />
                                         Wishlist
                                     </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="group">
-                                    <BsBox2Heart className="w-5 h-5 mr-2 group-hover:text-orange-600" />
+                                <DropdownMenuItem asChild>
                                     <Link
                                         href="/profile/orders?page=1"
                                         aria-description="open cart"
                                         aria-label="open cart"
                                         aria-controls="navbar-default"
                                         aria-expanded="false"
+                                        className="group hover:cursor-pointer"
                                     >
+                                        <BsBox2Heart className="w-5 h-5 mr-2 group-hover:text-orange-600" />
                                         Orders
                                     </Link>
                                 </DropdownMenuItem>
@@ -166,15 +173,18 @@ export default function NavMenu() {
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
                                 <DropdownMenuItem
+                                    asChild
                                     className="group hover:cursor-pointer"
                                     onClick={() => signOut({ callbackUrl: "/" })}>
-                                    <PiSignOutBold className="w-5 h-5 group-hover:text-indigo-700 mr-2" />
-                                    <span>Logout</span>
+                                    <span>
+                                        <PiSignOutBold className="w-5 h-5 group-hover:text-indigo-700 mr-2" />
+                                        Logout
+                                    </span>
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    :
+                ) : (
                     <Button asChild variant={"outline"}>
                         <Link
                             href="/signin"
@@ -187,7 +197,7 @@ export default function NavMenu() {
                             Login
                         </Link>
                     </Button>
-                }
+                )}
                 <ModeToggler />
             </div >
 
@@ -250,7 +260,11 @@ export default function NavMenu() {
                                     </SheetContent>
                                 </Sheet>
                             </div>
-                            {session?.user ? (
+                            {status === "loading" ? (
+                                <Button variant={"outline"} >
+                                    <ImSpinner9 className=" animate-spin" />
+                                </Button>
+                            ) : status === "authenticated" ? (
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button className="w-full my-2 mx-2">
@@ -261,37 +275,39 @@ export default function NavMenu() {
                                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuGroup>
-                                            <DropdownMenuItem className="group">
-                                                <LuUserCircle2 className="w-5 h-5 mr-2 group-hover:text-blue-400" />
+                                            <DropdownMenuItem asChild>
                                                 <Link href={`${session.user.role === "USER" ? "/profile?type=membership" : "/dashboard"}`}
                                                     aria-description="open profile"
                                                     aria-label="open profile"
                                                     aria-controls="navbar-default"
                                                     aria-expanded="false"
-                                                    className="">
+                                                    className="hover:cursor-pointer group">
+                                                    <LuUserCircle2 className="w-5 h-5 mr-2 group-hover:text-blue-400" />
                                                     {session.user.role === "USER" ? "Profile" : "Dashboard"}
                                                 </Link>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="group">
-                                                <GoHeartFill className="w-5 h-5 group-hover:animate-pumping-heart group-hover:text-red-600 mr-2" />
+                                            <DropdownMenuItem asChild>
                                                 <Link
                                                     href="/profile/wishlist"
                                                     aria-description="open wishlist"
                                                     aria-label="open wishlist"
                                                     aria-controls="navbar-default"
-                                                    aria-expanded="false">
+                                                    aria-expanded="false"
+                                                    className="group hover:cursor-pointer">
+                                                    <GoHeartFill className="w-5 h-5 group-hover:animate-pumping-heart group-hover:text-red-600 mr-2" />
                                                     Wishlist
                                                 </Link>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="group">
-                                                <BsBox2Heart className="w-5 h-5 mr-2 group-hover:text-orange-600" />
+                                            <DropdownMenuItem asChild>
                                                 <Link
                                                     href="/profile/orders?page=1"
                                                     aria-description="open cart"
                                                     aria-label="open cart"
                                                     aria-controls="navbar-default"
                                                     aria-expanded="false"
+                                                    className="group hover:cursor-pointer"
                                                 >
+                                                    <BsBox2Heart className="w-5 h-5 mr-2 group-hover:text-orange-600" />
                                                     Orders
                                                 </Link>
                                             </DropdownMenuItem>
@@ -299,10 +315,11 @@ export default function NavMenu() {
                                         <DropdownMenuSeparator />
                                         <DropdownMenuGroup>
                                             <DropdownMenuItem
-                                                className="group hover:cursor-pointer"
+                                                asChild
                                                 onClick={() => signOut({ callbackUrl: "/" })}>
-                                                <PiSignOutBold className="w-5 h-5 group-hover:text-indigo-700 mr-2" />
-                                                <span>Logout</span>
+                                                <span className="group hover:cursor-pointer">
+                                                    <PiSignOutBold className="w-5 h-5 group-hover:text-indigo-700 mr-2" />
+                                                    Logout</span>
                                             </DropdownMenuItem>
                                         </DropdownMenuGroup>
                                     </DropdownMenuContent>
