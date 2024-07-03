@@ -9,7 +9,7 @@ import { FaCircleCheck } from 'react-icons/fa6'
 import { MdPending } from "react-icons/md";
 import { MdCancel } from "react-icons/md";
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import ActionButton from '@/components/ActionButton'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuGroup, DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { BsCart3 } from 'react-icons/bs'
@@ -58,8 +58,8 @@ export default async function page({ searchParams }: Props) {
                                             <dl className="grid flex-1 sm:grid-cols-[1.5fr,1fr,1fr] grid-cols-[1fr,auto] gap-x-6 text-sm sm:col-span-3 place-items-center">
                                                 <div>
                                                     <dt className="font-medium dark:text-slate-400">Order ID</dt>
-                                                    <dd className="mt-1 dark:text-gray-200">
-                                                        {orderPublicId}
+                                                    <dd className="mt-1 text-indigo-600 hover:underline">
+                                                        #{orderPublicId}
                                                     </dd>
                                                 </div>
                                                 <div className="hidden sm:block">
@@ -120,13 +120,19 @@ export default async function page({ searchParams }: Props) {
                                                                     <DropdownMenuLabel>Action</DropdownMenuLabel>
                                                                     <DropdownMenuGroup>
                                                                         <DropdownMenuItem asChild>
-                                                                            <Link href={`/product?query=${product.title.replace(" ", "-")}-${productPublicId}`} className="whitespace-nowrap hover:text-slate-200 hover:cursor-pointer">
-                                                                                <LuExternalLink className="w-4 h-4 mr-2" />
-                                                                                View product</Link>
+                                                                            <Link href={`/order?query=${orderPublicId}`} className={`flex items-center justify-center hover:cursor-pointer ${buttonVariants({ variant: "ghost" })}`}>
+                                                                                View Order
+                                                                                <span className="sr-only">{orderPublicId}</span>
+                                                                            </Link>
                                                                         </DropdownMenuItem>
                                                                         <DropdownMenuItem asChild>
-                                                                            <ActionButton variant={"ghost"} action={"add"} quantity={1} data={product} className=" whitespace-nowrap hover:text-slate-200 hover:cursor-pointer">
-                                                                                <BsCart3 className="w-4 h-4 mr-2" />Buy again</ActionButton>
+                                                                            <Invoice
+                                                                                className='pl-4 hover:cursor-pointer'
+                                                                                variant={"ghost"}
+                                                                                date={order.createdAt.toDateString()}
+                                                                                amount={order.total_price}
+                                                                                invoiceId={orderPublicId}
+                                                                            />
                                                                         </DropdownMenuItem>
                                                                     </DropdownMenuGroup>
                                                                 </DropdownMenuContent>
@@ -176,7 +182,7 @@ export default async function page({ searchParams }: Props) {
                     )
                 })
                     : (
-                        <p className="text-center font-medium">There are no orders at the moment.</p>
+                        <p className="text-center font-medium mt-6">There are no orders at the moment.</p>
                     )}
 
 
