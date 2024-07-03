@@ -91,7 +91,7 @@ export default function Cart({ cartDb, user }: CartProps) {
                                         </ActionButton>
                                     </div>
                                     <div className="flex items-end justify-end">
-                                        <p className="text-lg font-bold text-indigo-700">${product.price.toFixed(2)}</p>
+                                        <p className="text-lg font-semibold text-indigo-700">${product.price.toFixed(2)}</p>
                                     </div>
                                 </div>
                             </div>
@@ -115,9 +115,9 @@ export default function Cart({ cartDb, user }: CartProps) {
                     </div>
                     <hr className="my-4" />
                     <div className="flex justify-between">
-                        <p className="text-lg font-bold">Total</p>
+                        <p className="text-lg font-normal">Total</p>
                         <div className="">
-                            <p className="mb-1 text-lg font-bold">${userCart.totalAmount} USD</p>
+                            <p className="mb-1 text-lg font-medium">${userCart.totalAmount} USD</p>
                             <p className="text-sm dark:text-slate-300">including VAT</p>
                         </div>
                     </div>
