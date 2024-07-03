@@ -8,6 +8,7 @@ type OrderItemsProps = {
 };
 
 export default function OrderItems({ product, status, quantity, expectedDeliveryTime }: OrderItemsProps) {
+    const orderDate = (date: Date): string => new Date(date.setDate(date.getDate() + Math.random() * 10)).toDateString()
     return (
         <div className={`flex flex-col lg:flex-row items-center py-6 last:border-none border-b border-gray-200 gap-6 w-full`}>
             <div className="img-box max-lg:w-full">
@@ -57,7 +58,9 @@ export default function OrderItems({ product, status, quantity, expectedDelivery
                                 <p className="font-medium text-sm whitespace-nowrap leading-6 ">
                                     Expected Delivery Time</p>
                                 <p className="font-medium text-base whitespace-nowrap leading-7 lg:mt-3 text-emerald-500">
-                                    {new Date(expectedDeliveryTime.setDate(expectedDeliveryTime.getDate() + Math.random() * 10)).toDateString()}
+                                    <time dateTime={orderDate(expectedDeliveryTime)}>
+                                        {orderDate(expectedDeliveryTime)}
+                                    </time>
                                 </p>
                             </div>
                         </div>
