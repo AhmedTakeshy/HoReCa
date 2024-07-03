@@ -153,7 +153,7 @@ export default function NavMenu() {
                                 <DropdownMenuItem className="group">
                                     <BsBox2Heart className="w-5 h-5 mr-2 group-hover:text-orange-600" />
                                     <Link
-                                        href="/orders"
+                                        href="/profile/orders?page=1"
                                         aria-description="open cart"
                                         aria-label="open cart"
                                         aria-controls="navbar-default"
@@ -275,7 +275,7 @@ export default function NavMenu() {
                                             <DropdownMenuItem className="group">
                                                 <GoHeartFill className="w-5 h-5 group-hover:animate-pumping-heart group-hover:text-red-600 mr-2" />
                                                 <Link
-                                                    href="/wishlist"
+                                                    href="/profile/wishlist"
                                                     aria-description="open wishlist"
                                                     aria-label="open wishlist"
                                                     aria-controls="navbar-default"
@@ -286,7 +286,7 @@ export default function NavMenu() {
                                             <DropdownMenuItem className="group">
                                                 <BsBox2Heart className="w-5 h-5 mr-2 group-hover:text-orange-600" />
                                                 <Link
-                                                    href="/orders"
+                                                    href="/profile/orders?page=1"
                                                     aria-description="open cart"
                                                     aria-label="open cart"
                                                     aria-controls="navbar-default"
@@ -307,15 +307,6 @@ export default function NavMenu() {
                                         </DropdownMenuGroup>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                // <Link href={`${session.user.role === "USER" ? "/profile?type=membership" : "/dashboard"}`}
-                                //     aria-description="open profile"
-                                //     aria-label="open profile"
-                                //     aria-controls="navbar-default"
-                                //     aria-expanded="false"
-                                //     className="">
-                                //         <LuUserCircle2 className="w-5 h-5 mr-2 group-hover:text-blue-400" />
-                                //     {session.user.role === "USER" ? "Profile" : "Dashboard"}
-                                // </Link>
                             ) : (
                                 <Link href="/signin" className={`${buttonVariants({ variant: "default" })} my-2 w-full mx-4 relative group hover:animate-flip perspective hover:bg-cyan-950`}>
                                     <LuUserCircle2 className="w-6 h-6" />

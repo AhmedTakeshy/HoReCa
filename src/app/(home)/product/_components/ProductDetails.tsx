@@ -14,7 +14,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
     const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setQuantity(Number(e.target.value))
-        console.log(quantity)
     }
 
     return (

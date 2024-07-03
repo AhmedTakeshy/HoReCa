@@ -15,7 +15,7 @@ type ProductItemProps = {
 export function ProductItem({ data, quantity }: ProductItemProps) {
     return (
         <div className="mt-8">
-            <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10 bg-white dark:bg-zinc-900 h-[500px] flex flex-col justify-start">
+            <BackgroundGradient className="rounded-[22px] max-w-xs p-4 sm:p-10 bg-white dark:bg-zinc-900 h-[500px] flex flex-col justify-start">
                 <Image
                     src={data.thumbnail}
                     alt="jordans"
