@@ -132,7 +132,7 @@ export async function getOrders({ email, page = 1 }: OrderProps): Promise<Server
     }
 }
 
-export async function updateOrderStatus(orderId: number, status: Status): Promise<ServerResponse<Order>> {
+export async function updateOrderStatus(orderId: number, status: Status): Promise<ServerResponse<OrderWithItems>> {
     try {
         const order = await prisma.order.update({
             where: {
@@ -188,7 +188,7 @@ export async function deleteOrCancelOrder(orderId: number): Promise<ServerRespon
     }
 }
 
-export async function getLastOrder(email: string): Promise<ServerResponse<Order>> {
+export async function getLastOrder(email: string): Promise<ServerResponse<OrderWithItems>> {
     try {
         const order = await prisma.order.findFirst({
             where: {
@@ -230,7 +230,7 @@ export async function getLastOrder(email: string): Promise<ServerResponse<Order>
     }
 }
 
-export async function getOrderById(orderId: number): Promise<ServerResponse<Order>> {
+export async function getOrderById(orderId: number): Promise<ServerResponse<OrderWithItems>> {
     try {
         const order = await prisma.order.findUnique({
             where: {

@@ -1,16 +1,16 @@
 "use client"
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
-type InvoiceProps = {
+type InvoiceProps = ButtonProps & {
     invoiceId: string
     date: string
     amount: number
 }
 
-export default function Invoice({ date, amount, invoiceId }: InvoiceProps) {
+export default function Invoice({ date, amount, invoiceId, ...props }: InvoiceProps) {
     function handlePrint() {
         window.print()
     }
@@ -34,7 +34,7 @@ export default function Invoice({ date, amount, invoiceId }: InvoiceProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button>
+                <Button {...props}>
                     View Invoice
                 </Button>
             </DialogTrigger>

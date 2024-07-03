@@ -34,7 +34,7 @@ export default async function page({ searchParams }: Props) {
                             <div className="data">
                                 <p className="font-semibold text-base leading-7 ">Order Id: <span className="text-indigo-600 font-medium">#{response.data.publicId}</span></p>
                                 <p className="font-semibold text-base leading-7  mt-4">
-                                    Order Payment : <span className="text-gray-400 font-medium"> {new Date(response.data.createdAt).toDateString()}</span>
+                                    Order Payment Date: <span className="text-gray-400 font-medium"> {new Date(response.data.createdAt).toDateString()}</span>
                                 </p>
                             </div>
                         </div>
