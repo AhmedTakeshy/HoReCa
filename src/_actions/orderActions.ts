@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { clearCart, getCartFromDatabase } from "./cartActions";
 import { prisma } from "@/lib/prisma";
-import { Order, Status } from "@prisma/client";
+import { Order, OrderItem, Status } from "@prisma/client";
 
 type OrderProps = {
     page?: number;
@@ -12,14 +12,18 @@ type OrderProps = {
 }
 
 type Metadata = {
-    orders: Order[]
+    orders: {
+        order: Order;
+        order_items: (OrderItem & { product: Product })[];
+    }[];
     metadata: {
         hastNextPage: boolean;
         totalPages: number;
     }
 }
+type OrderWithItems = Order & { order_items: (OrderItem & { product: Product })[] };
 
-export async function createOrder({ email }: OrderProps): Promise<ServerResponse<Order>> {
+export async function createOrder({ email }: OrderProps): Promise<ServerResponse<OrderWithItems>> {
     try {
         const response = await getCartFromDatabase(email)
         if (response.status === "Success") {
@@ -104,7 +108,10 @@ export async function getOrders({ email, page = 1 }: OrderProps): Promise<Server
 
         return {
             data: {
-                orders,
+                orders: orders.map(order => ({
+                    order,
+                    order_items: order.order_items
+                })),
                 metadata: {
                     hastNextPage: totalOrders > page * 6,
                     totalPages: Math.ceil(totalOrders / 6)
@@ -217,6 +224,43 @@ export async function getLastOrder(email: string): Promise<ServerResponse<Order>
         console.log("🚀 ~ getLastOrder ~ error:", error)
         return {
             errorMessage: "Failed to get last order",
+            status: "Error",
+            statusCode: 500
+        }
+    }
+}
+
+export async function getOrderById(orderId: number): Promise<ServerResponse<Order>> {
+    try {
+        const order = await prisma.order.findUnique({
+            where: {
+                id: orderId
+            },
+            include: {
+                order_items: {
+                    include: {
+                        product: true
+                    }
+                }
+            }
+        })
+        if (!order) {
+            return {
+                errorMessage: "Order not found",
+                status: "Error",
+                statusCode: 404
+            }
+        }
+        return {
+            successMessage: "Order fetched successfully",
+            data: order,
+            status: "Success",
+            statusCode: 200
+        }
+    } catch (error) {
+        console.log("🚀 ~ getOrderById ~ error:", error)
+        return {
+            errorMessage: "Failed to get order",
             status: "Error",
             statusCode: 500
         }

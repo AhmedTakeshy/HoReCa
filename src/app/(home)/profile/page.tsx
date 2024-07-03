@@ -1,7 +1,8 @@
-import React from 'react'
+import Profile from './_components/profile'
 
-export default function page() {
+export default async function page() {
+
     return (
-        <h1 className='flex justify-center items-center mx-auto text-4xl font-semibold h-[50vh] w-screen'>Profile page</h1>
+        <Profile />
     )
 }

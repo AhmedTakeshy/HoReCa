@@ -57,7 +57,7 @@ export default function OrderItems({ product, status, quantity, expectedDelivery
                                 <p className="font-medium text-sm whitespace-nowrap leading-6 ">
                                     Expected Delivery Time</p>
                                 <p className="font-medium text-base whitespace-nowrap leading-7 lg:mt-3 text-emerald-500">
-                                    {new Date(expectedDeliveryTime.setDate(expectedDeliveryTime.getDate() + 7)).toDateString()}
+                                    {new Date(expectedDeliveryTime.setDate(expectedDeliveryTime.getDate() + Math.random() * 10)).toDateString()}
                                 </p>
                             </div>
                         </div>
