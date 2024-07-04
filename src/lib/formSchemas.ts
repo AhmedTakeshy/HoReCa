@@ -1,6 +1,20 @@
 import * as z from "zod";
 
 
+export const contactSchema = z.object({
+    fullName: z.string().min(3, {
+        message: "Name must be at least 3 characters long"
+    }).max(50, {
+        message: "Name must be at most 50 characters long"
+    }),
+    email: z.string().email({
+        message: "Invalid email address",
+    }),
+    message: z.string().min(12, {
+        message: "Message must be at least 12 characters long"
+    })
+});
+
 export const signInFormSchema = z.object({
     email: z.string().trim().email({
         message: "Please enter a valid email address",
@@ -51,7 +65,7 @@ export const passwordSchema = z.object({
     message: "Passwords do not match",
 })
 
-
+export type ContactSchema = z.infer<typeof contactSchema>
 export type SignInFormSchema = z.infer<typeof signInFormSchema>
 export type SignUpFormSchema = z.infer<typeof signUpFormSchema>
 export type UserUpdateSchema = z.infer<typeof userUpdateSchema>

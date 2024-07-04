@@ -1,11 +1,36 @@
 "use server"
 
-import { PasswordSchema, SignUpFormSchema, UserUpdateSchema, passwordSchema, signUpFormSchema, userUpdateSchema } from "@/lib/formSchemas";
+import { ContactSchema, PasswordSchema, SignUpFormSchema, UserUpdateSchema, contactSchema, passwordSchema, signUpFormSchema, userUpdateSchema } from "@/lib/formSchemas";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import bcrypt, { hash } from "bcryptjs";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+
+
+export async function contactFormAction(values: ContactSchema): Promise<ServerResponse<null>> {
+
+    try {
+        const result = await contactSchema.safeParseAsync(values)
+        if (!result.success) {
+            return {
+                statusCode: 400,
+                status: "Error",
+                errorMessage: result.error.errors[0].message,
+            }
+        }
+        return {
+            statusCode: 200,
+            status: "Success",
+            successMessage: "Contact form submitted successfully",
+            data: null,
+        }
+    } catch (error) {
+        return {
+            statusCode: 500,
+            status: "Error",
+            errorMessage: "Internal Server Error",
+        }
+    }
+}
 
 export async function signUpAction(values: SignUpFormSchema) {
     try {
