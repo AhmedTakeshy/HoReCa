@@ -1,6 +1,7 @@
 import AuthProvider from "@/context/AuthProvider"
 import NavMenu from "./_components/NavMenu"
 import ScrollButton from "@/components/ScrollButton"
+import Footer from "./_components/footer"
 
 export default function MainLayout({
     children,
@@ -17,6 +18,7 @@ export default function MainLayout({
                 {children}
                 {auth}
                 <ScrollButton />
+                <Footer />
             </AuthProvider>
         </>
     )
