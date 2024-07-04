@@ -11,8 +11,8 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'HoReCa App',
-  description: "HoReCa App is a web application for managing restaurants, cafes, and hotels.",
+  title: 'HoReCa | E-commerce',
+  description: "HoReCa is a e-commerce app for shopping online.",
 }
 
 export default function RootLayout({
