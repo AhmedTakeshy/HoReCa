@@ -37,7 +37,7 @@ export default async function page({ searchParams }: Props) {
                 <div className="max-w-xl">
                     <h1 className="text-base font-medium text-rose-600">Uh oh!</h1>
                     <p className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">Something went wrong.</p>
-                    <p className="mt-2 text-base text-gray-500">We couldn't find your order. Please try again later.</p>
+                    <p className="mt-2 text-base text-gray-500">We couldn&apos;t find your order. Please try again later.</p>
                 </div>
             </div>
         )
