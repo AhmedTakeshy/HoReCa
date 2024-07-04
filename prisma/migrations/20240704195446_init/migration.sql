@@ -30,10 +30,12 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "role" "Role" DEFAULT 'USER',
+    "role" "Role" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
+    "cartId" INTEGER,
+    "wishlistId" INTEGER,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -52,9 +54,10 @@ CREATE TABLE "Cart" (
 -- CreateTable
 CREATE TABLE "CartItem" (
     "id" SERIAL NOT NULL,
+    "publicId" TEXT NOT NULL,
     "productId" INTEGER NOT NULL,
-    "cartId" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
+    "cartId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -73,7 +76,7 @@ CREATE TABLE "Product" (
     "stock" INTEGER NOT NULL,
     "category" TEXT NOT NULL,
     "brand" TEXT NOT NULL,
-    "ratings" DOUBLE PRECISION,
+    "ratings" DOUBLE PRECISION NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -87,7 +90,8 @@ CREATE TABLE "Order" (
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "totalPrice" DOUBLE PRECISION NOT NULL,
+    "total_quantity" INTEGER NOT NULL,
+    "total_price" INTEGER NOT NULL,
     "status" "Status" NOT NULL,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
@@ -96,6 +100,7 @@ CREATE TABLE "Order" (
 -- CreateTable
 CREATE TABLE "OrderItem" (
     "id" SERIAL NOT NULL,
+    "publicId" TEXT NOT NULL,
     "productId" INTEGER NOT NULL,
     "orderId" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
@@ -119,6 +124,7 @@ CREATE TABLE "Wishlist" (
 -- CreateTable
 CREATE TABLE "WishlistItem" (
     "id" SERIAL NOT NULL,
+    "publicId" TEXT NOT NULL,
     "productId" INTEGER NOT NULL,
     "wishlistId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -152,10 +158,13 @@ CREATE UNIQUE INDEX "Cart_userId_key" ON "Cart"("userId");
 CREATE INDEX "Cart_userId_idx" ON "Cart" USING HASH ("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "CartItem_productId_key" ON "CartItem"("productId");
+CREATE UNIQUE INDEX "CartItem_publicId_key" ON "CartItem"("publicId");
 
 -- CreateIndex
 CREATE INDEX "CartItem_productId_idx" ON "CartItem" USING HASH ("productId");
+
+-- CreateIndex
+CREATE INDEX "CartItem_cartId_idx" ON "CartItem" USING HASH ("cartId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Product_publicId_key" ON "Product"("publicId");
@@ -176,10 +185,13 @@ CREATE UNIQUE INDEX "Order_publicId_key" ON "Order"("publicId");
 CREATE INDEX "Order_userId_idx" ON "Order" USING HASH ("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "OrderItem_productId_key" ON "OrderItem"("productId");
+CREATE UNIQUE INDEX "OrderItem_publicId_key" ON "OrderItem"("publicId");
 
 -- CreateIndex
 CREATE INDEX "OrderItem_productId_idx" ON "OrderItem" USING HASH ("productId");
+
+-- CreateIndex
+CREATE INDEX "OrderItem_orderId_idx" ON "OrderItem" USING HASH ("orderId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Wishlist_publicId_key" ON "Wishlist"("publicId");
@@ -191,13 +203,13 @@ CREATE UNIQUE INDEX "Wishlist_userId_key" ON "Wishlist"("userId");
 CREATE INDEX "Wishlist_userId_idx" ON "Wishlist" USING HASH ("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "WishlistItem_productId_key" ON "WishlistItem"("productId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "WishlistItem_wishlistId_key" ON "WishlistItem"("wishlistId");
+CREATE UNIQUE INDEX "WishlistItem_publicId_key" ON "WishlistItem"("publicId");
 
 -- CreateIndex
 CREATE INDEX "WishlistItem_productId_idx" ON "WishlistItem" USING HASH ("productId");
+
+-- CreateIndex
+CREATE INDEX "WishlistItem_wishlistId_idx" ON "WishlistItem" USING HASH ("wishlistId");
 
 -- AddForeignKey
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
