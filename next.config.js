@@ -15,6 +15,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "tailwindui.com",
       },
+      {
+        protocol: "https",
+        hostname: "tailus.io",
+      },
+      {
+        protocol: "https",
+        hostname: "pagedone.io",
+      },
     ],
   },
 };
