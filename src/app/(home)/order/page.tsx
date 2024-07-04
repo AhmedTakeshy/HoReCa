@@ -13,7 +13,7 @@ export default async function page({ searchParams }: Props) {
             <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
                 <div className="max-w-xl">
                     <h1 className="text-base font-medium text-indigo-600">Thank you!</h1>
-                    <p className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">It's on the way!</p>
+                    <p className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">It&apos;s on the way!</p>
                     <p className="mt-2 text-base text-gray-500">
                         Your order #<span className="text-indigo-600 hover:underline">{searchParams?.query} </span>has shipped and will be with you soon.</p>
                 </div>

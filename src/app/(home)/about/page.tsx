@@ -13,7 +13,7 @@ export default function page() {
                                     <h6 className="text-gray-600 dark:text-slate-400 text-base font-normal leading-relaxed">About Us</h6>
                                     <div className="w-full flex-col justify-start lg:items-start items-center gap-3 flex">
                                         <h2 className="text-indigo-700 text-4xl font-bold font-manrope leading-normal lg:text-start text-center">The Tale of Our Achievement Story</h2>
-                                        <p className="text-gray-600 dark:text-slate-400 text-base font-normal leading-relaxed lg:text-start text-center">Our achievement story is a testament to teamwork and perseverance. Together, we've overcome challenges, celebrated victories, and created a narrative of progress and success.</p>
+                                        <p className="text-gray-600 dark:text-slate-400 text-base font-normal leading-relaxed lg:text-start text-center">Our achievement story is a testament to teamwork and perseverance. Together, we&apos;ve overcome challenges, celebrated victories, and created a narrative of progress and success.</p>
                                     </div>
                                 </div>
                                 <div className="w-full flex-col justify-center items-start gap-6 flex">
