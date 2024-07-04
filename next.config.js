@@ -17,7 +17,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "tailus.io",
+        hostname: "images.unsplash.com",
       },
       {
         protocol: "https",

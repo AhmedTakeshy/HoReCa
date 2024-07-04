@@ -3,8 +3,42 @@ import Image from "next/image";
 import Categories from "./_components/Categories";
 import { Lamp } from "./_components/Lamp";
 import Link from "next/link";
+import IncentiveLogo from "./_components/incentiveLogo";
+import { InfiniteMovingCards } from "@/components/infiniteMovingCards";
 
 export default function Home() {
+  const items = [
+    {
+      quote: 'Integer id nunc sit semper purus. Bibendum at lacus ut arcu blandit montes vitae auctor libero. Hac condimentum dignissim nibh vulputate ut nunc. Amet nibh orci mi venenatis blandit vel et proin. Non hendrerit in vel ac diam.',
+      name: 'Brenna Goyette',
+      title: 'brennagoyette',
+      imgSrc: 'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=1024&h=1024&q=80',
+    },
+    {
+      quote: 'Laborum quis quam. Dolorum et ut quod quia. Voluptas numquam delectus nihil. Aut enim doloremque et ipsam.',
+      name: 'Leslie Alexander',
+      title: 'lesliealexander',
+      imgSrc: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    },
+    {
+      quote: 'Aut reprehenderit voluptatem eum asperiores beatae id. Iure molestiae ipsam ut officia rem nulla blanditiis.',
+      name: 'Lindsay Walton',
+      title: 'lindsaywalton',
+      imgSrc: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    },
+    {
+      quote: 'Voluptas quos itaque ipsam in voluptatem est. Iste eos blanditiis repudiandae. Earum deserunt enim molestiae ipsum perferendis recusandae saepe corrupti.',
+      name: 'Tom Cook',
+      title: 'tomcook',
+      imgSrc: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    },
+    {
+      quote: 'Molestias ea earum quos nostrum doloremque sed. Quaerat quasi aut velit incidunt excepturi rerum voluptatem minus harum.',
+      name: 'Leonard Krasner',
+      title: 'leonardkrasner',
+      imgSrc: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    },
+  ]
   return (
     <main className="mb-8">
       <Lamp />
@@ -64,6 +98,8 @@ export default function Home() {
         </Link>
       </div>
       <Categories />
+      <IncentiveLogo />
+      <InfiniteMovingCards items={items} speed="slow" pauseOnHover={true} direction="right" />
     </main>
   )
 }

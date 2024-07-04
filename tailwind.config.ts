@@ -1,4 +1,8 @@
 import type { Config } from "tailwindcss"
+const colors = require("tailwindcss/colors");
+const {
+  default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
 
 const config = {
   darkMode: ["class"],
@@ -59,6 +63,11 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        scroll: {
+          to: {
+            transform: "translate(calc(-50% - 0.5rem))",
+          },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -109,11 +118,23 @@ const config = {
         "move-out": "move-out 2.25s ease-in-out 1",
         "pumping-heart": "pumping-heart 1.25s ease-in-out infinite forwards",
         "flip": "flip 2s cubic-bezier(0.4, 0.2, 0.2, 1) 2 forwards",
+        "scroll": "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
       },
     },
   },
 
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), addVariablesForColors],
 } satisfies Config
 
 export default config
+
+function addVariablesForColors({ addBase, theme }: any) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}
