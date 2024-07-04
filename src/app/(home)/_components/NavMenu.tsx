@@ -83,13 +83,13 @@ export default function NavMenu() {
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/services" legacyBehavior passHref>
-                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Services</NavigationMenuLink>
+                        <Link href="/about" legacyBehavior passHref>
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>About</NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/about" legacyBehavior passHref>
-                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>About</NavigationMenuLink>
+                        <Link href="/contact" legacyBehavior passHref>
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Contact Us</NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                 </NavigationMenuList>
@@ -225,18 +225,18 @@ export default function NavMenu() {
                                         </Link>
                                     </NavigationMenuItem>
                                     <NavigationMenuItem>
-                                        <Link href="/products" legacyBehavior passHref>
+                                        <Link href="/products" tabIndex={-1} legacyBehavior passHref className="pointer-events-none">
                                             <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>Products</NavigationMenuLink>
-                                        </Link>
-                                    </NavigationMenuItem>
-                                    <NavigationMenuItem>
-                                        <Link href="/services" legacyBehavior passHref>
-                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>Services</NavigationMenuLink>
                                         </Link>
                                     </NavigationMenuItem>
                                     <NavigationMenuItem>
                                         <Link href="/about" legacyBehavior passHref>
                                             <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>About</NavigationMenuLink>
+                                        </Link>
+                                    </NavigationMenuItem>
+                                    <NavigationMenuItem>
+                                        <Link href="/contact" legacyBehavior passHref>
+                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>Contact Us</NavigationMenuLink>
                                         </Link>
                                     </NavigationMenuItem>
                                 </NavigationMenuList>
@@ -275,7 +275,7 @@ export default function NavMenu() {
                                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuGroup>
-                                            <DropdownMenuItem asChild>
+                                            <DropdownMenuItem asChild onClick={() => setOpen(false)}>
                                                 <Link href={`${session.user.role === "USER" ? "/profile?type=membership" : "/dashboard"}`}
                                                     aria-description="open profile"
                                                     aria-label="open profile"
@@ -286,7 +286,7 @@ export default function NavMenu() {
                                                     {session.user.role === "USER" ? "Profile" : "Dashboard"}
                                                 </Link>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem asChild>
+                                            <DropdownMenuItem asChild onClick={() => setOpen(false)}>
                                                 <Link
                                                     href="/profile/wishlist"
                                                     aria-description="open wishlist"
@@ -298,7 +298,7 @@ export default function NavMenu() {
                                                     Wishlist
                                                 </Link>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem asChild>
+                                            <DropdownMenuItem asChild onClick={() => setOpen(false)}>
                                                 <Link
                                                     href="/profile/orders?page=1"
                                                     aria-description="open cart"
@@ -316,7 +316,7 @@ export default function NavMenu() {
                                         <DropdownMenuGroup>
                                             <DropdownMenuItem
                                                 asChild
-                                                onClick={() => signOut({ callbackUrl: "/" })}>
+                                                onClick={() => { signOut({ callbackUrl: "/" }); setOpen(false) }}>
                                                 <span className="group hover:cursor-pointer">
                                                     <PiSignOutBold className="w-5 h-5 group-hover:text-indigo-700 mr-2" />
                                                     Logout</span>
