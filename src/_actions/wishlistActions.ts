@@ -202,6 +202,26 @@ export async function addToWishlist(email: string, productId: number): Promise<S
                 id: true
             }
         })
+        if (!user) {
+            return {
+                errorMessage: "User not found",
+                status: "Error",
+                statusCode: 404,
+            }
+        }
+        let wishlist = await prisma.wishlist.findUnique({
+            where: {
+                userId: user.id
+            }
+        })
+
+        if (!wishlist) {
+            wishlist = await prisma.wishlist.create({
+                data: {
+                    userId: user.id
+                }
+            })
+        }
         await prisma.wishlist.update({
             where: {
                 userId: user?.id
@@ -226,6 +246,7 @@ export async function addToWishlist(email: string, productId: number): Promise<S
         }
     }
     catch (error) {
+        console.log("🚀 ~ addToWishlist ~ error:", error)
         return {
             errorMessage: "Failed to add product to wishlist",
             status: "Error",
@@ -244,6 +265,7 @@ export async function removeFromWishlist(email: string, productId: number): Prom
                 id: true
             }
         })
+        console.log("🚀 ~ removeFromWishlist ~ user:", user)
         await prisma.wishlist.update({
             where: {
                 userId: user?.id
@@ -268,6 +290,7 @@ export async function removeFromWishlist(email: string, productId: number): Prom
         }
     }
     catch (error) {
+        console.log("🚀 ~ removeFromWishlist ~ error:", error)
         return {
             errorMessage: "Failed to remove product from wishlist",
             status: "Error",
