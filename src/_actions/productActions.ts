@@ -28,7 +28,6 @@ export async function getProductById({ id }: ProductsProps): Promise<ServerRespo
             return { errorMessage: "Product not found!", status: "Error", statusCode: 400, }
         }
     } catch (err) {
-        console.log(err)
         return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error", }
     }
 
@@ -61,7 +60,6 @@ export async function getProducts({ page = 1 }: ProductsProps): Promise<ServerRe
         }
 
     } catch (err) {
-        console.log(err)
         return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error", }
     }
 }
@@ -101,7 +99,6 @@ export async function getProductsByCategory({ category, page = 1 }: Category): P
         }
     }
     catch (err) {
-        console.log(err)
         return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error", }
     }
 }
@@ -172,7 +169,6 @@ export async function getProductsByFilterAndSort({ params }: FilterWithSort): Pr
         }
     }
     catch (err) {
-        console.log(err)
         return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error", }
     }
 }

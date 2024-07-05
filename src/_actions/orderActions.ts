@@ -70,7 +70,6 @@ export async function createOrder({ email }: OrderProps): Promise<ServerResponse
             }
         }
     } catch (error) {
-        console.log("🚀 ~ createOrder ~ error:", error)
         return {
             errorMessage: "Failed to create order",
             status: "Error",
@@ -123,7 +122,6 @@ export async function getOrders({ email, page = 1 }: OrderProps): Promise<Server
             statusCode: 200
         }
     } catch (error) {
-        console.log("🚀 ~ getOrders ~ error:", error)
         return {
             errorMessage: "Failed to get orders",
             status: "Error",
@@ -156,7 +154,6 @@ export async function updateOrderStatus(orderId: number, status: Status): Promis
             statusCode: 200
         }
     } catch (error) {
-        console.log("🚀 ~ updateOrderStatus ~ error:", error)
         return {
             errorMessage: "Failed to update order status",
             status: "Error",
@@ -179,7 +176,6 @@ export async function deleteOrCancelOrder(orderId: number): Promise<ServerRespon
             statusCode: 200
         }
     } catch (error) {
-        console.log("🚀 ~ deleteOrCancelOrder ~ error:", error)
         return {
             errorMessage: "Failed to delete order",
             status: "Error",
@@ -221,7 +217,6 @@ export async function getLastOrder(email: string): Promise<ServerResponse<OrderW
             statusCode: 200
         }
     } catch (error) {
-        console.log("🚀 ~ getLastOrder ~ error:", error)
         return {
             errorMessage: "Failed to get last order",
             status: "Error",
@@ -258,7 +253,6 @@ export async function getOrderById(orderId: number): Promise<ServerResponse<Orde
             statusCode: 200
         }
     } catch (error) {
-        console.log("🚀 ~ getOrderById ~ error:", error)
         return {
             errorMessage: "Failed to get order",
             status: "Error",

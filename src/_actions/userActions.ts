@@ -62,7 +62,6 @@ export async function signUpAction(values: SignUpFormSchema) {
             return { error: false, message: `User has been created successfully with this email ${userEmail}`, status: 201 }
         }
     } catch (error) {
-        console.log(error);
         return { error: true, message: "Something went wrong!", status: 401 }
     }
 }
@@ -98,7 +97,6 @@ export async function updateUser(values: UserUpdateSchema) {
         revalidatePath("/profile")
         return { error: false, message: `User has been updated successfully.`, status: 200 }
     } catch (error) {
-        console.log(error);
         return { error: true, message: "Something went wrong!", status: 401 }
     }
 }
@@ -131,7 +129,6 @@ export async function updatePassword(values: PasswordSchema) {
         revalidatePath("/profile")
         return { error: false, message: "Password has been updated successfully.", status: 200 }
     } catch (error) {
-        console.log(error);
         return { error: true, message: "Something went wrong!", status: 401 }
     }
 }

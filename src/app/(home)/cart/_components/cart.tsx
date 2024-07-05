@@ -49,7 +49,7 @@ export default function Cart({ cartDb, user }: CartProps) {
                 sessionId,
             });
             if (result?.error) {
-                console.error(result.error.message);
+                throw new Error(result.error.message);
             }
         } catch (err) {
             console.error(err)

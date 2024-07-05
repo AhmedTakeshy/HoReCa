@@ -36,7 +36,7 @@ export default function WishlistButton({ productId, email, title, mode, ...props
             return
         }
         const response = await addToWishlist(email, productId)
-        console.log("🚀 ~ addItem ~ response:", response)
+
         switch (response.status) {
             case "Success":
                 toast.success("Added successfully", {
@@ -69,7 +69,6 @@ export default function WishlistButton({ productId, email, title, mode, ...props
             return
         }
         const response = await removeFromWishlist(email, productId)
-        console.log("🚀 ~ removeItem ~ response:", response)
         switch (response.status) {
             case "Success":
                 toast.success("Removed successfully", {

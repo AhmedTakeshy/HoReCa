@@ -29,7 +29,6 @@ export async function POST(request: Request) {
         });
         return NextResponse.json({ sessionId: session.id }, { status: 200 });
     } catch (err: any) {
-        console.log("🚀 ~ POST ~ err:", err)
         return new NextResponse(err, {
             status: 400,
         });

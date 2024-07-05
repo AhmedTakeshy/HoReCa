@@ -17,7 +17,6 @@ export async function getCategories(): Promise<ServerResponse<string[]>> {
             return { errorMessage: "There are no categories at the moment!", status: "Error", statusCode: 400 };
         }
     } catch (err) {
-        console.log(err)
         return { errorMessage: "Something wrong happened!", statusCode: 401, status: "Error" }
     }
 }

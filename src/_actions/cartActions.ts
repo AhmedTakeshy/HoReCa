@@ -145,7 +145,6 @@ export const getCartFromDatabase = async (email: string): Promise<ServerResponse
             statusCode: 200,
         }
     } catch (error) {
-        console.log("🚀 ~ getCartFromDatabase ~ error:", error)
         return {
             errorMessage: "Something went wrong. Please try again.",
             status: "Error",
