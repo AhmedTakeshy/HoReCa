@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { Wishlist } from "@prisma/client";
+import { Wishlist, WishlistItem } from "@prisma/client";
 
 type WishlistProps = {
     page?: number;
@@ -11,7 +11,13 @@ type WishlistProps = {
 }
 
 type Metadata = {
-    wishlists: Wishlist[]
+    wishlist: {
+        wishlist: Wishlist;
+        wishlist_items: {
+            wishlist_item: WishlistItem;
+            product: Product;
+        }[];
+    };
     metadata: {
         hastNextPage: boolean;
         totalPages: number;
@@ -60,27 +66,61 @@ export async function getWishlistItems({ email }: WishlistProps): Promise<Server
     }
 }
 
-export async function getWishlist({ page = 1 }: WishlistProps): Promise<ServerResponse<Metadata>> {
+export async function getWishlist({ email, page = 1 }: WishlistProps): Promise<ServerResponse<Metadata>> {
     try {
-        const wishlists = await prisma.wishlist.findMany({
+        const user = await prisma.user.findUnique({
+            where: {
+                email,
+            }
+        })
+        if (!user) {
+            return {
+                errorMessage: "User not found",
+                status: "Error",
+                statusCode: 404,
+            }
+        }
+
+        const wishlist = await prisma.wishlist.findUnique({
+            where: {
+                userId: user.id
+            },
             include: {
-                user: true,
                 wishlist_items: {
                     include: {
                         product: true
-                    }
-                }
+                    },
+                    skip: (page - 1) * 12,
+                    take: 12
+                },
             },
-            skip: (page - 1) * 6,
-            take: 6
         })
-        const totalWishlists = await prisma.wishlist.count()
+
+        if (!wishlist) {
+            return {
+                errorMessage: "Wishlist not found",
+                status: "Error",
+                statusCode: 404,
+            }
+        }
+
+        const totalWishlistItems = await prisma.wishlistItem.count({
+            where: {
+                wishlistId: wishlist.id
+            }
+        })
         return {
             data: {
-                wishlists,
+                wishlist: {
+                    wishlist,
+                    wishlist_items: wishlist.wishlist_items.map(wishlistItem => ({
+                        wishlist_item: wishlistItem,
+                        product: wishlistItem.product
+                    }))
+                },
                 metadata: {
-                    hastNextPage: totalWishlists > page * 6,
-                    totalPages: Math.ceil(totalWishlists / 6)
+                    hastNextPage: totalWishlistItems > page * 12,
+                    totalPages: Math.ceil(totalWishlistItems / 12)
                 }
             },
             status: "Success",
@@ -97,18 +137,23 @@ export async function getWishlist({ page = 1 }: WishlistProps): Promise<ServerRe
     }
 }
 
-export async function getWishlistsBySearch({ page = 1, search = "" }: WishlistProps): Promise<ServerResponse<Metadata>> {
+export async function getWishlistItemsBySearch({ email, page = 1, search = "" }: WishlistProps): Promise<ServerResponse<Metadata>> {
     try {
-        const wishlists = await prisma.wishlist.findMany({
-            include: {
-                user: true,
-                wishlist_items: {
-                    include: {
-                        product: true
-                    }
-                }
-            },
+        const user = await prisma.user.findUnique({
             where: {
+                email,
+            }
+        })
+        if (!user) {
+            return {
+                errorMessage: "User not found",
+                status: "Error",
+                statusCode: 404,
+            }
+        }
+        const wishlist = await prisma.wishlist.findUnique({
+            where: {
+                userId: user.id,
                 OR: [
                     {
                         wishlist_items: {
@@ -133,15 +178,30 @@ export async function getWishlistsBySearch({ page = 1, search = "" }: WishlistPr
                                 }
                             }
                         }
-                    }
-                ]
+                    },
+                ],
             },
-            skip: (page - 1) * 6,
-            take: 6
+            include: {
+                wishlist_items: {
+                    include: {
+                        product: true
+                    },
+                    skip: (page - 1) * 12,
+                    take: 12
+                }
+            }
         })
 
-        const totalWishlists = await prisma.wishlist.count({
+        if (!wishlist) {
+            return {
+                errorMessage: "Wishlist not found",
+                status: "Error",
+                statusCode: 404,
+            }
+        }
+        const totalWishlistItems = await prisma.wishlist.count({
             where: {
+                userId: user.id,
                 OR: [
                     {
                         wishlist_items: {
@@ -172,10 +232,16 @@ export async function getWishlistsBySearch({ page = 1, search = "" }: WishlistPr
         })
         return {
             data: {
-                wishlists,
+                wishlist: {
+                    wishlist,
+                    wishlist_items: wishlist.wishlist_items.map(wishlistItem => ({
+                        wishlist_item: wishlistItem,
+                        product: wishlistItem.product
+                    }))
+                },
                 metadata: {
-                    hastNextPage: totalWishlists > page * 6,
-                    totalPages: Math.ceil(totalWishlists / 6)
+                    hastNextPage: totalWishlistItems > page * 12,
+                    totalPages: Math.ceil(totalWishlistItems / 12)
                 }
             },
             status: "Success",
@@ -237,7 +303,7 @@ export async function addToWishlist(email: string, productId: number): Promise<S
                 }
             }
         })
-        revalidatePath("/wishlist")
+        revalidatePath("/profile/wishlist")
         return {
             data: null,
             status: "Success",
@@ -279,7 +345,7 @@ export async function removeFromWishlist(email: string, productId: number): Prom
                 }
             }
         })
-        revalidatePath("/wishlist")
+        revalidatePath("/profile/wishlist")
         return {
             data: null,
             status: "Success",

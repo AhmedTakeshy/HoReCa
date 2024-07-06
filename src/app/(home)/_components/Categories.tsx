@@ -38,8 +38,8 @@ export default async function Categories() {
                                 <CarouselContent className="lg:ml-0 ml-4">
                                     <CategoryProducts category={category} />
                                 </CarouselContent>
-                                <CarouselPrevious className="" />
-                                <CarouselNext className="" />
+                                <CarouselPrevious className="left-0 sm:-left-12" />
+                                <CarouselNext className="right-0 sm:-right-12" />
                             </CarouselComponent>
                         </div>
                     )).slice(0, 5)

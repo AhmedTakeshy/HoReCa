@@ -11,7 +11,7 @@ type ProductsProps = {
 
 export default async function CategoryProducts({ category }: ProductsProps) {
     const productsResponse = await getProductsByCategory({ category, page: 1 });
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
     const wishlistItemsResponse = await getWishlistItems({ email: session?.user.email ?? "" })
 
     return productsResponse.status === "Success" && productsResponse.data.products.map((product) => (
