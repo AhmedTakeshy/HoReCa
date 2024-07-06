@@ -38,10 +38,12 @@ import { PiSignInFill, PiSignOutBold } from "react-icons/pi";
 import SideCart from "./sideCart"
 import { usePathname } from "next/navigation"
 import { ImSpinner9 } from "react-icons/im"
+import { IoIosArrowDown } from "react-icons/io"
 
 
 export default function NavMenu() {
     const [open, setOpen] = useState<boolean>(false)
+    const [iconDown, setIconDown] = useState<boolean>(false)
     const cart = useAppSelector(state => state.cart)
     const { data: session, status } = useSession()
     const pathname = usePathname()
@@ -68,7 +70,7 @@ export default function NavMenu() {
     return (
         <header className={`flex mt-6 mb-10 mx-auto md:justify-around justify-between items-center w-full md:px-8 px-3`}>
             <Link href="/" aria-description="open home page" aria-label="open home page" aria-controls="navbar-default" aria-expanded="false">
-                <Image src={logo} width={200} height={75} alt="logo" />
+                <Image src={logo} width={200} height={75} alt="logo" priority className="w-auto h-auto" />
             </Link>
             <NavigationMenu className={` items-center  justify-between hidden gap-2 md:flex`}>
                 <NavigationMenuList className="items-center justify-between hidden gap-2 md:flex ">
@@ -123,10 +125,11 @@ export default function NavMenu() {
                         <ImSpinner9 className=" animate-spin" />
                     </Button>
                 ) : status === "authenticated" ? (
-                    <DropdownMenu >
+                    <DropdownMenu onOpenChange={(status) => status ? setIconDown(true) : setIconDown(false)}>
                         <DropdownMenuTrigger asChild>
                             <Button variant={"outline"}>
                                 {session?.user.name}
+                                <IoIosArrowDown className={`w-4 h-4 transition-transform duration-300 ml-2 ${iconDown ? "rotate-180" : ""}`} />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
@@ -265,17 +268,18 @@ export default function NavMenu() {
                                     <ImSpinner9 className=" animate-spin" />
                                 </Button>
                             ) : status === "authenticated" ? (
-                                <DropdownMenu>
+                                <DropdownMenu onOpenChange={(status) => status ? setIconDown(true) : setIconDown(false)}>
                                     <DropdownMenuTrigger asChild>
-                                        <Button className="w-full my-2 mx-2">
+                                        <Button className="w-full my-2 mx-2 flex items-center">
                                             {session?.user.name}
+                                            <IoIosArrowDown className={`w-4 h-4 transition-transform duration-300 ml-2 ${iconDown ? "rotate-180" : ""}`} />
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-screen ">
                                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuGroup>
-                                            <DropdownMenuItem asChild onClick={() => setOpen(false)}>
+                                            <DropdownMenuItem asChild onClick={() => { setOpen(false); }}>
                                                 <Link href={`${session.user.role === "USER" ? "/profile?type=membership" : "/dashboard"}`}
                                                     aria-description="open profile"
                                                     aria-label="open profile"
@@ -286,7 +290,7 @@ export default function NavMenu() {
                                                     {session.user.role === "USER" ? "Profile" : "Dashboard"}
                                                 </Link>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem asChild onClick={() => setOpen(false)}>
+                                            <DropdownMenuItem asChild onClick={() => { setOpen(false); }}>
                                                 <Link
                                                     href="/profile/wishlist?page=1"
                                                     aria-description="open wishlist"
@@ -298,7 +302,7 @@ export default function NavMenu() {
                                                     Wishlist
                                                 </Link>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem asChild onClick={() => setOpen(false)}>
+                                            <DropdownMenuItem asChild onClick={() => { setOpen(false); }}>
                                                 <Link
                                                     href="/profile/orders?page=1"
                                                     aria-description="open cart"
@@ -316,7 +320,7 @@ export default function NavMenu() {
                                         <DropdownMenuGroup>
                                             <DropdownMenuItem
                                                 asChild
-                                                onClick={() => { signOut({ callbackUrl: "/" }); setOpen(false) }}>
+                                                onClick={() => { signOut({ callbackUrl: "/" }); setOpen(false); }}>
                                                 <span className="group hover:cursor-pointer">
                                                     <PiSignOutBold className="w-5 h-5 group-hover:text-indigo-700 mr-2" />
                                                     Logout</span>

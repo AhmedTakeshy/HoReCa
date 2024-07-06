@@ -80,7 +80,7 @@ export default function Home() {
             <div className="relative py-32">
               <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">Mid-Season Sale</h1>
               <div className="mt-4 sm:mt-6">
-                <Link href="/products"
+                <Link href="/category"
                   className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 font-medium text-white hover:bg-indigo-700"
                 >
                   Shop Now
@@ -92,7 +92,7 @@ export default function Home() {
       </section>
       <div className="md:flex md:items-center md:justify-between container mt-24">
         <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-200">Trending Products</h2>
-        <Link href="/products" className="hidden text-sm font-medium text-indigo-400 hover:text-indigo-600 md:block">
+        <Link href="/category" className="hidden text-sm font-medium text-indigo-400 hover:text-indigo-600 md:block">
           Shop the collections
           <span aria-hidden="true"> →</span>
         </Link>
