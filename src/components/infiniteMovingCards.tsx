@@ -110,9 +110,9 @@ export const InfiniteMovingCards = ({
                                     <Image
                                         src={item.imgSrc}
                                         alt={item.name}
-                                        layout="fill"
-                                        objectFit="cover"
-                                        objectPosition="center"
+                                        className="rounded-full object-cover object-center"
+                                        fill
+                                        sizes="48px"
                                     />
                                 </div>
                                 <span className="flex flex-col gap-px">
