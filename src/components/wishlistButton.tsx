@@ -105,7 +105,7 @@ export default function WishlistButton({ productId, email, title, mode, ...props
             disabled={isPending}
         >
             <GoHeartFill
-                className={`w-6 h-6 ${optimisticMode === "add" ? "group-hover:text-red-600 group-hover:animate-pumping-heart" : "!text-red-600 group-hover:!text-inherit transition-colors duration-300"}`} />
+                className={`w-6 h-6 ${optimisticMode === "add" ? "group-hover:text-red-600 group-hover:animate-pumping-heart" : "!text-red-600 sm:group-hover:!text-inherit transition-colors duration-300"}`} />
         </Button>
     )
 }

@@ -77,9 +77,9 @@ export default function NavMenu() {
                             <NavigationMenuLink className={navigationMenuTriggerStyle()}>Home</NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
-                    <NavigationMenuItem>
-                        <Link href="/products" legacyBehavior passHref>
-                            <NavigationMenuLink className={navigationMenuTriggerStyle()}>Products</NavigationMenuLink>
+                    <NavigationMenuItem tabIndex={-1}>
+                        <Link href="/products" tabIndex={-1} legacyBehavior passHref>
+                            <NavigationMenuLink tabIndex={-1} className={`${navigationMenuTriggerStyle()} pointer-events-none`}>Products</NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
@@ -146,7 +146,7 @@ export default function NavMenu() {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
                                     <Link
-                                        href="/wishlist"
+                                        href="/profile/wishlist?page=1"
                                         aria-description="open wishlist"
                                         aria-label="open wishlist"
                                         aria-controls="navbar-default"
@@ -224,9 +224,9 @@ export default function NavMenu() {
                                             <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>Home</NavigationMenuLink>
                                         </Link>
                                     </NavigationMenuItem>
-                                    <NavigationMenuItem>
+                                    <NavigationMenuItem tabIndex={-1}>
                                         <Link href="/products" tabIndex={-1} legacyBehavior passHref className="pointer-events-none">
-                                            <NavigationMenuLink onClick={() => setOpen(false)} className={navigationMenuTriggerStyle()}>Products</NavigationMenuLink>
+                                            <NavigationMenuLink tabIndex={-1} onClick={() => setOpen(false)} className={`${navigationMenuTriggerStyle()} pointer-events-none`}>Products</NavigationMenuLink>
                                         </Link>
                                     </NavigationMenuItem>
                                     <NavigationMenuItem>
@@ -242,9 +242,9 @@ export default function NavMenu() {
                                 </NavigationMenuList>
                             </NavigationMenu>
                             <div className="flex items-center justify-between w-full gap-2 mx-2">
-                                <Link href="/wishlist" className={`${buttonVariants({ variant: "default" })} w-full group`}>
+                                {/* <Link href="/profile/wishlist" className={`${buttonVariants({ variant: "default" })} w-full group`}>
                                     <GoHeartFill className="w-6 h-6 group-hover:animate-pumping-heart group-hover:text-red-600 " />
-                                </Link>
+                                </Link> */}
                                 <Sheet>
                                     <SheetTrigger asChild>
                                         <Button className={` w-full group relative overflow-hidden`}>
@@ -288,7 +288,7 @@ export default function NavMenu() {
                                             </DropdownMenuItem>
                                             <DropdownMenuItem asChild onClick={() => setOpen(false)}>
                                                 <Link
-                                                    href="/profile/wishlist"
+                                                    href="/profile/wishlist?page=1"
                                                     aria-description="open wishlist"
                                                     aria-label="open wishlist"
                                                     aria-controls="navbar-default"

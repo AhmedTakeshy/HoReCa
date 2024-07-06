@@ -171,11 +171,8 @@ export default async function page({ searchParams }: Props) {
                                                     </li>
                                                 )
                                             })}
-
-                                            {/* <!-- More products... --> */}
                                         </ul>
                                     </div>
-                                    {/* <!-- More orders... --> */}
                                 </div>
                             </div>
                         </div>
