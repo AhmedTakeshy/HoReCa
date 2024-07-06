@@ -23,8 +23,8 @@ export default async function page({ searchParams }: Props) {
 
     return (
         response.status === "Success" ? (
-            <div className='h-full flex flex-col justify-between items-center'>
-                <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6">
+            <div className='h-full flex flex-col justify-between items-center w-full'>
+                <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 w-full place-items-center">
                     {response.data.wishlist.wishlist_items.map(({ product, wishlist_item }) => {
                         return (
                             <CategoryItem
