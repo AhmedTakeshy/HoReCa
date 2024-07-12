@@ -13,6 +13,7 @@ type ProductItemProps = {
     quantity?: number
 }
 export function ProductItem({ data, quantity }: ProductItemProps) {
+
     return (
         <div className="mt-8">
             <BackgroundGradient className="rounded-[22px] max-w-xs p-4 sm:p-10 bg-white dark:bg-zinc-900 h-[500px] flex flex-col justify-start">
@@ -31,9 +32,7 @@ export function ProductItem({ data, quantity }: ProductItemProps) {
                         <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-2 line-clamp-2">
                             {data.description}
                         </p>
-                        <Stars
-                            count={data.ratings}
-                        />
+                        <Stars count={Math.floor(data.ratings)} />
                     </div>
                     <div className="rounded-full pl-4 pr-2 py-1 text-white flex items-center justify-between space-x-4 bg-black mt-4 text-xs font-bold hover:bg-black">
                         <span className="">${data.price.toFixed(2)}</span>

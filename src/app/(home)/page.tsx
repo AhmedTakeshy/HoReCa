@@ -5,8 +5,9 @@ import { Lamp } from "./_components/Lamp";
 import Link from "next/link";
 import IncentiveLogo from "./_components/incentiveLogo";
 import { InfiniteMovingCards } from "@/components/infiniteMovingCards";
+import { getCategories } from "@/_actions/categoryActions";
 
-export default function Home() {
+export default async function Home() {
   const items = [
     {
       quote: 'Integer id nunc sit semper purus. Bibendum at lacus ut arcu blandit montes vitae auctor libero. Hac condimentum dignissim nibh vulputate ut nunc. Amet nibh orci mi venenatis blandit vel et proin. Non hendrerit in vel ac diam.',
@@ -39,6 +40,8 @@ export default function Home() {
       imgSrc: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     },
   ]
+  const categories = await getCategories()
+
   return (
     <main className="mb-8">
       <Lamp />
@@ -80,7 +83,13 @@ export default function Home() {
             <div className="relative py-32">
               <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">Mid-Season Sale</h1>
               <div className="mt-4 sm:mt-6">
-                <Link href="/category"
+                <Link href={{
+                  pathname: '/category', query: {
+                    query: categories.status === "Success" ?
+                      categories.data[Math.floor(Math.random() * categories.data.length)] : "beauty",
+                    page: 1
+                  }
+                }}
                   className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 font-medium text-white hover:bg-indigo-700"
                 >
                   Shop Now
@@ -92,7 +101,15 @@ export default function Home() {
       </section>
       <div className="md:flex md:items-center md:justify-between container mt-24">
         <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-200">Trending Products</h2>
-        <Link href="/category" className="hidden text-sm font-medium text-indigo-400 hover:text-indigo-600 md:block">
+        <Link
+          href={{
+            pathname: '/category', query: {
+              query: categories.status === "Success" ?
+                categories.data[Math.floor(Math.random() * categories.data.length)] : "beauty",
+              page: 1
+            }
+          }}
+          className="hidden text-sm font-medium text-indigo-400 hover:text-indigo-600 md:block">
           Shop the collections
           <span aria-hidden="true"> →</span>
         </Link>
