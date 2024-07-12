@@ -48,7 +48,14 @@ export default async function Categories() {
                 asChild
                 className=" bg-indigo-400 font-medium text-white hover:bg-indigo-700 ml-auto flex w-fit mr-16 mb-8 -mt-4"
             >
-                <Link href="/products">
+                <Link
+                    href={{
+                        pathname: '/category', query: {
+                            query: response.status === "Success" ?
+                                response.data[Math.floor(Math.random() * response.data.length)] : "beauty",
+                            page: 1
+                        }
+                    }}>
                     Shop Collection
                 </Link>
             </Button>

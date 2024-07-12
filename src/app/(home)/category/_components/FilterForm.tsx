@@ -1,14 +1,14 @@
 "use client"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
-
 import { cn } from "@/lib/utils"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
     Command,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
+    CommandList,
 } from "@/components/ui/command"
 import {
     Popover,
@@ -22,7 +22,6 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { usePathname, useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 
 export default function FilterForm() {
     const router = useRouter()
@@ -30,25 +29,32 @@ export default function FilterForm() {
     const searchParams = useSearchParams()
     const [open, setOpen] = useState<boolean>(false)
     const [value, setValue] = useState<string>("")
-    const [categories, setCategories] = useState<{ label: string, value: string }[]>([
-        {
-            label: "",
-            value: ""
-        }
-    ])
+    const [categories, setCategories] = useState<{ label: string, value: string }[]>([])
+    const [ratings, setRatings] = useState<string>("")
+    const [price, setPrice] = useState<string>("")
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const response = await getCategories()
-            if (response.status === "Success") {
-                setCategories((prev) => [...response.data
-                    .map((category) => ({ label: category.toUpperCase(), value: category.toLowerCase() }))])
-            } else {
-                toast.error(response.errorMessage)
+            try {
+                const response = await getCategories();
+                if (response.status === "Success") {
+                    setCategories(
+                        response.data.map((category) => ({
+                            label: category.toUpperCase(),
+                            value: category.toLowerCase()
+                        }))
+                    );
+                } else {
+                    toast.error(response.errorMessage);
+                }
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+                toast.error("An error occurred while fetching categories.");
             }
-        }
-        fetchCategories()
-    }, [])
+        };
+
+        fetchCategories();
+    }, []);
 
     const createQueryString = useCallback(
         (name: string, value: string) => {
@@ -61,14 +67,23 @@ export default function FilterForm() {
     )
 
     const ratingHandler = (value: string) => {
+        setRatings(value)
         const newQueryString = createQueryString("ratings", value)
         router.push(`${pathname}?${newQueryString}`, { scroll: false })
         toast.success("Rating filter applied successfully!")
     }
     const priceHandler = (value: string) => {
+        setPrice(value)
         const newQueryString = createQueryString("price", value)
         router.push(`${pathname}?${newQueryString}`, { scroll: false })
         toast.success("Price filter applied successfully!")
+    }
+
+    const resetFilters = () => {
+        setRatings("")
+        setPrice("")
+        router.push(`${pathname}?query=${value}&page=1`)
+        toast.success("Filters reset successfully!")
     }
 
     return (
@@ -93,30 +108,32 @@ export default function FilterForm() {
                         <CommandInput placeholder="Search category..." className="h-9" />
                         <CommandEmpty>No category found.</CommandEmpty>
                         <CommandGroup>
-                            {categories.map((category) => (
-                                <CommandItem
-                                    key={category.value}
-                                    value={category.value}
-                                    onSelect={(currentValue) => {
-                                        setValue(currentValue === value ? "" : currentValue)
-                                        router.push(currentValue)
-                                        setOpen(false)
-                                    }}
-                                >
-                                    {category.label}
-                                    <CheckIcon
-                                        className={cn(
-                                            "ml-auto h-4 w-4",
-                                            value === category.value ? "opacity-100" : "opacity-0"
-                                        )}
-                                    />
-                                </CommandItem>
-                            ))}
+                            <CommandList>
+                                {categories.map((category) => (
+                                    <CommandItem
+                                        key={category.value}
+                                        value={category.value}
+                                        onSelect={(currentValue) => {
+                                            setValue(currentValue === value ? "" : currentValue)
+                                            router.push(`${pathname}?query=${currentValue}&page=1`)
+                                            setOpen(false)
+                                        }}
+                                    >
+                                        {category.label}
+                                        <CheckIcon
+                                            className={cn(
+                                                "ml-auto h-4 w-4",
+                                                value === category.value ? "opacity-100" : "opacity-0"
+                                            )}
+                                        />
+                                    </CommandItem>
+                                ))}
+                            </CommandList>
                         </CommandGroup>
                     </Command>
                 </PopoverContent>
             </Popover>
-            <RadioGroup onValueChange={ratingHandler}>
+            <RadioGroup value={ratings} onValueChange={ratingHandler}>
                 <Label>Ratings</Label>
                 <div className="flex items-center space-x-2">
                     <RadioGroupItem value="1" id="r1" />
@@ -140,7 +157,7 @@ export default function FilterForm() {
                 </div>
             </RadioGroup>
             <div className="w-full mb-2 gap-2">
-                <RadioGroup onValueChange={priceHandler}>
+                <RadioGroup value={price} onValueChange={priceHandler}>
                     <Label>Price</Label>
                     <div className="flex items-center space-x-2">
                         <RadioGroupItem className="rounded" value="0-500" id="p1" />
@@ -164,7 +181,11 @@ export default function FilterForm() {
                     </div>
                 </RadioGroup>
             </div>
-            <Link className={`${buttonVariants({ variant: "default" })} w-full sm:col-span-2 `} href={`${pathname}`}>Reset filters</Link>
+            <Button
+                onClick={resetFilters}
+                className={` w-full sm:col-span-2 `}>
+                Reset filters
+            </Button>
         </div>
     )
 }
