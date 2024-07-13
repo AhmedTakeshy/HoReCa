@@ -118,6 +118,7 @@ export async function getProductsByFilterAndSort({ params }: FilterWithSort): Pr
 
     const sortType = sortMappings[params.sorting as keyof typeof sortMappings] || sortMappings["highest-ratings"];
     const category = params.query
+    console.log("🚀 ~ getProductsByFilterAndSort ~ category:", category)
     try {
         const products = await prisma.product.findMany({
             where: {
@@ -128,7 +129,7 @@ export async function getProductsByFilterAndSort({ params }: FilterWithSort): Pr
                 },
                 price: {
                     gte: params.price?.split("-")[0] ? Number(params.price?.split("-")[0]) : 0,
-                    lte: params.price?.split("-")[1] ? Number(params.price?.split("-")[1]) : 10000,
+                    lte: params.price?.split("-")[1] ? Number(params.price?.split("-")[1]) : 100000,
                 }
             },
             orderBy: {
@@ -147,7 +148,7 @@ export async function getProductsByFilterAndSort({ params }: FilterWithSort): Pr
                     },
                     price: {
                         gte: params.price?.split("-")[0] ? Number(params.price?.split("-")[0]) : 0,
-                        lte: params.price?.split("-")[1] ? Number(params.price?.split("-")[1]) : 10000,
+                        lte: params.price?.split("-")[1] ? Number(params.price?.split("-")[1]) : 100000,
                     }
                 }
             })

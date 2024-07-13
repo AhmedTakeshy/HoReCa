@@ -28,7 +28,7 @@ export default function FilterForm() {
     const pathname = usePathname()
     const searchParams = useSearchParams()
     const [open, setOpen] = useState<boolean>(false)
-    const [value, setValue] = useState<string>("")
+    const [value, setValue] = useState<string>(searchParams.get("query") ?? "")
     const [categories, setCategories] = useState<{ label: string, value: string }[]>([])
     const [ratings, setRatings] = useState<string>("")
     const [price, setPrice] = useState<string>("")
